@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const isAuth = require('./isAuth');
+const nodemailer = require("nodemailer");
+
+require('dotenv').config();
 
 const mysql = require('mysql');
 
@@ -25,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));//Supports URL encoded bodies
 
 const sessionConfig = {
     name: 'userSession',
-    secret: 'process.env.cookieSECRET',
+    secret: process.env.cookieSECRET,
     cookie: {
         maxAge: 1000 * 60 * 60,
         secure: false,
@@ -347,7 +350,7 @@ app.post('/pensionDetails',  (req, res) => {
 app.post('/pensionProvider', (req, res) => {
     //id from userAccount table
     const userId = req.session.user[0].id;
-    const transferStatus = 1;
+    const transferStatus = 0;
 
         db.query("SELECT PensionProvider AS providerName FROM pensiondetails WHERE userId = ? AND transferStatus = ?;", 
         [userId, transferStatus],
@@ -356,6 +359,7 @@ app.post('/pensionProvider', (req, res) => {
                 console.log({err : err});
             }
             if(result.length > 0){
+                req.session.provider = result;
                res.send({message: result});
             }
             else{
@@ -374,15 +378,28 @@ app.post('/queueTransfer', (req, res) => {
     //id from userAccount table
     const userId = req.session.user[0].id;
     const transferStatus = req.body.transferStatus;
+    const providers = req.session.provider;
 
-    db.query("UPDATE pensionDetails SET transferStatus = ? WHERE userId = ?", 
+    db.query("UPDATE pensionDetails SET transferStatus = ? WHERE userId = ? AND transferStatus = \"0\"", 
     [transferStatus, userId],
     (err, result) =>{
         if(err){
             console.log(err);
         }
         else{
-            res.send({message: "Transfer queued successfully"});
+            for(var i=0; i<providers.length; i++){
+                db.query("UPDATE transactions SET transferStatus = ? WHERE userId = ? AND transferStatus = 0 AND pensionProvider = ?", 
+                [transferStatus, userId, providers[i].providerName],
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                       
+                    }
+                }
+                );
+            }
         }
     }
     );
@@ -509,6 +526,213 @@ app.post('/activity', (req, res) => {
         );
 });
 
+//15. Get profileDetails from database
+
+app.post('/getProfile', (req, res) => {
+    //id from userAccount table
+    const userId = req.session.user[0].id;
+
+        db.query("SELECT useraccount.id, useraccount.name, useraccount.email, userdetails.phone, userdetails.id_no, userdetails.dob, userdetails.employment_status FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userid WHERE useraccount.id = ? AND userdetails.userId = ?;", 
+        [userId, userId],
+        (err, result) =>{
+            if(err){
+                console.log({err : err});
+            }
+            if(result.length > 0){
+               res.send(result);
+            }
+            else{
+                res.send({message: "No Profile"});
+              
+            }
+
+            
+        }
+        );
+});
+
+//16. -------------------Update Profile------------------------
+
+//Update username
+
+app.post('/updateUserName', (req, res) => {
+    const userName = req.body.userName;
+    const userId = req.session.user[0].id;
+
+    db.query("UPDATE useraccount SET name = ? WHERE id = ?", 
+                [userName, userId],
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        res.send("Name inserted successfully");
+                    }
+                }
+                );
+})
+
+//Update userEmail
+
+app.post('/updateUserEmail', (req, res) => {
+    const userEmail = req.body.userEmail;
+    const userId = req.session.user[0].id;
+
+    db.query("UPDATE useraccount SET email = ? WHERE id = ?", 
+                [userEmail, userId],
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        res.send("Email inserted successfully");
+                    }
+                }
+                );
+})
+
+//Update userPhone
+
+app.post('/updateUserPhone', (req, res) => {
+    const userPhone = req.body.userPhone;
+    const userId = req.session.user[0].id;
+
+    db.query("UPDATE userdetails SET phone = ? WHERE userId = ?", 
+                [userPhone, userId],
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        res.send("Phone inserted successfully");
+                    }
+                }
+                );
+})
+
+//Update userId
+
+app.post('/updateUserId', (req, res) => {
+    const id = req.body.userID;
+    const userId = req.session.user[0].id;
+
+    db.query("UPDATE userdetails SET id_no = ? WHERE userId = ?", 
+                [id, userId],
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        db.query("UPDATE pensiondetails SET idno = ? WHERE userId = ?", 
+                        [id, userId],
+                        (err, result) =>{
+                            if(err){
+                                console.log(err);
+                            }
+                            else{
+                                db.query("UPDATE transactions SET idno = ? WHERE userId = ?", 
+                                [id, userId],
+                                (err, result) =>{
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                    else{
+                                        res.send("Id inserted successfully");
+                                    }
+                                }
+                                );
+                            }
+                        }
+                        );
+                    }
+                }
+                );
+
+})
+
+//Update dob
+
+app.post('/updateDOB', (req, res) => {
+    const dob = req.body.dob;
+    const userId = req.session.user[0].id;
+
+    db.query("UPDATE userdetails SET dob = ? WHERE userId = ?", 
+                [dob, userId],
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        res.send("dob inserted successfully");
+                    }
+                }
+                );
+})
+
+//Update employment status
+
+app.post('/updateEmploymentStatus', (req, res) => {
+    const employmentStatus = req.body.employmentStatus;
+    const userId = req.session.user[0].id;
+
+    db.query("UPDATE userdetails SET employment_status = ? WHERE userId = ?", 
+                [employmentStatus, userId],
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        res.send("Employment status inserted successfully");
+                    }
+                }
+                );
+})
+
+//Benefiary details
+app.post('/beneficiaryDetails', (req, res) => {
+    const beneficiaryFirstName =  req.body.beneficiaryFirstName;
+    const  beneficiaryLastName =  req.body.beneficiaryLastName;
+    const  beneficiarydob = req.body.beneficiarydob;
+    const benefit = req.body.benefit;
+    const userId = req.session.user[0].id;
+
+    db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, benefit, userId) VALUES (?, ?, ?, ?, ?);", 
+    [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, benefit, userId], 
+    (err, result) =>{
+        if(err){
+            console.log(err);
+        }
+        else{
+           res.send("Beneficiary added successfully");
+        }
+    }
+    );
+})
+
+// Get beneficiaries
+
+//Benefiary details
+app.post('/beneficiaries', (req, res) => {
+    const userId = req.session.user[0].id;
+
+    db.query("SELECT firstname, lastname, benefit FROM clientbeneficiary WHERE userId = ?;", 
+    [userId], 
+    (err, result) =>{
+
+        if(err){
+            console.log(err);
+        }
+        if(result.length > 0){
+            res.send(result);
+        }
+        else{
+           res.send("No beneficiaries");
+        }
+    }
+    );
+})
+
+
 //
 //
 //
@@ -624,7 +848,7 @@ app.post('/adminLogin', (req, res) => {
             if(result.length > 0){
                bcrypt.compare(password, result[0].password, (error, response) =>{
                 if(response){
-                    req.session.user = result;   
+                    req.session.admin = result;   
                     res.send({message: 'Logged In'});                 
                 }
                 else{
@@ -644,7 +868,8 @@ app.post('/adminLogin', (req, res) => {
 
 //3. Authenticate admin
 app.post('/adminAuth', (req, res, next) =>{
-    if(req.session && req.session.user){
+    if(req.session && req.session.admin){
+
         res.send({message: 'authenticated'});
         next();
     }
@@ -684,7 +909,7 @@ app.post("/")
 app.post('/queuedTransfers', (req, res) => {
     
 
-        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.phone, userdetails.id_no, userdetails.dob, userdetails.employment_status, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, transactions.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus, pensiondetails.usersignature FROM useraccount, userdetails, pensiondetails, transactions WHERE useraccount.id = userdetails.userId AND userdetails.userId = pensiondetails.userId AND userdetails.userId = transactions.userId AND transactions.transferStatus < 100 AND pensiondetails.transferStatus < 100;", 
+        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.phone, userdetails.id_no, userdetails.employment_status, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, pensiondetails.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus, pensiondetails.usersignature FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId RIGHT JOIN pensiondetails ON userdetails.userId = pensiondetails.userId RIGHT JOIN transactions ON pensiondetails.userId = transactions.userId WHERE transactions.transferStatus < 100 AND transactions.transferStatus = pensiondetails.transferStatus;", 
     
         (err, result) =>{
             if(err){
@@ -703,7 +928,7 @@ app.post('/queuedTransfers', (req, res) => {
 
 //7. Sending admin user name to dashboard
 app.post('/adminName', (req, res) => {
-        res.send(req.session.user[0].adminName);
+        res.send(req.session.admin[0].adminName);
 });
 
 
@@ -715,6 +940,8 @@ app.post('/statusUpdate', (req, res) => {
     const status = req.body.status;
     const pensionProvider = req.body.pensionProvider;
 
+    console.log(pensionProvider);
+
     db.query("UPDATE transactions SET transferStatus = ?, Amount = ?  WHERE idNo = ? AND PensionProvider = ?;", 
     [status, pensionAmount, clientId, pensionProvider], 
     (err, result) =>{
@@ -722,25 +949,7 @@ app.post('/statusUpdate', (req, res) => {
             console.log(err);
         }
         else{                          
-            res.send("Values Updated");
-            
-        }
-    }
-    );
-
-                    
-})
-       
-
-//9. Update of status and amount --- Done by the admin the dashboard
-app.post('/statusUpdate2', (req, res) => {
-    //Update details
-    const clientId = req.body.clientId;
-    const status = req.body.status;
-    const pensionProvider = req.body.pensionProvider;
-
-    //Update
-    db.query("UPDATE pensiondetails SET transferStatus = ? WHERE idNo = ? AND PensionProvider = ?;", 
+            db.query("UPDATE pensiondetails SET transferStatus = ? WHERE idNo = ? AND PensionProvider = ?;", 
             [status, clientId, pensionProvider], 
             (err, result) =>{
                 if(err){
@@ -751,8 +960,14 @@ app.post('/statusUpdate2', (req, res) => {
                 }
             }
             ); 
+            
+        }
+    }
+    );
+
                     
 })
+       
 
   //10. get contributions
 
@@ -798,6 +1013,146 @@ app.post('/withdrawTable', async(req, res) => {
     }
     );
 });  
+
+//Search client 
+
+app.post('/getClient', async(req, res) => {
+    
+
+    db.query("SELECT  useraccount.name, userdetails.id_no FROM useraccount LEFT JOIN userdetails ON useraccount.id = userdetails.userId;", 
+
+    (err, result) =>{
+        if(err){
+            console.log({err : err});
+        }
+        if(result.length > 0){
+           res.send(result);
+        }
+        else{
+            res.send({message: "No Client"});
+            
+        }
+    }
+    );
+}); 
+
+//6. Get specific client details
+
+app.post('/searchDetails', async(req, res) => {
+   
+    const idNumber = req.body.idNumber;
+    let clientId;
+
+    db.query("SELECT userId from userdetails WHERE id_no = ?",
+    [idNumber],
+    (err, result)=>{
+        if(err){
+            console.log({err : err});
+        }
+        if(result.length <= 0){
+            res.send("No Profile");
+        }
+        else{
+           clientId = result[0].userId;
+           
+           db.query("SELECT useraccount.name, useraccount.email, useraccount.create_time, userdetails.phone, userdetails.id_no, userdetails.dob, userdetails.employment_status FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId WHERE useraccount.id = ?;", 
+           [clientId],
+           (err, result) =>{
+               if(err){
+                   console.log({err : err});
+               }
+               if(result.length > 0){
+                  res.send(result);
+               }
+               else{
+                   res.send("No Details");
+               }
+           }
+           );
+        }
+    }
+    )
+ 
+});
+
+// 11. Total Combined pensions
+app.post('/clientProfileTotalCombined', (req, res) => {
+    //id from userAccount table
+    const idNumber = req.body.idNumber;
+    let clientId;
+    const transactionType = "Pension Transfer";
+
+    db.query("SELECT userId from userdetails WHERE id_no = ?",
+    [idNumber],
+    (err, result)=>{
+        if(err){
+            console.log({err : err});
+        }
+        if(result.length <= 0){
+            res.send("User not found!");
+        }
+        else{
+           clientId = result[0].userId;
+           
+           db.query("SELECT SUM(amount) AS totalCombined FROM transactions WHERE userId = ? AND transactionType = ?;", 
+           [clientId, transactionType],
+           (err, result) =>{
+               if(err){
+                   console.log({err : err});
+               }
+               if(result.length > 0){
+                  res.send(result);
+               }
+               else{
+                   res.send({message: "Amount not found"});
+               }
+               
+           }
+           );
+        }
+    }
+    )
+});
+
+// 12. Get Total contributions
+app.post('/clientProfileTotalContributions', (req, res) => {
+    //id from userAccount table
+    const idNumber = req.body.idNumber;
+    let clientId;
+
+    db.query("SELECT userId from userdetails WHERE id_no = ?",
+    [idNumber],
+    (err, result)=>{
+        if(err){
+            console.log({err : err});
+        }
+        if(result.length <= 0){
+            res.send("User not found!");
+        }
+        else{
+           clientId = result[0].userId;
+           
+           db.query("SELECT SUM(amount) AS totalContributed FROM usercontributions WHERE userId = ?", 
+        [clientId],
+        (err, result) =>{
+            if(err){
+                console.log({err : err});
+            }
+            if(result.length > 0){
+               res.send(result);
+            }
+            else{
+                res.send({message: "Amount not found"});
+              
+            }
+
+            
+        }
+        );
+        }
+    }
+    )
+});
 
 
 app.listen(5000, ()=>{
