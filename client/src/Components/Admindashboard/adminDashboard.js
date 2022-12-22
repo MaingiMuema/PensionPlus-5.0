@@ -5,7 +5,6 @@ import TableComponent from './tableComponent';
 import DashboardBtns from './dashboardBtns';
 import Axios from "axios";
 import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
-import { HashLink } from 'react-router-hash-link';
 
 //Images
 import img1 from "../../Assets/totalIcon.png";
