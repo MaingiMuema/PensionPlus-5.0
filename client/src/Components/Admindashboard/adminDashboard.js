@@ -646,7 +646,7 @@ const checkLogin= () => {
                 <div className="container dashboardButtonContainer fadeInUp">
                     <div className="row" onClick={hideSearchList}>
                         <div className="col-lg-4">
-                        <a href="/adminDashboard/#pendingTransfersTable">
+                        <Link>
                             <div className="d-flex justify-content-center">
                                 <button className="dashboardButton ">
                                     <div className="buttonIcon">
@@ -656,10 +656,11 @@ const checkLogin= () => {
                                     <span className="btnText">Pending Transfers</span>
                                 </button>
                             </div>
-                        </a>
+                        </Link>
                         </div>
                         <div className="col-lg-4">
-                        <a href="#"><div className="d-flex justify-content-center">
+                        <Link>
+                            <div className="d-flex justify-content-center">
                                 <button className="dashboardButton ">
                                     <div className="buttonIcon">
                                         <img className="img-fluid bIcon" src={img3} alt="total Icon" />
@@ -668,10 +669,11 @@ const checkLogin= () => {
                                     <span className="btnText">Recent Contributions</span>
                                 </button>
                             </div>
-                        </a>
+                        </Link>
                         </div>
                         <div className="col-lg-4">
-                        <a href="/withdraw"><div className="d-flex justify-content-center">
+                        <Link>
+                            <div className="d-flex justify-content-center">
                                 <button className="dashboardButton ">
                                     <div className="buttonIcon">
                                         <img className="img-fluid bIcon" src={img4} alt="total Icon" />
@@ -680,7 +682,7 @@ const checkLogin= () => {
                                     <span className="btnText">Recent Withdrawals</span>
                                 </button>
                             </div>
-                        </a>
+                        </Link>
                         </div>
                     </div>
                     <div className="row searchBarSection" onClick={hideSearchList}>
