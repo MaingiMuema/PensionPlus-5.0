@@ -22,12 +22,10 @@ import AdminLogIn from "./Components/Admindashboard/admin-login";
 import Profile from "./Components/profile";
 import Referral from "./Components/referral";
 
-
 function App() {
- 
   return (
     <>
-      <Router >
+      <Router>
         <Switch>
           <Route exact path="/">
             <Landingpage />
@@ -60,10 +58,10 @@ function App() {
             <PensionDetailsLoggedIn />
           </Route>
           <Route exact path="/withdraw">
-            <Withdraw/>
+            <Withdraw />
           </Route>
           <Route exact path="/pensionCalculator">
-            <PensionCalculator/>
+            <PensionCalculator />
           </Route>
           <Route exact path="/Payment">
             <Payment />
@@ -71,18 +69,18 @@ function App() {
           <Route exact path="/adminDashboard">
             <AdminDashboard />
           </Route>
-         <Route exact path="/admin-create-account">
-          <CreateAdminAccount />
-         </Route>
-         <Route exact path="/admin-login">
-          <AdminLogIn />
-         </Route>
-         <Route exact path="/profile">
-          <Profile />
-         </Route>
-         <Route exact path="/referral">
-          <Referral />
-         </Route>
+          <Route exact path="/admin-create-account">
+            <CreateAdminAccount />
+          </Route>
+          <Route exact path="/admin-login">
+            <AdminLogIn />
+          </Route>
+          <Route exact path="/profile">
+            <Profile />
+          </Route>
+          <Route exact path="/referral">
+            <Referral />
+          </Route>
         </Switch>
       </Router>
     </>

@@ -4,18 +4,14 @@ import Logo from "../Assets/Logo.png";
 import Axios from "axios";
 
 const DashboardNavBar = () => {
-
   const logout = () => {
-    Axios.get("http://localhost:5000/logout", {
-
-    }).then((response) => {
-      if(response.data){
-        window.location.href="/";
+    Axios.get("http://localhost:5000/logout", {}).then((response) => {
+      if (response.data) {
+        window.location.href = "/";
         console.log(response);
       }
     });
   };
-
 
   return (
     <nav className="navbar navbar-expand-xl dashboardNavbar ">
@@ -36,37 +32,85 @@ const DashboardNavBar = () => {
 
       <div className="navbar-collapse collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-        <li className="nav-item active">
-            <Link className="nav-link">
-              About Us
-            </Link>
+          <li className="nav-item active">
+            <Link className="nav-link">About Us</Link>
           </li>
           <li className="nav-item">
-            <a data-bs-toggle="collapse" href="#serviceDropdown" data-bs-target="#serviceDropdown" role="button" aria-expanded="false" aria-bs-controls="serviceDropdown">
-              <Link className="nav-link">
-                Services
-              </Link>
+            <a
+              data-bs-toggle="collapse"
+              href="#serviceDropdown"
+              data-bs-target="#serviceDropdown"
+              role="button"
+              aria-expanded="false"
+              aria-bs-controls="serviceDropdown"
+            >
+              <Link className="nav-link">Services</Link>
             </a>
             <div className="collapse navLinkDropdown" id="serviceDropdown">
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">Combine</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">Contribute</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">WorkPlace Pension</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">Self-employed Saver</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">Consultancy</Link></div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  Combine
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  Contribute
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  WorkPlace Pension
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  Self-employed Saver
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  Consultancy
+                </Link>
+              </div>
             </div>
           </li>
           <li className="nav-item">
-          <a data-bs-toggle="collapse" href="#resourceDropdown" data-bs-target="#resourceDropdown" role="button" aria-expanded="false" aria-bs-controls="resourceDropdown">
-              <Link className="nav-link">
-                Resources
-              </Link>
+            <a
+              data-bs-toggle="collapse"
+              href="#resourceDropdown"
+              data-bs-target="#resourceDropdown"
+              role="button"
+              aria-expanded="false"
+              aria-bs-controls="resourceDropdown"
+            >
+              <Link className="nav-link">Resources</Link>
             </a>
             <div className="collapse navLinkDropdown" id="resourceDropdown">
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" to="/pensionCalculator">Pension Calculator</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">Pensions Explained</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">FAQs</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">Terms & Conditions</Link></div>
-              <div className="dropdownLinkContainer"><Link className="dropdownLink" href="#">Contact Us</Link></div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" to="/pensionCalculator">
+                  Pension Calculator
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  Pensions Explained
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  FAQs
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  Terms & Conditions
+                </Link>
+              </div>
+              <div className="dropdownLinkContainer">
+                <Link className="dropdownLink" href="#">
+                  Contact Us
+                </Link>
+              </div>
             </div>
           </li>
           <li className="nav-item">
@@ -77,7 +121,9 @@ const DashboardNavBar = () => {
         </ul>
 
         <div className="acc-btns">
-          <Link onClick={logout} className="logIn-btn" to="/">LOG OUT</Link>
+          <Link onClick={logout} className="logIn-btn" to="/">
+            LOG OUT
+          </Link>
         </div>
       </div>
     </nav>

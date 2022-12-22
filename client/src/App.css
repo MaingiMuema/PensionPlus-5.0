@@ -27,7 +27,7 @@ Navbar
   }
 }
 
-.navLinkDropdown{
+.navLinkDropdown {
   position: absolute;
   z-index: 2;
   background-color: #0075c9;
@@ -35,30 +35,30 @@ Navbar
   padding: 10px 0 10px 0;
 }
 
-.dropdownLinkContainer{
+.dropdownLinkContainer {
   padding: 10px 25px 10px 25px;
   background-color: #0075c9;
   transition: background-color 1.5s cubic-bezier(0.21, 1.46, 0.76, 0.92);
   width: 100%;
 }
 
-.dropdownLinkContainer:hover{
+.dropdownLinkContainer:hover {
   padding: 10px 25px 10px 25px;
   background-color: #0461a4;
   width: 100%;
 }
 
-.linkWrapper{
+.linkWrapper {
   position: absolute;
   width: 100vw;
   height: 100vh;
 }
 
-.dropdownLink{
+.dropdownLink {
   color: white;
 }
 
-.dropdownLink:hover{
+.dropdownLink:hover {
   color: white;
 }
 
@@ -1181,7 +1181,6 @@ Total Pot card
   }
 
   div .column1 {
-    
   }
 
   div .column2 {
@@ -1207,11 +1206,10 @@ Total Pot card
   padding: 20px 10px 20px 10px;
   background-color: #fff;
   margin-top: 50px;
-  
 }
 
-.pChange{
-  color: #3A8605;
+.pChange {
+  color: #3a8605;
 }
 
 /*
@@ -1220,26 +1218,26 @@ Applaus Card
 
 */
 @media screen and(max-width: 991px) {
-    div #applausCol{
-      display: flex;
-      justify-content: center;
-    }
+  div #applausCol {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .applausCard {
   box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
   border-radius: 10px;
   padding: 20px 30px 20px 30px;
-  background-color: #FFC928;
+  background-color: #ffc928;
   margin-top: 42px;
   width: 70%;
 }
 
-.applausCard h1{
+.applausCard h1 {
   color: #444;
 }
 
-.applausCard p{
+.applausCard p {
   color: #444;
   font-size: 14px;
 }
@@ -1270,11 +1268,11 @@ Dashboard buttons
 
 */
 
-.dashboardButtonContainer{
+.dashboardButtonContainer {
   margin-top: 50px;
 }
 
-.dashboardButton{
+.dashboardButton {
   box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
   border-radius: 10px;
   padding: 20px 30px 20px 30px;
@@ -1285,7 +1283,7 @@ Dashboard buttons
   transition: background-color 0.6s cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 
-.dashboardButton:hover{
+.dashboardButton:hover {
   box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
   border-radius: 10px;
   padding: 20px 30px 20px 30px;
@@ -1295,11 +1293,11 @@ Dashboard buttons
   border: 0px;
 }
 
-.bIcon{
+.bIcon {
   transform: scale(0.8);
 }
 
-.btnText{
+.btnText {
   color: white;
 }
 
@@ -1309,17 +1307,17 @@ Dashboard buttons
 
 */
 
-#caseChart{
+#caseChart {
   margin-top: 100px;
 }
 
-.casegraph{
+.casegraph {
   margin-top: 30px;
   font-size: 16px;
   width: 90%;
 }
 
-.caseSummary{
+.caseSummary {
   padding: 20px 70px 30px 70px;
 }
 
@@ -1329,46 +1327,37 @@ Dashboard buttons
 
 */
 
-@media screen and (max-width: 350px){
-  span .progressStatus{
+@media screen and (max-width: 350px) {
+  span .progressStatus {
     margin-top: -15px;
     font-size: 16px;
     color: #444;
     width: 30px;
-    height: 30px
+    height: 30px;
   }
 
-  span .activityStatus{
+  span .activityStatus {
     margin-top: -15px;
     font-size: 16px;
     color: #444;
     width: 30px;
-    height: 30px
+    height: 30px;
   }
-  
 }
 
-@media screen and (max-width: 900px){
-  div #portfolioChart{
+@media screen and (max-width: 900px) {
+  div #portfolioChart {
     margin-top: 60px;
   }
 }
 
-.pendingTransferProviderName{
+.pendingTransferProviderName {
   color: #444;
   font-size: 16px;
   font-weight: 600;
 }
 
-.progressStatus{
-  margin-top: -20px;
-  font-size: 16px;
-  color: #444;
-  width: 50px;
-  height: 50px
-}
-
-.activityStatus{
+.progressStatus {
   margin-top: -20px;
   font-size: 16px;
   color: #444;
@@ -1376,33 +1365,41 @@ Dashboard buttons
   height: 50px;
 }
 
-#activityAmount{
+.activityStatus {
+  margin-top: -20px;
+  font-size: 16px;
+  color: #444;
+  width: 50px;
+  height: 50px;
+}
+
+#activityAmount {
   margin-right: 40px;
 }
 
-.pendingTransfer{
+.pendingTransfer {
   font-size: 24px;
   color: #ffc928;
   margin-top: 20px;
   padding: 0 20px 0 20px;
 }
 
-.pensionTransferDivider{
+.pensionTransferDivider {
   color: #0075c99c;
 }
 
-.tableHeading{
+.tableHeading {
   font-size: 18px;
   font-weight: 700;
   color: #444;
   padding-left: 20px;
 }
 
-.activitySection{
+.activitySection {
   margin-top: 50px;
 }
 
-.pendingTransfersBtn{
+.pendingTransfersBtn {
   background-color: #0075c9;
   border-radius: 1px;
   border: 0;
@@ -1411,32 +1408,32 @@ Dashboard buttons
   color: white;
 }
 
-.tAmount{
+.tAmount {
   position: relative;
   z-index: 2;
 }
 
-.blueLabel{
+.blueLabel {
   width: 20px;
   height: 20px;
   background-color: #0075c9;
 }
 
-.portfolioKeyLabel{
+.portfolioKeyLabel {
   margin-left: 10px;
 }
 
-.yellowLabel{
+.yellowLabel {
   width: 20px;
   height: 20px;
   background-color: #ffc928;
 }
 
-.portfolioPiechart{
+.portfolioPiechart {
   padding-left: 15%;
 }
 
-#portfolioChart{
+#portfolioChart {
   margin-top: 160px;
 }
 
@@ -1446,7 +1443,7 @@ Login form
 
 */
 
-.c-b-contact{
+.c-b-contact {
   padding: 5px 20px 5px 20px;
 }
 
@@ -1455,83 +1452,84 @@ Login form
 
   */
 
-  .paymentMethod{
-    box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
-    border-radius: 10px;
-    padding: 20px 30px 20px 30px;
-    background-color: #ffffff;
-    margin-top: 42px;
-    width: 90%;
-    border: 0px;
-    transition: background-color 0.6s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-  }
+.paymentMethod {
+  box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
+  border-radius: 10px;
+  padding: 20px 30px 20px 30px;
+  background-color: #ffffff;
+  margin-top: 42px;
+  width: 90%;
+  border: 0px;
+  transition: background-color 0.6s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
 
-  .paymentMethod:hover{
-    box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
-    border-radius: 10px;
-    padding: 20px 30px 20px 30px;
-    background-color: #bbbbbb;
-    margin-top: 42px;
-    width: 90%;
-    border: 0px;
-  }
+.paymentMethod:hover {
+  box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
+  border-radius: 10px;
+  padding: 20px 30px 20px 30px;
+  background-color: #bbbbbb;
+  margin-top: 42px;
+  width: 90%;
+  border: 0px;
+}
 
-  #paymentMethod{
-    width: 100%;
-  }
+#paymentMethod {
+  width: 100%;
+}
 
-  .paymentCheckbox{
-    position: relative;
-    z-index: 3;
-  }
+.paymentCheckbox {
+  position: relative;
+  z-index: 3;
+}
 
-  /*
+/*
 
   Pension Calculator Page
 
   */
 
-  @media screen and (min-width: 990px){
-    div .calculatebtn{
-      margin-top: 65px;
-    }
-
-    div .calculatebtn:hover {
-      margin-top: 65px;
-    }
+@media screen and (min-width: 990px) {
+  div .calculatebtn {
+    margin-top: 65px;
   }
 
-  @media screen and (max-width: 600px){
-    div .pensionCalculatorForm{
-      margin-top: 20px;
-      padding-left: 0.5%;
-    }
+  div .calculatebtn:hover {
+    margin-top: 65px;
   }
+}
 
-  #pensionCalculatorHeader{
-    padding: 120px 0 120px 0;
-    color: rgb(0, 0, 0);
-    background-image: linear-gradient(90deg, #0075c9d3, #ffc928bd), url("./Assets/pensionCalculatorImg.png");
-    background-size: contain;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-  }
-
-  .pensionCalculatorForm{
+@media screen and (max-width: 600px) {
+  div .pensionCalculatorForm {
     margin-top: 20px;
+    padding-left: 0.5%;
   }
+}
 
-  .pCalculatorParagraph{
-    margin-top: 30px;
-    font-size: 18px;
-    padding: 0 50px 0 50px;
-  }
+#pensionCalculatorHeader {
+  padding: 120px 0 120px 0;
+  color: rgb(0, 0, 0);
+  background-image: linear-gradient(90deg, #0075c9d3, #ffc928bd),
+    url("./Assets/pensionCalculatorImg.png");
+  background-size: contain;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
 
-  .inputLable{
-    margin-top: 40px;
-  }
+.pensionCalculatorForm {
+  margin-top: 20px;
+}
 
-.pCalc{
+.pCalculatorParagraph {
+  margin-top: 30px;
+  font-size: 18px;
+  padding: 0 50px 0 50px;
+}
+
+.inputLable {
+  margin-top: 40px;
+}
+
+.pCalc {
   margin-top: 10px;
 }
 
@@ -1557,16 +1555,15 @@ Login form
   background-color: #0075c9;
 }
 
-.requiredField{
+.requiredField {
   color: rgb(240, 0, 0);
   font-size: 14px;
   margin-top: -10px;
 }
 
-#calculatorContainer{
+#calculatorContainer {
   padding-bottom: 150px;
 }
-
 
 /*
 
@@ -1574,43 +1571,46 @@ Contribution page
 
 */
 
-.nextBTNSection{
+.nextBTNSection {
   margin-top: 50px;
 }
 
 /*
 Admin dashboard
 */
-  
+
 table {
   border: 2px solid #0075c9;
   width: 100%;
   height: 200px;
-  border:none;
+  border: none;
   border-collapse: collapse;
 }
-  
+
 th {
   /* border-left: 1px solid black; */
   text-align: center;
 }
-  
+
 td {
   padding: 20px;
   text-align: center;
   margin: 50px;
 }
 
-table td, table th {
+table td,
+table th {
   border-left: 2px solid #000;
   border-right: 2px solid #000;
 }
 
-table td:first-child , table th:first-child {
+table td:first-child,
+table th:first-child {
   border-left: none;
 }
 
-table td:last-child, table th:last-child {
+table td:last-child,
+table th:last-child {
   border-right: none;
 }
 
@@ -1628,20 +1628,20 @@ table td:last-child, table th:last-child {
   border: none;
 }
 
-.updateProfile{
+.updateProfile {
   padding-top: 50px;
   padding-left: 20px;
 }
 
-.updateCard{
+.updateCard {
   padding: 30px 0 5px 0;
 }
 
-.beneficiariesUpdate{
-  padding: 30px 0px  0  -50px;
+.beneficiariesUpdate {
+  padding: 30px 0px 0 -50px;
 }
 
-.updateBeneficiary{
+.updateBeneficiary {
   padding-left: 50px;
 }
 /*
@@ -1677,40 +1677,39 @@ Admin DashBoard styles
   width: 170px;
 }
 
-.searchBarSection{
+.searchBarSection {
   margin-top: 100px;
 }
 
-#searchForm{
+#searchForm {
   width: 90%;
 }
 
-.updateForm{
+.updateForm {
   margin-left: 60px;
 }
 
-.updateContainer{
+.updateContainer {
   margin-top: 50px;
 }
 
-.adminName{
+.adminName {
   font-size: 14px;
   font-weight: 400;
 }
 
-#status{
+#status {
   padding: 0;
 }
 
-.bubble{
+.bubble {
   background-color: #0075c9;
   padding: 10px 20px 10px 20px;
   color: white;
   border-radius: 10px;
-
 }
 
-.statusLabel{
+.statusLabel {
   margin-bottom: 20px;
 }
 
@@ -1726,10 +1725,7 @@ datalist {
 Input List of search suggestion
 */
 
-
 /*the container must be positioned relative:*/
-
-
 
 .list {
   display: flex;
@@ -1761,7 +1757,7 @@ Input List of search suggestion
   border-bottom: none;
 }
 
-.clientProfileCard{
+.clientProfileCard {
   padding: 30px 30px 30px 30px;
   margin-top: 40px;
 }
@@ -1791,11 +1787,11 @@ Input List of search suggestion
   margin-top: 50px;
 }
 
-.referralContainer{
+.referralContainer {
   padding-top: 100px 50px 20px 50px;
 }
 
-.refferalCard{
+.refferalCard {
   padding: 50px;
   padding-bottom: 30px;
   width: 85%;
@@ -1803,17 +1799,17 @@ Input List of search suggestion
   margin-top: 50px;
 }
 
-.referHeading{
+.referHeading {
   font-size: 21px;
   font-weight: 600;
   color: #ffffff;
 }
 
-.referText{
+.referText {
   margin-top: 20px;
 }
 
-.referralLinkCard{
+.referralLinkCard {
   width: 80%;
   background-color: white;
   border: 0.5px solid #0075c9;
@@ -1824,7 +1820,7 @@ Input List of search suggestion
 }
 
 .copylink {
- padding: 10px 20px 10px 20px;
+  padding: 10px 20px 10px 20px;
   border-radius: 5px;
   margin-top: 50px;
   margin-bottom: 30px;
@@ -1845,7 +1841,7 @@ Input List of search suggestion
   background-color: #ffc928;
 }
 
-#pendingTransfersTable{
+#pendingTransfersTable {
   height: 50%;
 }
 
@@ -1855,66 +1851,66 @@ Fade-In Animations
 
 */
 
-.fadeInUp{
-  animation:fadeInUp 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
+.fadeInUp {
+  animation: fadeInUp 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
   animation-delay: 0.7s;
 }
 
-@keyframes fadeInUp{
-  0%{
-    transform:translate(0px, 100px);
+@keyframes fadeInUp {
+  0% {
+    transform: translate(0px, 100px);
     opacity: 0;
   }
-  100%{
-    transform:translate(0px, 0);
+  100% {
+    transform: translate(0px, 0);
     opacity: 1;
   }
 }
 
-.fadeInLeft{
-  animation:fadeInLeft 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
+.fadeInLeft {
+  animation: fadeInLeft 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
   animation-delay: 0.7s;
 }
 
-@keyframes fadeInLeft{
-  0%{
-    transform:translate(-100px, 0px);
+@keyframes fadeInLeft {
+  0% {
+    transform: translate(-100px, 0px);
     opacity: 0;
   }
-  100%{
-    transform:translate(0px, 0);
+  100% {
+    transform: translate(0px, 0);
     opacity: 1;
   }
 }
 
-.fadeInRight{
-  animation:fadeInRight 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
+.fadeInRight {
+  animation: fadeInRight 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
   animation-delay: 0.7s;
 }
 
-@keyframes fadeInRight{
-  0%{
-    transform:translate(100px, 0px);
+@keyframes fadeInRight {
+  0% {
+    transform: translate(100px, 0px);
     opacity: 0;
   }
-  100%{
-    transform:translate(0px, 0);
+  100% {
+    transform: translate(0px, 0);
     opacity: 1;
   }
 }
 
-.fadeInBottom{
+.fadeInBottom {
   animation-delay: 0.7s;
-  animation:fadeInBottom 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
+  animation: fadeInBottom 1s cubic-bezier(0.65, 0.19, 0.32, 1.13) backwards;
 }
 
-@keyframes fadeInBottom{
-  0%{
-    transform:translate(0px, -100px);
+@keyframes fadeInBottom {
+  0% {
+    transform: translate(0px, -100px);
     opacity: 0;
   }
-  100%{
-    transform:translate(0px, 0);
+  100% {
+    transform: translate(0px, 0);
     opacity: 1;
   }
 }

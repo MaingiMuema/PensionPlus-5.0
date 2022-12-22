@@ -137,23 +137,19 @@ const PensionDetailsLoggedIn = () => {
     }
   };
 
- //Login status
- const [loginStatus, setLoginStatus] = useState("false");
+  //Login status
+  const [loginStatus, setLoginStatus] = useState("false");
 
- const checkLogin= () => {
-   Axios.post("http://localhost:5000/auth", {
-     
-   }).then((response) => {
-       console.log(response.status);
-       if(response.data.message == 'Not authenticated'){
+  const checkLogin = () => {
+    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+      console.log(response.status);
+      if (response.data.message == "Not authenticated") {
         window.history.go(-1);
-       }
-       else{
-         setLoginStatus("true")
-       }
- 
-   });
- };
+      } else {
+        setLoginStatus("true");
+      }
+    });
+  };
 
   return (
     <div onLoadCapture={checkLogin} className="container-fluid account-section">

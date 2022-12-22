@@ -10,10 +10,8 @@ import Axios from "axios";
 import img1 from "../Assets/Verification illustrations.png";
 
 const ClientDetails = (props) => {
-
   var name = props.name;
   console.log(name);
-
 
   const addDetails = () => {
     Axios.post("http://localhost:5000/userDetails", {
@@ -146,38 +144,29 @@ const ClientDetails = (props) => {
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
 
-  const checkLogin= () => {
-    Axios.post("http://localhost:5000/auth", {
-      
-    }).then((response) => {
-        if(response.data.message == 'Not authenticated'){
-          window.history.go(-1);
-        }
-        else{
-          setLoginStatus("true")
-        }
-  
+  const checkLogin = () => {
+    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+      if (response.data.message == "Not authenticated") {
+        window.history.go(-1);
+      } else {
+        setLoginStatus("true");
+      }
     });
   };
 
+  var backArrow;
 
-
-var backArrow;
-
-if(loginStatus == "false"){
-  backArrow = (
-    <Link to="/create-account">
-    <span>
-      <Icon className="back-arrow" name="arrow left" />
-      Back
-    </span>
-  </Link>
-  )
-}
-else{
-  
-}
-
+  if (loginStatus == "false") {
+    backArrow = (
+      <Link to="/create-account">
+        <span>
+          <Icon className="back-arrow" name="arrow left" />
+          Back
+        </span>
+      </Link>
+    );
+  } else {
+  }
 
   return (
     <div onLoadCapture={checkLogin} className="container-fluid account-section">

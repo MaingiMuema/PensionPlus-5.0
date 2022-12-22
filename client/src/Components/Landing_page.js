@@ -94,117 +94,111 @@ if (screenWidth <= 900) {
 }
 
 function Landingpage() {
-    //Login status
-const [loginStatus, setLoginStatus] = useState("false");
+  //Login status
+  const [loginStatus, setLoginStatus] = useState("false");
 
-const checkLogin= () => {
-  Axios.post("http://localhost:5000/auth", {
-    
-  }).then((response) => {
-    
-      if(response.data.message == 'Not authenticated'){
-        
-      }
-      else{
+  const checkLogin = () => {
+    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+      if (response.data.message == "Not authenticated") {
+      } else {
         setLoginStatus("true");
       }
+    });
+  };
 
-  });
-};
+  console.log(loginStatus);
 
-console.log(loginStatus);
+  //Check Login status
+  var NavBar;
 
-//Check Login status
-var NavBar;
+  var getStartedBtn;
 
-var getStartedBtn;
+  var combineBtnLandingPage;
 
-var combineBtnLandingPage;
+  var combineLink;
+  var contributeLink;
+  var calculatorLink;
+  var personalPensionLink;
+  var contributionLink;
 
-var combineLink;
-var contributeLink;
-var calculatorLink;
-var personalPensionLink;
-var contributionLink;
+  if (loginStatus == "true") {
+    NavBar = (
+      <>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <NavbarSignedIn />
+            </Route>
+          </Switch>
+        </Router>
+      </>
+    );
+    getStartedBtn = (
+      <Link to="/pensionDetails">
+        <button>Get started</button>
+      </Link>
+    );
 
-if(loginStatus == "true"){
-  NavBar = (
-    <>
-    <Router>
-      <Switch>
-        <Route exact path="/">
-          <NavbarSignedIn />
-        </Route>
-      </Switch>
-    </Router>
-  </>
-  )
-  getStartedBtn = (
-  <Link to="/pensionDetails">
-    <button>Get started</button>
-  </Link>
-  )
+    combineBtnLandingPage = (
+      <Link to="/pensionDetails">
+        <button class="call-to-action">Combine with PensionPlus</button>
+      </Link>
+    );
 
-  combineBtnLandingPage = (<Link to="/pensionDetails">
-  <button class="call-to-action">Combine with PensionPlus</button>
-</Link>)
+    combineLink = <Link to="/userDashboard">Combine</Link>;
+    contributeLink = <Link to="/userDashboard">contribute</Link>;
+    calculatorLink = <Link to="/userDashboard">Pension Calcuator</Link>;
+    personalPensionLink = (
+      <Link class="arrow-button" to="/userDashboard">
+        Personal saver<span class="arrow"></span>
+      </Link>
+    );
 
-combineLink =<Link to="/userDashboard">Combine</Link>;
-contributeLink =<Link to="/userDashboard">contribute</Link>;
-calculatorLink =<Link to="/userDashboard">Pension Calcuator</Link>;
-personalPensionLink =  (
-  <Link class="arrow-button" to="/userDashboard">
-  Personal saver<span class="arrow"></span>
-  </Link>
-);
+    contributionLink = (
+      <Link class="arrow-button" to="/userDashboard">
+        Employer<span class="arrow"></span>
+      </Link>
+    );
+  } else {
+    NavBar = (
+      <>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Navbar />
+            </Route>
+          </Switch>
+        </Router>
+      </>
+    );
 
-contributionLink =  (
-  <Link class="arrow-button" to="/userDashboard">
-  Employer<span class="arrow"></span>
-  </Link>
-);
+    getStartedBtn = (
+      <Link to="create-account">
+        <button>Get started</button>
+      </Link>
+    );
 
-}
-else{
-  NavBar = (
-    <>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Navbar />
-          </Route>
-        </Switch>
-      </Router>
-    </>
-  )
+    combineBtnLandingPage = (
+      <Link to="/create-account">
+        <button class="call-to-action">Combine with PensionPlus</button>
+      </Link>
+    );
+    combineLink = <Link to="/login">Combine</Link>;
+    contributeLink = <Link to="/login">contribute</Link>;
+    calculatorLink = <Link to="/login">Pension Calcuator</Link>;
 
-  getStartedBtn = (
-  <Link to="create-account">
-  <button>Get started</button>
-</Link>
-)
+    personalPensionLink = (
+      <Link class="arrow-button" to="/login">
+        Personal saver<span class="arrow"></span>
+      </Link>
+    );
 
-combineBtnLandingPage = (<Link to="/create-account">
-  <button class="call-to-action">Combine with PensionPlus</button>
-</Link>);
-combineLink =<Link to="/login">Combine</Link>;
-contributeLink =<Link to="/login">contribute</Link>;
-calculatorLink =<Link to="/login">Pension Calcuator</Link>;
-
-personalPensionLink =  (
-  <Link class="arrow-button" to="/login">
-  Personal saver<span class="arrow"></span>
-  </Link>
-);
-
-contributionLink =  (
-  <Link class="arrow-button" to="/login">
-  Employer<span class="arrow"></span>
-  </Link>
-);
-}
-
-
+    contributionLink = (
+      <Link class="arrow-button" to="/login">
+        Employer<span class="arrow"></span>
+      </Link>
+    );
+  }
 
   return (
     <div onLoad={checkLogin} class="container-fluid">
@@ -307,7 +301,7 @@ contributionLink =  (
                 objectives, change how you contribute, and finally get your
                 finances back on track.
               </p>
-             {combineBtnLandingPage}
+              {combineBtnLandingPage}
             </div>
           </div>
         </div>
@@ -764,18 +758,14 @@ contributionLink =  (
                     <li>
                       <a href="#">Our pension</a>
                     </li>
+                    <li>{combineLink}</li>
+                    <li>{contributeLink}</li>
                     <li>
-                      {combineLink}
+                      <a href="#" aria-disabled>
+                        Plans
+                      </a>
                     </li>
-                    <li>
-                      {contributeLink}
-                    </li>
-                    <li>
-                      <a href="#" aria-disabled>Plans</a>
-                    </li>
-                    <li>
-                      {calculatorLink}
-                    </li>
+                    <li>{calculatorLink}</li>
                     <li>
                       <a href="#">Self-employed Saver</a>
                     </li>
@@ -802,17 +792,13 @@ contributionLink =  (
                   </p>
                 </div>
               </div>
-              <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
-                
-              </div>
+              <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right"></div>
             </div>
           </div>
         </div>
       </footer>
-
-
     </div>
   );
-};
+}
 
 export default Landingpage;

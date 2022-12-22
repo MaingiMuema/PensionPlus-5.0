@@ -3,19 +3,15 @@ import Navbar from "../NavBar";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 
-
 //Images
 import img1 from "../../Assets/create-acc-vector.png";
 
 const AdminLogIn = () => {
+  //Checkpath
+  const [checkPath, setCheckPath] = useState("/login");
 
-    //Checkpath
-    const [checkPath, setCheckPath] = useState("/login");
-
-
-     //Login status
+  //Login status
   const [loginStatus, setLoginStatus] = useState("false");
-
 
   //Login user
   Axios.defaults.withCredentials = true;
@@ -25,21 +21,19 @@ const AdminLogIn = () => {
       email: email,
       password: password,
     }).then((response) => {
-      if(response.data.message=="Wrong email/Password combination!"){
+      if (response.data.message == "Wrong email/Password combination!") {
         setCheckPath("/admin-login");
         alert(response.data.message);
-      }
-      else if(response.data.message=="Administrator account does not exist!"){
+      } else if (
+        response.data.message == "Administrator account does not exist!"
+      ) {
         setCheckPath("/admin-login");
         alert(response.data.message);
+      } else {
+        window.location.href = "/#/adminDashboard";
       }
-      else{
-        window.location.href="/#/adminDashboard";
-      }
-
     });
   };
-
 
   //Check input field
   const [inputValue, setInputValue] = useState();
@@ -63,42 +57,44 @@ const AdminLogIn = () => {
 
   var logInBtn;
 
-  const checkDetails = () =>{
-    if(inputValue == null && inputValue2 == null){
-        alert("Please input Email and password!");
+  const checkDetails = () => {
+    if (inputValue == null && inputValue2 == null) {
+      alert("Please input Email and password!");
+    } else if (inputValue == null || inputValue2 == null) {
+      checkEmpty();
     }
-    else if(inputValue == null || inputValue2 == null){
-        checkEmpty();
-    }
-  }
+  };
 
-  const checkEmpty = () =>{
-    if(inputValue == null || inputValue == ""){
-        alert("Please input Email!");
+  const checkEmpty = () => {
+    if (inputValue == null || inputValue == "") {
+      alert("Please input Email!");
     }
-   if(inputValue2 == null || inputValue2 == ""){
-        alert("Please input password!");
+    if (inputValue2 == null || inputValue2 == "") {
+      alert("Please input password!");
     }
+  };
 
-  }
-
-  if((inputValue == null || inputValue == "")|| (inputValue2 == null || inputValue2 == "")){
+  if (
+    inputValue == null ||
+    inputValue == "" ||
+    inputValue2 == null ||
+    inputValue2 == ""
+  ) {
     logInBtn = (
-        <button class="createACC-btn" onClick={checkDetails}>Login</button>
-    )
-   
-  }
-  else{
-   
+      <button class="createACC-btn" onClick={checkDetails}>
+        Login
+      </button>
+    );
+  } else {
     logInBtn = (
-      <Link onMouseDown={login} ><button class="createACC-btn" >Login</button></Link>
-  )
-   
+      <Link onMouseDown={login}>
+        <button class="createACC-btn">Login</button>
+      </Link>
+    );
   }
-  
 
   return (
-    <div  className="container-fluid account-section">
+    <div className="container-fluid account-section">
       <div class="container">
         <>
           <Router>
@@ -160,7 +156,10 @@ const AdminLogIn = () => {
             </form>
             {logInBtn}
             <p>
-            <span>Don't have an account?</span>&nbsp;&nbsp;&nbsp;<span><Link to="/admin-create-account">Create account</Link></span>
+              <span>Don't have an account?</span>&nbsp;&nbsp;&nbsp;
+              <span>
+                <Link to="/admin-create-account">Create account</Link>
+              </span>
             </p>
           </div>
         </div>

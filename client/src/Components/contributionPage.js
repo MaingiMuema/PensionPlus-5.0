@@ -13,7 +13,6 @@ import img4 from "../Assets/visa-removebg-preview.png";
 import img5 from "../Assets/create-acc-vector.png";
 
 const ContributionPage = () => {
-
   const [inputValue, setInputValue] = useState();
 
   let onChange = (event) => {
@@ -21,47 +20,43 @@ const ContributionPage = () => {
     setInputValue(newValue);
   };
 
-const checkAlert = () =>{
-  alert("Please input amount");
-}
+  const checkAlert = () => {
+    alert("Please input amount");
+  };
 
   var nextBtn;
 
-  if(inputValue == "" || inputValue == null){
+  if (inputValue == "" || inputValue == null) {
     nextBtn = (
-        <Link to="/contributionPage">
-          <button className="createACC-btn" onClick={checkAlert}>Next</button>
-        </Link>
+      <Link to="/contributionPage">
+        <button className="createACC-btn" onClick={checkAlert}>
+          Next
+        </button>
+      </Link>
     );
-  }
-  else{
+  } else {
     nextBtn = (
-        <Link to="/checkOutPage">
-          <button className="createACC-btn">Next</button>
-        </Link>
-    )
+      <Link to="/checkOutPage">
+        <button className="createACC-btn">Next</button>
+      </Link>
+    );
   }
 
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
 
-  const checkLogin= () => {
-    Axios.post("http://localhost:5000/auth", {
-      
-    }).then((response) => {
-        console.log(response.status);
-        if(response.data.message == 'Not authenticated'){
-          window.history.go(-1);
-        }
-        else{
-          setLoginStatus("true")
-        }
-  
+  const checkLogin = () => {
+    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+      console.log(response.status);
+      if (response.data.message == "Not authenticated") {
+        window.history.go(-1);
+      } else {
+        setLoginStatus("true");
+      }
     });
   };
 
-//Check user session
-
+  //Check user session
 
   return (
     <div onLoad={checkLogin} className="container-fluid account-section">
@@ -109,38 +104,34 @@ const checkAlert = () =>{
             <br />
           </div>
         </div>
-        <div className="col-lg-4">
-        </div>
+        <div className="col-lg-4"></div>
         <form id="paymentMethod">
-         
-                <div className="row">    
-                        <div className="col-lg-4">
-                       
-                        </div>                   
-                        <div className="col-lg-4 fadeInRight">
-                        <h3 className="text-center" >Payment method</h3>
-                        <label for="visa" className="d-flex justify-content-center">
-                            <div >
-                              <Link>
-                                <button className="paymentMethod  ">
-                                    <div className="buttonIcon">
-                                        <img className="img-fluid bIcon" src={img3} alt="total Icon" />
-                                    </div>
-                                    <br/>
-                                </button>
-                              </Link>
-                            </div>
-                        </label>
-                        </div>
-                        <div className="col-lg-4">
-                       
-                        </div>
-                    </div>     
-            </form> 
+          <div className="row">
+            <div className="col-lg-4"></div>
+            <div className="col-lg-4 fadeInRight">
+              <h3 className="text-center">Payment method</h3>
+              <label for="visa" className="d-flex justify-content-center">
+                <div>
+                  <Link>
+                    <button className="paymentMethod  ">
+                      <div className="buttonIcon">
+                        <img
+                          className="img-fluid bIcon"
+                          src={img3}
+                          alt="total Icon"
+                        />
+                      </div>
+                      <br />
+                    </button>
+                  </Link>
+                </div>
+              </label>
+            </div>
+            <div className="col-lg-4"></div>
+          </div>
+        </form>
       </div>
-     
     </div>
-   
   );
 };
 

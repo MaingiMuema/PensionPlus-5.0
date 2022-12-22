@@ -9,10 +9,10 @@ import img1 from "../../Assets/create-acc-vector.png";
 
 Axios.defaults.withCredentials = true;
 const CreateAdminAccount = () => {
-//Create account button
-var createAccountBtn;
+  //Create account button
+  var createAccountBtn;
 
-const [checkPath, setCheckPath] = useState('/admin-create-account');
+  const [checkPath, setCheckPath] = useState("/admin-create-account");
 
   //Add user
   const addUser = () => {
@@ -21,13 +21,15 @@ const [checkPath, setCheckPath] = useState('/admin-create-account');
       email: email,
       password: password,
     }).then((response) => {
-      if(response.data=="Another admin with that email already exists! If this is you, Try logging in"){
-        window.location.href="/#/admin-create-account";
+      if (
+        response.data ==
+        "Another admin with that email already exists! If this is you, Try logging in"
+      ) {
+        window.location.href = "/#/admin-create-account";
         alert(response.data);
-      }
-      else{
+      } else {
         console.log(response);
-        window.location.href="/#/admin-login";
+        window.location.href = "/#/admin-login";
       }
     });
   };
@@ -154,41 +156,31 @@ const [checkPath, setCheckPath] = useState('/admin-create-account');
   const email = inputValue2;
   const password = inputValue3;
 
-   //Login status
-   const [loginStatus, setLoginStatus] = useState("false");
+  //Login status
+  const [loginStatus, setLoginStatus] = useState("false");
 
-   const checkLogin= () => {
-     Axios.post("http://localhost:5000/authAdmin", {
-       
-     }).then((response) => {
-         console.log(response.status);
-         if(response.data.message == 'Not authenticated'){
-             
-         }
-         else{
-           setLoginStatus("true")
-         }
-   
-     });
-   };
+  const checkLogin = () => {
+    Axios.post("http://localhost:5000/authAdmin", {}).then((response) => {
+      console.log(response.status);
+      if (response.data.message == "Not authenticated") {
+      } else {
+        setLoginStatus("true");
+      }
+    });
+  };
 
-var NavBar;
+  var NavBar;
 
-
-console.log(loginStatus);
+  console.log(loginStatus);
 
   return (
     <div onLoadStart={checkLogin} className="container-fluid account-section">
-      <div class="container">
-
-      </div>
+      <div class="container"></div>
       <div class="row">
         <div class="col-lg-6">
           <div class="blueDiv fadeInLeft">
             <h1>Admin account</h1>
-            <p>
-              Monitor transactions and Performance
-            </p>
+            <p>Monitor transactions and Performance</p>
           </div>
           <img
             className="img-fluid create-acc-vector fadeInUp"

@@ -25,30 +25,28 @@ const PensionDetails = () => {
 
   const [inputValue2, setInputValue2] = useState();
 
-  let onChange2 = (event) =>{
+  let onChange2 = (event) => {
     const newValue = event.target.value;
     setInputValue2(newValue);
-  }
+  };
 
-  const [employerfundstatus, setEmployerFundStatus] = useState('false');
+  const [employerfundstatus, setEmployerFundStatus] = useState("false");
 
-  const fundStatus = () =>{
-    const status = document.getElementById('employerfundstatus').checked;
-    if(status){
-      setEmployerFundStatus('true');
+  const fundStatus = () => {
+    const status = document.getElementById("employerfundstatus").checked;
+    if (status) {
+      setEmployerFundStatus("true");
+    } else {
+      setEmployerFundStatus("false");
     }
-    else{
-      setEmployerFundStatus('false');
-    }
-  }
+  };
 
   const [inputValue3, setInputValue3] = useState();
 
-  let onChange3 = (event) =>{
+  let onChange3 = (event) => {
     const newValue = event.target.value;
     setInputValue3(newValue);
-  }
-
+  };
 
   const checkAlerts = () => {
     if (inputValue == null) {
@@ -58,7 +56,7 @@ const PensionDetails = () => {
 
   //dropdown select
 
-  const [value, setValue] = React.useState('Britam');
+  const [value, setValue] = React.useState("Britam");
 
   const handleSelect = (event) => {
     setValue(event.target.value);
@@ -79,7 +77,6 @@ const PensionDetails = () => {
     document.getElementById("sig-card").style.display = "flex";
     document.getElementById("sig-card").style.zIndex = "1";
   };
-
 
   //Signature form
   var screenWidth = window.screen.width;
@@ -129,7 +126,7 @@ const PensionDetails = () => {
 
   //Path
   const [sig, setSig] = useState();
-  const userSignature =sig;
+  const userSignature = sig;
   const [checkPath, setcheckPath] = useState();
 
   function showAlert() {
@@ -152,36 +149,29 @@ const PensionDetails = () => {
     }
   };
 
-   //Login status
-   const [loginStatus, setLoginStatus] = useState("false");
+  //Login status
+  const [loginStatus, setLoginStatus] = useState("false");
 
-   const checkLogin= () => {
-     Axios.post("http://localhost:5000/auth", {
-       
-     }).then((response) => {
-         if(response.data.message == 'Not authenticated'){
-          window.history.go(-1);
-         }
-         else{
-           setLoginStatus("true")
-         }
-   
-     });
-   };
+  const checkLogin = () => {
+    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+      if (response.data.message == "Not authenticated") {
+        window.history.go(-1);
+      } else {
+        setLoginStatus("true");
+      }
+    });
+  };
 
-   //Variables sent to the backend
-   const companyName = inputValue;
-   const companyEmail = inputValue2;
-   const provider = value;
-   const isFundedByEmployer = employerfundstatus;
-   const additionalInfo =inputValue3;
-   const transferStatus = 0;
- 
+  //Variables sent to the backend
+  const companyName = inputValue;
+  const companyEmail = inputValue2;
+  const provider = value;
+  const isFundedByEmployer = employerfundstatus;
+  const additionalInfo = inputValue3;
+  const transferStatus = 0;
 
-
-   //Sending user pension details to the backend
-   const pensionDetails = () => {
-
+  //Sending user pension details to the backend
+  const pensionDetails = () => {
     Axios.post("http://localhost:5000/pensionDetails", {
       companyName: companyName,
       companyEmail: companyEmail,
@@ -189,7 +179,6 @@ const PensionDetails = () => {
       isFundedByEmployer: isFundedByEmployer,
       additionalInfo: additionalInfo,
       transferStatus: transferStatus,
-      
     }).then((response) => {
       console.log(response.data.message);
     });
@@ -197,13 +186,10 @@ const PensionDetails = () => {
 
   //Send user signature to backend
   const userSig = () => {
-
     Axios.post("http://localhost:5000/userSignature", {
       userSignature: sigData,
-      
     }).then((response) => {
       console.log(response.data.message);
-      
     });
   };
 
@@ -216,12 +202,15 @@ const PensionDetails = () => {
     );
   } else {
     nextBtn = (
-      <button onClick={handleModal} onMouseDown={pensionDetails} className="createACC-btn">
+      <button
+        onClick={handleModal}
+        onMouseDown={pensionDetails}
+        className="createACC-btn"
+      >
         Next
       </button>
     );
   }
-
 
   return (
     <div onLoad={checkLogin} className="container-fluid account-section">
@@ -279,7 +268,7 @@ const PensionDetails = () => {
                 <br />
                 <br />
                 <input
-                onChange={onChange2}
+                  onChange={onChange2}
                   type="email"
                   name="companyEmail"
                   className="inputbox"
@@ -313,17 +302,23 @@ const PensionDetails = () => {
                   <option value="ICEA ">ICEA </option>
                   <option value="The Monarch ">The Monarch </option>
                   <option value="CIC Life">CIC Life</option>
-                  <option value="Corporate Insurance">Corporate Insurance</option>
+                  <option value="Corporate Insurance">
+                    Corporate Insurance
+                  </option>
                   <option value="Madison">Madison</option>
                   <option value="Saham">Saham</option>
                   <option value="Liberty Life">Liberty Life</option>
-                  <option value="Capex Life Insurance">Capex Life Insurance</option>
+                  <option value="Capex Life Insurance">
+                    Capex Life Insurance
+                  </option>
                 </select>
               </label>
               <label for="AdditionalInformation">
                 <span>
                   Additional Information{" "}
-                  <span oncChange={onChange3} className="optional-field-text">(Optional)</span>
+                  <span oncChange={onChange3} className="optional-field-text">
+                    (Optional)
+                  </span>
                 </span>
                 <br />
                 <br />
@@ -338,7 +333,12 @@ const PensionDetails = () => {
 
               <div className="d-flex">
                 <div className="check-box">
-                  <input className="checkBox" onClick={fundStatus} type="checkbox" id="employerfundstatus"/>
+                  <input
+                    className="checkBox"
+                    onClick={fundStatus}
+                    type="checkbox"
+                    id="employerfundstatus"
+                  />
                 </div>
                 <p>This pension is currently being funded by my employer.</p>
               </div>

@@ -10,12 +10,10 @@ import img1 from "../Assets/create-acc-vector.png";
 
 Axios.defaults.withCredentials = true;
 const CreateAccount = () => {
+  //Create account button
+  var createAccountBtn;
 
-
-//Create account button
-var createAccountBtn;
-
-const [checkPath, setCheckPath] = useState('/clientDetails');
+  const [checkPath, setCheckPath] = useState("/clientDetails");
 
   //Add user
   const addUser = () => {
@@ -26,13 +24,15 @@ const [checkPath, setCheckPath] = useState('/clientDetails');
       email: email,
       password: password,
     }).then((response) => {
-      if(response.data=="A username with that email already exists! Try logging in"){
-        window.location.href="/#/create-account";
+      if (
+        response.data ==
+        "A username with that email already exists! Try logging in"
+      ) {
+        window.location.href = "/#/create-account";
         alert(response.data);
-      }
-      else{
+      } else {
         console.log(response);
-        window.location.href="/#/login";
+        window.location.href = "/#/login";
       }
     });
   };
@@ -159,80 +159,69 @@ const [checkPath, setCheckPath] = useState('/clientDetails');
   const email = inputValue2;
   const password = inputValue3;
 
-//Send email
-var to,subject,text;
+  //Send email
+  var to, subject, text;
 
-to=email;
-   
-subject="Welcome email";
-text="Welcome to pensionplus.";
+  to = email;
 
-const sendEmail = () => {
+  subject = "Welcome email";
+  text = "Welcome to pensionplus.";
 
-  Axios.post("http://localhost:5000/send", {
-    to:to,
-    subject:subject,
-    text:text,
-  }).then((response) => {
-    alert(response);
-  });
-};
+  const sendEmail = () => {
+    Axios.post("http://localhost:5000/send", {
+      to: to,
+      subject: subject,
+      text: text,
+    }).then((response) => {
+      alert(response);
+    });
+  };
 
-   //Login status
-   const [loginStatus, setLoginStatus] = useState("false");
+  //Login status
+  const [loginStatus, setLoginStatus] = useState("false");
 
-   const checkLogin= () => {
-     Axios.post("http://localhost:5000/auth", {
-       
-     }).then((response) => {
-         console.log(response.status);
-         if(response.data.message == 'Not authenticated'){
-             
-         }
-         else{
-           setLoginStatus("true")
-         }
-   
-     });
-   };
+  const checkLogin = () => {
+    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+      console.log(response.status);
+      if (response.data.message == "Not authenticated") {
+      } else {
+        setLoginStatus("true");
+      }
+    });
+  };
 
-   
+  var NavBar;
 
-var NavBar;
-
-if(loginStatus == "true"){
-  NavBar = (
-    <>
-    <Router>
-      <Switch>
-        <Route exact path="/create-account">
-          <NavbarSignedIn />
-        </Route>
-      </Switch>
-    </Router>
-  </>
-  )
-}
-else{
-  NavBar = (
-    <>
-      <Router>
-        <Switch>
-          <Route exact path="/create-account">
-            <Navbar />
-          </Route>
-        </Switch>
-      </Router>
-    </>
-  )
-}
-console.log(loginStatus);
+  if (loginStatus == "true") {
+    NavBar = (
+      <>
+        <Router>
+          <Switch>
+            <Route exact path="/create-account">
+              <NavbarSignedIn />
+            </Route>
+          </Switch>
+        </Router>
+      </>
+    );
+  } else {
+    NavBar = (
+      <>
+        <Router>
+          <Switch>
+            <Route exact path="/create-account">
+              <Navbar />
+            </Route>
+          </Switch>
+        </Router>
+      </>
+    );
+  }
+  console.log(loginStatus);
 
   return (
     <div onLoadStart={checkLogin} className="container-fluid account-section">
-      <div class="container">
-      {NavBar}
-      </div>
+      <div class="container">{NavBar}</div>
       <div class="row">
         <div class="col-lg-6">
           <div class="blueDiv fadeInBottom">
