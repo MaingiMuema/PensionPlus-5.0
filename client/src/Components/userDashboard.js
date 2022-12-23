@@ -235,6 +235,8 @@ function UserDashboard() {
     });
   };
 
+  console.log(data);
+
   var screenWidth = window.screen.width;
   var casegraphWidth;
   var casegraphHeight;

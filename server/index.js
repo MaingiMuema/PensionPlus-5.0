@@ -1154,6 +1154,44 @@ app.post('/clientProfileTotalContributions', (req, res) => {
     )
 });
 
+//Get year from useaccount table
+app.post('/getCases', (req, res) => {
+
+   db.query("SELECT DATE_FORMAT(create_time, '%M') AS month, DATE_FORMAT(create_time, '%Y-%M') AS monthAndYear FROM useraccount WHERE create_time > (now()+30) - INTERVAL 12 MONTH",
+   (err, result) =>{
+    if(err){
+        console.log({err : err});
+    }
+    if(result.length > 0){
+        res.send(result);
+    }
+    else{
+        res.send(result);
+    }
+   }
+   )
+       
+});
+
+//Get year from useaccount table
+app.post('/getMonth', (req, res) => {
+
+    db.query("SELECT create_time AS year FROM useraccount WHERE create_time > now() - INTERVAL 3 day",
+    (err, result) =>{
+     if(err){
+         console.log({err : err});
+     }
+     if(result.length > 0){
+         res.send(result);
+     }
+     else{
+         res.send("No data");
+     }
+    }
+    )
+        
+ });
+
 
 app.listen(5000, ()=>{
     console.log("Server is running on port 5000");
