@@ -96,68 +96,7 @@ function AdminDashboard() {
 
   const [combinedCashAmount, setCombinedCashAmount] = useState([]);
 
-  const [portfolioData, setportfolioData] = useState([
-    {
-      name: "Feb",
-      value: 50,
-      fill: "#db4e7b",
-    },
-    {
-      name: "Jan",
-      value: 20,
-      fill: "#c51ff2",
-    },
-    {
-      name: "Dec",
-      value: 4,
-      fill: "#c3d874",
-    },
-    {
-      name: "Nov",
-      value: 40,
-      fill: "#0075C9",
-    },
-    {
-      name: "Oct",
-      value: 28,
-      fill: "#00C975",
-    },
-    {
-      name: "Sep",
-      value: 55,
-      fill: "#8884d8",
-    },
-    {
-      name: "Aug",
-      value: 34,
-      fill: "#7c6104",
-    },
-    {
-      name: "Jul",
-      value: 45,
-      fill: "#518f9e",
-    },
-    {
-      name: "Jun",
-      value: 50,
-      fill: "#ac9bfd",
-    },
-    {
-      name: "May",
-      value: 67,
-      fill: "#7e7f93",
-    },
-    {
-      name: "Apr",
-      value: 20,
-      fill: "#93018a",
-    },
-    {
-      name: "Mar",
-      value: 12,
-      fill: "#5459a4",
-    },
-  ]);
+  const [portfolioData, setportfolioData] = useState(0);
 
   //Getting total combined to populate combine pie
   const pieData = () => {
@@ -173,6 +112,7 @@ function AdminDashboard() {
           );
         }
         setCombinedAmount(response.data.combinedCumulative[0].totalCombined);
+        const tCombinedAmnt = response.data.combinedCumulative[0].totalCombined;
 
         var monthSort = []; //Array to store sorted months
 
@@ -231,90 +171,105 @@ function AdminDashboard() {
           } else {
           }
         }
+
+        //Monthly shortform percentages
+        const jp = ((JanuaryAmount*100)/tCombinedAmnt).toFixed(3);
+        const fp = ((FebruaryAmount*100)/tCombinedAmnt).toFixed(3);
+        const mp = ((MarchAmount*100)/tCombinedAmnt).toFixed(3);
+        const ap = ((AprilAmount*100)/tCombinedAmnt).toFixed(3);
+        const Map = ((MayAmount*100)/tCombinedAmnt).toFixed(3);
+        const Jup = ((JuneAmount*100)/tCombinedAmnt).toFixed(3);
+        const Julp = ((JulyAmount*100)/tCombinedAmnt).toFixed(3);
+        const Aup = ((AugustAmount*100)/tCombinedAmnt).toFixed(3);
+        const sp = ((SeptemberAmount*100)/tCombinedAmnt).toFixed(3);
+        const op = ((OctoberAmount*100)/tCombinedAmnt).toFixed(3);
+        const np = ((NovemberAmount*100)/tCombinedAmnt).toFixed(3);
+        const dp = ((DecemberAmount*100)/tCombinedAmnt).toFixed(3);
+
         var totalMonthlyAmounts = []; //An array that stores the monthly totals
 
         //A for loop to match Month to a corresponding index and also populate the totalMonthlyTotals array with monthly totals
         for (i = 0; i < 12; i++) {
           if (i == 0) {
             if (JanuaryAmount > 0) {
-              monthSort[i] = "Jan";
+              monthSort[i] = "Jan" + " " + jp +"%";
               totalMonthlyAmounts[i] = JanuaryAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 1) {
             if (FebruaryAmount > 0) {
-              monthSort[i] = "Feb";
+              monthSort[i] = "Feb" + " " + fp +"%";
               totalMonthlyAmounts[i] = FebruaryAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 2) {
             if (MarchAmount > 0) {
-              monthSort[i] = "Mar";
+              monthSort[i] = "Mar" + " " + mp +"%";
               totalMonthlyAmounts[i] = MarchAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 3) {
             if (AprilAmount > 0) {
-              monthSort[i] = "Apr";
+              monthSort[i] = "Apr" + " " + ap +"%";
               totalMonthlyAmounts[i] = AprilAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 4) {
             if (MayAmount > 0) {
-              monthSort[i] = "May";
+              monthSort[i] = "May" + " " + Map +"%";
               totalMonthlyAmounts[i] = MayAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 5) {
             if (JuneAmount > 0) {
-              monthSort[i] = "Jun";
+              monthSort[i] = "Jun" + " " + Jup +"%";
               totalMonthlyAmounts[i] = JuneAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 6) {
             if (JulyAmount > 0) {
-              monthSort[i] = "Jul";
+              monthSort[i] = "Jul" + " " + Julp +"%";
               totalMonthlyAmounts[i] = JulyAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 7) {
             if (AugustAmount > 0) {
-              monthSort[i] = "Aug";
+              monthSort[i] = "Aug" + " " + Aup +"%";
               totalMonthlyAmounts[i] = AugustAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 8) {
             if (SeptemberAmount > 0) {
-              monthSort[i] = "Sep";
+              monthSort[i] = "Sep" + " " + sp +"%";
               totalMonthlyAmounts[i] = SeptemberAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 9) {
             if (OctoberAmount > 0) {
-              monthSort[i] = "Oct";
+              monthSort[i] = "Oct" + " " + op +"%";
               totalMonthlyAmounts[i] = OctoberAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 10) {
             if (NovemberAmount > 0) {
-              monthSort[i] = "Nov";
+              monthSort[i] = "Nov" + " " + np +"%";
               totalMonthlyAmounts[i] = NovemberAmount;
             } else {
               monthSort[i] = "";
             }
           } else if (i == 11) {
             if (DecemberAmount > 0) {
-              monthSort[i] = "Dec";
+              monthSort[i] = "Dec" + " " + dp +"%";
               totalMonthlyAmounts[i] = DecemberAmount;
             } else {
               monthSort[i] = "";
@@ -1298,7 +1253,7 @@ function AdminDashboard() {
   const checkId = (event) => {
     const newValue = event.target.value;
     const newValue1 = newValue.trim();
-    const newValue2 = parseInt(newValue1);
+    const newValue2 = (newValue1);
     setClientId(newValue2);
   };
 
@@ -1477,7 +1432,7 @@ function AdminDashboard() {
 
   var cId = searchValue.slice(idStart, idEnd);
 
-  var idNumber = parseInt(cId);
+  var idNumber = (cId);
 
   //User profile details
   const [clientName, setClientName] = useState("");
@@ -1888,6 +1843,33 @@ function AdminDashboard() {
             <div className="col-lg-5">
               <div className="col-12">
                 <div className="dashboardCard text-sm" id="portfolioChart">
+                <PieChart className="mx-auto" width={400} height={220}>
+                    <Pie
+                      data={combinedCashAmount}
+                      cx={175}
+                      cy={100}
+                      innerRadius={30}
+                      outerRadius={80}
+                      dataKey="value"
+                      nameKey="name"
+                      isAnimationActive={true}
+                    >
+                      <LabelList
+                        dataKey="name"
+                        position="outside"
+                        fill="#000"
+                        stroke="#000"
+                        style={{
+                          "font-size": "small",
+                          "font-weight": "lighter",
+                        }}
+                      />
+                    </Pie>
+                  </PieChart>
+                  <p className="text-center">
+                    Total annual Combined Amount: &nbsp;
+                    <b> Ksh{combinedAmount}</b>
+                  </p>
                   <PieChart className="mx-auto" width={400} height={220}>
                     <Pie
                       data={portfolioData}
@@ -1915,33 +1897,6 @@ function AdminDashboard() {
                   <p className="text-center">
                     Total annual Contributed Amount: &nbsp;
                     <b> Ksh{contributionAmount}</b>
-                  </p>
-                  <PieChart className="mx-auto" width={400} height={220}>
-                    <Pie
-                      data={combinedCashAmount}
-                      cx={175}
-                      cy={100}
-                      innerRadius={30}
-                      outerRadius={80}
-                      dataKey="value"
-                      nameKey="name"
-                      isAnimationActive={true}
-                    >
-                      <LabelList
-                        dataKey="name"
-                        position="outside"
-                        fill="#000"
-                        stroke="#000"
-                        style={{
-                          "font-size": "small",
-                          "font-weight": "lighter",
-                        }}
-                      />
-                    </Pie>
-                  </PieChart>
-                  <p className="text-center">
-                    Total annual Combined Amount: &nbsp;
-                    <b> Ksh{combinedAmount}</b>
                   </p>
                 </div>
               </div>
