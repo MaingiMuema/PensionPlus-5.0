@@ -15,7 +15,6 @@ import {
   Label,
 } from "recharts";
 import TableComponent from "./tableComponent";
-import DashboardBtns from "./dashboardBtns";
 import Axios from "axios";
 import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
 
@@ -28,7 +27,7 @@ import img4 from "../../Assets/whiteWithdrawIcon.png";
 function AdminDashboard() {
   //Queued transfers data
   const [queuedDataHeader, setQueuedDataHeaders] = useState([
-    "Client Name",
+    "Client name",
     "Client Email",
     "Phone Number",
     "Client ID",
@@ -38,7 +37,6 @@ function AdminDashboard() {
     "Pension Provider",
     "Current Employer",
     "Transfer Status",
-    "Signature",
   ]);
 
   const [queuedData, setQueuedData] = useState([]);
@@ -52,6 +50,7 @@ function AdminDashboard() {
       }
     });
   };
+
 
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
@@ -73,7 +72,6 @@ function AdminDashboard() {
     checkLogin();
     totalContributions();
     pendingTransfers();
-    casePerformance();
     adName();
     queuedTransfers();
     contributionsTable();
@@ -91,10 +89,356 @@ function AdminDashboard() {
     });
   };
 
+  // Total Combine cash for the last year
+  const [combinedAmount, setCombinedAmount] = useState(0);
+
+  // Total contributed amount for the last year
+  const [contributionAmount, setContributionAmount] = useState(0);
+
+  const [combinedCashAmount, setCombinedCashAmount] = useState([]);
+
+  const [portfolioData, setportfolioData] = useState([
+    {
+      name: "Feb",
+      value: 50,
+      fill: "#db4e7b",
+    },
+    {
+      name: "Jan",
+      value: 20,
+      fill: "#c51ff2",
+    },
+    {
+      name: "Dec",
+      value: 4,
+      fill: "#c3d874",
+    },
+    {
+      name: "Nov",
+      value: 40,
+      fill: "#0075C9",
+    },
+    {
+      name: "Oct",
+      value: 28,
+      fill: "#00C975",
+    },
+    {
+      name: "Sep",
+      value: 55,
+      fill: "#8884d8",
+    },
+    {
+      name: "Aug",
+      value: 34,
+      fill: "#7c6104",
+    },
+    {
+      name: "Jul",
+      value: 45,
+      fill: "#518f9e",
+    },
+    {
+      name: "Jun",
+      value: 50,
+      fill: "#ac9bfd",
+    },
+    {
+      name: "May",
+      value: 67,
+      fill: "#7e7f93",
+    },
+    {
+      name: "Apr",
+      value: 20,
+      fill: "#93018a",
+    },
+    {
+      name: "Mar",
+      value: 12,
+      fill: "#5459a4",
+    },
+  ]);
+
+
+    //Getting total combined to populate combine pie
+    const pieData = () => {
+      Axios.post("http://localhost:5000/getPieData", {}).then((response) => {
+        if (response.data == "No combined pensions") {
+          setCombinedAmount(0);
+        } 
+        else {
+          if(response.data.contributedCumulative[0].totalContributed == null){
+            setContributionAmount(0);
+          }
+          else{
+            setContributionAmount(response.data.contributedCumulative[0].totalContributed);
+          }  
+          setCombinedAmount(response.data.combinedCumulative[0].totalCombined);
+
+          var monthSort = [];//Array to store sorted months
+
+          var i;
+
+          //Initialize months
+          var JanuaryAmount = 0;
+          var FebruaryAmount = 0;
+          var MarchAmount = 0;
+          var AprilAmount = 0;
+          var MayAmount = 0;
+          var JuneAmount = 0;
+          var JulyAmount = 0;
+          var AugustAmount = 0;
+          var SeptemberAmount = 0;
+          var OctoberAmount = 0;
+          var NovemberAmount = 0;
+          var DecemberAmount = 0;
+
+          var month;
+          var amount = 0;
+
+          //For loop to add every month's combined pensions
+
+          for(i = 0; i<response.data.combineMonthAndYear.length; i++){
+           
+            month = response.data.combineMonthAndYear[i].monthAndYear.slice(5, response.data.combineMonthAndYear[i].monthAndYear.length); //Get month from date string response
+            amount = response.data.combineMonthAndYear[i].amount;//Get amount from from the JSON object
+          
+            if(month == "January"){
+              JanuaryAmount = JanuaryAmount + amount;
+            }
+            else if(month =="February"){
+              FebruaryAmount = FebruaryAmount + amount;
+            }
+            else if(month =="March"){
+              MarchAmount = MarchAmount + amount;
+            }
+            else if(month =="April"){
+              AprilAmount = AprilAmount + amount;
+            }
+            else if(month =="May"){
+              MayAmount = MayAmount + amount;
+            }
+            else if(month =="June"){
+              JuneAmount = JuneAmount + amount;
+            }
+            else if(month =="July"){
+              JulyAmount = JulyAmount + amount;
+            }
+            else if(month =="August"){
+              AugustAmount = AugustAmount + amount;
+            }
+            else if(month =="September"){
+              SeptemberAmount = SeptemberAmount + amount;
+            }
+            else if(month =="October"){
+              OctoberAmount = OctoberAmount + amount;
+            }
+            else if(month =="November"){
+              NovemberAmount = NovemberAmount + amount;
+            }
+            else if(month =="December"){
+              DecemberAmount = DecemberAmount + amount;
+            }
+            else{
+
+            }
+
+          }
+          var totalMonthlyAmounts = [];//An array that stores the monthly totals
+          
+          //A for loop to match Month to a corresponding index and also populate the totalMonthlyTotals array with monthly totals
+          for(i = 0; i < 12; i++){
+                       
+            if(i == 0){
+              if(JanuaryAmount > 0){
+                monthSort[i] = "Jan";
+                totalMonthlyAmounts[i] = JanuaryAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 1){
+              if(FebruaryAmount > 0){
+                monthSort[i] = "Feb";
+                totalMonthlyAmounts[i] = FebruaryAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 2){
+              if(MarchAmount > 0){
+                monthSort[i] = "Mar";
+                totalMonthlyAmounts[i] = MarchAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 3){
+              if(AprilAmount > 0){
+              monthSort[i] = "Apr";
+              totalMonthlyAmounts[i] = AprilAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 4){
+              if(MayAmount > 0){
+              monthSort[i] = "May";
+              totalMonthlyAmounts[i] = MayAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 5){
+              if(JuneAmount > 0){
+              monthSort[i] = "Jun";
+              totalMonthlyAmounts[i] = JuneAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 6){
+              if(JulyAmount > 0){
+              monthSort[i] = "Jul";
+              totalMonthlyAmounts[i] = JulyAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 7){
+              if(AugustAmount > 0){
+              monthSort[i] = "Aug";
+              totalMonthlyAmounts[i] = AugustAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 8){
+              if(SeptemberAmount > 0){
+              monthSort[i] = "Sep";
+              totalMonthlyAmounts[i] = SeptemberAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 9){
+              if(OctoberAmount > 0){
+              monthSort[i] = "Oct";
+              totalMonthlyAmounts[i] = OctoberAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 10){
+              if(NovemberAmount > 0){
+              monthSort[i] = "Nov";
+              totalMonthlyAmounts[i] = NovemberAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else if(i == 11){
+              if(DecemberAmount > 0){
+              monthSort[i] = "Dec";
+              totalMonthlyAmounts[i] = DecemberAmount;
+              }
+              else{
+                monthSort[i] = "";
+              }
+            }
+            else{
+
+            }
+          }
+
+          var combinedAmount = [];
+          
+          combinedAmount = [
+            {
+              name: monthSort[0],
+              value: totalMonthlyAmounts[0],
+              fill: "#a978f1"
+            },
+            {
+              name: monthSort[1],
+              value: totalMonthlyAmounts[1],
+              fill: "#d786e1"
+            },
+            {
+              name: monthSort[2],
+              value: totalMonthlyAmounts[2],
+              fill: "#e294c8"
+            },
+            {
+              name: monthSort[3],
+              value: totalMonthlyAmounts[3],
+              fill: "#ffbbd4"
+            },
+            {
+              name: monthSort[4],
+              value: totalMonthlyAmounts[4],
+              fill: "#c995bd"
+            },
+            {
+              name: monthSort[5],
+              value: totalMonthlyAmounts[5],
+              fill: "#816993"
+            },
+            {
+              name: monthSort[6],
+              value: totalMonthlyAmounts[6],
+              fill: "#696b93"
+            },
+            {
+              name: monthSort[7],
+              value: totalMonthlyAmounts[7],
+              fill: "#0f3960"
+            },
+            {
+              name: monthSort[8],
+              value: totalMonthlyAmounts[8],
+              fill: "#696b93"
+            },
+            {
+              name: monthSort[9],
+              value: totalMonthlyAmounts[9],
+              fill: "#8f74a3"
+            },
+            {
+              name: monthSort[10],
+              value: totalMonthlyAmounts[10],
+              fill: "#ffbbd4"
+            },
+            {
+              name: monthSort[11],
+              value: totalMonthlyAmounts[11],
+              fill: "#6072fd"
+            }           
+          ];
+
+          setCombinedCashAmount(combinedAmount);
+        }
+
+      });
+    };
+
   //Get total pending pension transfers
   const [pendingPensions, setPendingTransfer] = useState(0);
 
   const pendingTransfers = () => {
+    pieData();
     Axios.post("http://localhost:5000/totalPendingTransfers", {}).then(
       (response) => {
         if (response.data.message != "No Pending transfers") {
@@ -122,9 +466,6 @@ function AdminDashboard() {
     greetings = "Good evening";
     dayWish = "Have a wonderful evening ";
   }
-
-  // Total cash in the company wallet
-  const [totalCashAmount, setTotalCashAmount] = useState(0);
 
   //Get admin name from backend
   const adName = () => {
@@ -156,28 +497,14 @@ const getCases = () => {
             var NovemberCases = 0;
             var DecemberCases = 0;
             let i;
-            var year = [];
             var yearSort = [];
 
-
-            console.log(response.data);
             setMonth(response.data);
            
             for(i = 0; i<response.data.length; i++){
                 yearSort[i] = response.data[i].monthAndYear;
             }
-
-            for(i = 0; i<response.data.length; i++){
-                year[i] = response.data[i].monthAndYear;
-            }
-
-            console.log(year);
-
-            let uniqueYears = yearSort.filter((element, index) => {
-                return yearSort.indexOf(element) === index;
-            });
-            
-            console.log(uniqueYears);
+  
 
             //A for loop to Find total cases for each month
             for(i = 0; i < response.data.length; i++){
@@ -228,8 +555,7 @@ const getCases = () => {
             //A for loop to match Month to a corresponding index and also populate the totalMonthlyCases array with monthly totals
             for(i = 0; i<12; i++){
 
-                year= response.data[i].monthAndYear.slice(5, response.data[i].monthAndYear.length);
-                var yearSort1 = yearSort[i].slice(5, response.data[i].monthAndYear.length);
+                var yearSort1 = yearSort[i].slice(5, yearSort[i].length);
                 
                 if(i == 0){
                     if(yearSort1 == "January"){
@@ -993,13 +1319,7 @@ const getCases = () => {
                                                        
                 ]
             }
-
-
-
-           
-           
-             
-            console.log(casesArray);   
+  
 
             setData(casesArray);
         }
@@ -1007,19 +1327,7 @@ const getCases = () => {
     );
   };
 
-  setInterval(getCases(), 3000);
-
-  //Total cases calculate by finding the aggregate of total monthly cases
-
-  const casePerformance = () => {
-    Axios.post("http://localhost:5000/casePerformance", {}).then((response) => {
-
-      if (response) {
-      } else {
-        console.log("No amount combined or contributed!");
-      }
-    });
-  };
+  //setInterval(getCases(), 2000);
 
   var screenWidth = window.screen.width;
   var casegraphWidth;
@@ -1038,71 +1346,8 @@ const getCases = () => {
     casegraphHeight = 450;
   }
 
-  const [portfolioData, setportfolioData] = useState([
-    {
-      name: "Feb",
-      value: 50,
-      fill: "#db4e7b",
-    },
-    {
-      name: "Jan",
-      value: 20,
-      fill: "#c51ff2",
-    },
-    {
-      name: "Dec",
-      value: 4,
-      fill: "#c3d874",
-    },
-    {
-      name: "Nov",
-      value: 40,
-      fill: "#0075C9",
-    },
-    {
-      name: "Oct",
-      value: 28,
-      fill: "#00C975",
-    },
-    {
-      name: "Sep",
-      value: 55,
-      fill: "#8884d8",
-    },
-    {
-      name: "Aug",
-      value: 34,
-      fill: "#7c6104",
-    },
-    {
-      name: "Jul",
-      value: 45,
-      fill: "#518f9e",
-    },
-    {
-      name: "Jun",
-      value: 50,
-      fill: "#ac9bfd",
-    },
-    {
-      name: "May",
-      value: 67,
-      fill: "#7e7f93",
-    },
-    {
-      name: "Apr",
-      value: 20,
-      fill: "#93018a",
-    },
-    {
-      name: "Mar",
-      value: 12,
-      fill: "#5459a4",
-    },
-  ]);
-
   const [recentContribDataHeader, setRecentContribDataHeader] = useState([
-    "Client Name",
+    "Client name",
     "Client ID",
     "Amount",
     "Phone Number",
@@ -1124,7 +1369,7 @@ const getCases = () => {
 
   const [recentWithdrawalsDataHeader, setRecentWithdrawalsDataHeader] =
     useState([
-      "Client Name",
+      "Client name",
       "Client ID",
       "Amount",
       "Phone Number",
@@ -1173,7 +1418,9 @@ const getCases = () => {
 
   const checkId = (event) => {
     const newValue = event.target.value;
-    setClientId(newValue);
+    const newValue1 = newValue.trim();
+    const newValue2 = parseInt(newValue1);
+    setClientId(newValue2);
   };
 
   //Pension Provider
@@ -1181,8 +1428,121 @@ const getCases = () => {
 
   const checkProvider = (event) => {
     const newValue = event.target.value;
-    setPensionProvider(newValue);
+    const newValue1 = newValue.trim();
+    setPensionProvider(newValue1);
   };
+
+  //Employer
+    const [clientEmployer, setClientEmployer] = useState("");
+
+    const checkEmployer = (event) => {
+      const newValue = event.target.value;
+      const newValue1 = newValue.trim();
+      setClientEmployer(newValue1);
+    };
+
+  //Get client Signature from backend
+
+  const emptySig = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAACWCAYAAAAmC+ydAAAAAXNSR0IArs4c6QAACXpJREFUeF7t1zENAAAMw7CVP+mxyOURqGTtyc4RIECAAAECBAgQIEAgEli0Y4YAAQIECBAgQIAAAQInQDwBAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAg8JsjAJdg2LaeAAAAAElFTkSuQmCC"
+
+  const [userSig, setUserSig] = useState(emptySig);
+
+
+  //Get client signature from backend
+
+  const getSig = () => {
+    sigCheck = (
+      <div className="loadContainer">
+        <div class="loading-container">
+            <div class="loading"></div>
+            <div id="loading-text">Waiting</div>
+        </div>
+      </div>
+    );
+    Axios.post("http://localhost:5000/getSig", {
+      clientId: clientId,
+      pensionProvider: pensionProvider,
+      clientEmployer: clientEmployer
+    }).then((response) => {
+      console.log(response);
+      if(response.data != "No Signature"){
+        setUserSig(response.data[0].userSignature);
+        sigCheck = (
+          <img src={userSig} alt="Client Signature" className="clientSig img-fluid"/>
+        );
+      }
+      
+    });
+  };
+
+  //Check signature form inputs
+  const checkSigData = () => {
+    sigCheck = (
+      <div className="loadContainer">
+        <div class="loading-container">
+            <div class="loading"></div>
+            <div id="loading-text">Waiting</div>
+        </div>
+      </div>
+    );
+    if (
+      (clientId == "" || clientId == null) &&
+      (pensionProvider == "" || pensionProvider == null) &&
+      (clientEmployer == "" || clientEmployer == null)
+    ) {
+      alert("Please input Client Id, pension provider and Employer to get signature!");
+    } else if (clientId == "" || clientId == null) {
+      alert("Please input Client Id!");
+    } else if (pensionProvider == "" || pensionProvider == null) {
+      alert("Please input the Pension provider!");
+    } else if(clientEmployer == "" || clientEmployer == null) {
+      alert("Please input the Employer name!");
+    }
+     else {
+      getSig();
+    }
+  };
+
+  //checking if signature has loaded
+  var sigCheck;
+
+  if(userSig == emptySig){
+    sigCheck = (
+    <div className="loadContainer">
+      <div class="loading-container">
+          <div class="loading"></div>
+          <div id="loading-text">Waiting</div>
+      </div>
+    </div>
+    );
+  }
+  else{
+    sigCheck = (
+      <img src={userSig} alt="Client Signature" className="clientSig img-fluid"/>
+    );
+  }
+
+    //Download Signature
+
+    const onDownload = () =>{
+      if(userSig == emptySig){
+        alert("No signature to download");
+      }
+      else{
+      fetch(userSig).then(response => {
+          response.blob().then(blob => {
+              // Creating new object of Image file
+              const fileURL = window.URL.createObjectURL(blob);
+              // Setting various property values
+              let alink = document.createElement('a');
+              alink.href = fileURL;
+              alink.download = userSig;
+              alink.click();
+          })
+      })
+    }
+  }
+  
 
   //Send Transfer update status to backend
 
@@ -1190,10 +1550,11 @@ const getCases = () => {
     Axios.post("http://localhost:5000/statusUpdate", {
       clientId: clientId,
       pensionAmount: pensionAmount,
+      clientEmployer: clientEmployer,
       status: status,
       pensionProvider: pensionProvider,
     }).then((response) => {
-      console.log(response.data);
+    
     });
   };
 
@@ -1390,7 +1751,7 @@ const getCases = () => {
               <h1>Dashboard</h1>
             </div>
           </div>
-          <div class="col-lg-2">
+          <div class="col-lg-3">
             <div className="dWrapper">
               <div className="dashboardCard fadeInUp">
                 <div className="totalPot d-flex">
@@ -1403,7 +1764,7 @@ const getCases = () => {
                         Total Cases:
                         <br />
                         <br />{" "}
-                        <p className="totalPotAmount">
+                        <p className="totalPotAmount totalcounts">
                           <b>{totalCases}</b>
                         </p>
                       </p>
@@ -1413,28 +1774,7 @@ const getCases = () => {
               </div>
             </div>
           </div>
-          <div className="col-lg-3">
-            <div className="dWrapper">
-              <div className="dashboardCard fadeInUp">
-                <div className="totalPot d-flex">
-                  <span className="d-flex gap-3">
-                    <div className="totalIcon"></div>
-                    <div className="align-middle">
-                      <p className="">
-                        Pending pensions:
-                        <br />
-                        <br />{" "}
-                        <p className="totalPotAmount">
-                          <b>{pendingPensions}</b>
-                        </p>
-                      </p>
-                    </div>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-3">
+          <div className="col-lg-4">
             <div className="d-flex justify-content-center">
               <div className="applausCard fadeInRight">
                 <h4>
@@ -1453,11 +1793,13 @@ const getCases = () => {
                 <div className="d-flex justify-content-center">
                   <button className="dashboardButton ">
                     <div className="buttonIcon">
-                      <img
-                        className="img-fluid bIcon"
-                        src={img2}
-                        alt="total Icon"
-                      />
+                        <div className="align-middle">
+                        <p className="">
+                            <p className="counts">
+                            <b>{pendingPensions}</b>
+                            </p>
+                        </p>
+                        </div>
                     </div>
                     <br />
                     <span className="btnText">Pending Transfers</span>
@@ -1470,14 +1812,16 @@ const getCases = () => {
                 <div className="d-flex justify-content-center">
                   <button className="dashboardButton ">
                     <div className="buttonIcon">
-                      <img
-                        className="img-fluid bIcon"
-                        src={img3}
-                        alt="total Icon"
-                      />
+                        <div className="align-middle">
+                        <p className="">
+                            <p className="counts">
+                            <b>{0}</b>
+                            </p>
+                        </p>
+                        </div>
                     </div>
                     <br />
-                    <span className="btnText">Recent Contributions</span>
+                    <span className="btnText">Contributions</span>
                   </button>
                 </div>
               </Link>
@@ -1487,14 +1831,16 @@ const getCases = () => {
                 <div className="d-flex justify-content-center">
                   <button className="dashboardButton ">
                     <div className="buttonIcon">
-                      <img
-                        className="img-fluid bIcon"
-                        src={img4}
-                        alt="total Icon"
-                      />
+                        <div className="align-middle">
+                        <p className="">
+                            <p className="counts">
+                            <b>{0}</b>
+                            </p>
+                        </p>
+                        </div>
                     </div>
                     <br />
-                    <span className="btnText">Recent Withdrawals</span>
+                    <span className="btnText">Withdrawals</span>
                   </button>
                 </div>
               </Link>
@@ -1542,7 +1888,7 @@ const getCases = () => {
                 <div className="row">
                   <div className="col-lg-6">
                     <span>
-                      <b>Name: &nbsp;</b>
+                      <b>name: &nbsp;</b>
                       {clientName}
                     </span>
                   </div>
@@ -1613,7 +1959,7 @@ const getCases = () => {
                   </div>
                 </div>
                 <button className="call-to-action-deleteBTN">
-                  Delete client Profile
+                  Delete client account
                 </button>
               </div>
             </div>
@@ -1685,11 +2031,11 @@ const getCases = () => {
                   </PieChart>
                   <br />
                   <p className="text-center">
-                    Total Contributed Amount: &nbsp;<b> Ksh{totalPotAmount}</b>
+                    Total annual Contributed Amount: &nbsp;<b> Ksh{contributionAmount}</b>
                   </p>
                   <PieChart className="mx-auto" width={400} height={220}>
                     <Pie
-                      data={portfolioData}
+                      data={combinedCashAmount}
                       cx={175}
                       cy={100}
                       innerRadius={30}
@@ -1711,7 +2057,7 @@ const getCases = () => {
                     </Pie>
                   </PieChart>
                   <p className="text-center">
-                    Total Combined Amount: &nbsp;<b> Ksh{totalCashAmount}</b>
+                    Total annual Combined Amount: &nbsp;<b> Ksh{combinedAmount}</b>
                   </p>
                 </div>
               </div>
@@ -1724,18 +2070,39 @@ const getCases = () => {
               tableHeaders={queuedDataHeader}
               data={queuedData}
             />
-            <button
-              data-bs-toggle="collapse"
-              href="#collapseExample"
-              data-bs-target="#collapseExample"
-              role="button"
-              aria-expanded="false"
-              aria-bs-controls="collapseExample"
-              className="call-to-action-admin"
-            >
-              {" "}
-              Update status
-            </button>
+            <div className="updateSigBTNS row">
+              <div className="col-sm-4 d-flex justify-content-center">
+                <button
+                  data-bs-toggle="collapse"
+                  href="#collapseExample"
+                  data-bs-target="#collapseExample"
+                  role="button"
+                  aria-expanded="false"
+                  aria-bs-controls="collapseExample"
+                  className="call-to-action-admin"
+                >
+                  {" "}
+                  Update status
+                </button>
+              </div>
+              <div className="col-sm-4">
+                
+              </div>
+              <div className="col-sm-4 d-flex justify-content-center">
+                <button
+                  data-bs-toggle="collapse"
+                  href="#collapseExample1"
+                  data-bs-target="#collapseExample1"
+                  role="button"
+                  aria-expanded="false"
+                  aria-bs-controls="collapseExample1"
+                  className="call-to-action-admin"
+                >
+                  {" "}
+                  Client Signature
+                </button>
+              </div>
+            </div>
             <div className="updateContainer row  collapse" id="collapseExample">
               <div className="col-lg-3"></div>
               <div className="col-lg-6">
@@ -1751,7 +2118,7 @@ const getCases = () => {
                       <br />
                       <br />
                       <input
-                        type="number"
+                        type="text"
                         onChange={checkId}
                         onPaste={checkId}
                         name="ID"
@@ -1770,6 +2137,21 @@ const getCases = () => {
                         type="text"
                         onChange={checkProvider}
                         onPaste={checkProvider}
+                        className="inputbox"
+                        id="provider"
+                        placeholder="Pension provider name"
+                        required
+                      />
+                    </label>
+                    <label for="provider">
+                      <span className="requiredField">*</span>
+                      <span>Employer name</span>
+                      <br />
+                      <br />
+                      <input
+                        type="text"
+                        onChange={checkEmployer}
+                        onPaste={checkEmployer}
                         className="inputbox"
                         id="provider"
                         placeholder="Pension provider name"
@@ -1822,7 +2204,8 @@ const getCases = () => {
                       />
                     </label>
                     <button
-                      onClick={checkData}
+                      onMouseDown={checkData}
+                      onMouseUp={queuedTransfers}
                       data-bs-toggle="collapse"
                       href="#collapseExample"
                       data-bs-target="#collapseExample"
@@ -1837,6 +2220,101 @@ const getCases = () => {
                 </div>
               </div>
               <div className="col-lg-3"></div>
+            </div>
+            <div className="updateContainer row  collapse" id="collapseExample1">
+              <div className="col-lg-3"></div>
+              <div className="col-lg-6">
+                <h3 className="text-center">
+                  Get client Signature for a particular pension transfer request.
+                </h3>
+                <div className="account-Form d-flex justify-content-center">
+                  <div className="updateForm">
+                    <label for="idNo">
+                      <span className="requiredField">*</span>
+                      <span>Client ID number</span>
+                      <br />
+                      <br />
+                      <input
+                        type="text"
+                        onChange={checkId}
+                        onPaste={checkId}
+                        name="ID"
+                        className="inputbox"
+                        id="id_No"
+                        placeholder="ID number"
+                        required
+                      />
+                    </label>
+                    <label for="provider">
+                      <span className="requiredField">*</span>
+                      <span>Pension Provider</span>
+                      <br />
+                      <br />
+                      <input
+                        type="text"
+                        onChange={checkProvider}
+                        onPaste={checkProvider}
+                        className="inputbox"
+                        id="provider"
+                        placeholder="Pension provider name"
+                        required
+                      />
+                    </label>
+                    <label for="provider">
+                      <span className="requiredField">*</span>
+                      <span>Employer name</span>
+                      <br />
+                      <br />
+                      <input
+                        type="text"
+                        onChange={checkEmployer}
+                        onPaste={checkEmployer}
+                        className="inputbox"
+                        id="provider"
+                        placeholder="Pension provider name"
+                        required
+                      />
+                    </label>
+                    <button
+                      onClick={checkSigData}
+                      className="createACC-btn"
+                    >
+                      Acquire signature
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3"></div>
+              <div className="userSig">
+               <div className="d-flex justify-content-center sigbox">
+                {
+                 sigCheck
+                }
+                </div> 
+
+                { /*     
+                <div className="urlImg">
+                  <p>{userSig}</p>
+                </div>
+                */}
+                <div className="row">
+                    <div className="col">
+
+                    </div>
+                    <div className="col d-flex justify-content-center">
+                      <button
+                        className="call-to-action-admin"
+                        onClick={onDownload}
+                      >
+                        {" "}
+                        Download 
+                      </button>
+                    </div>
+                    <div className="col">
+                      
+                    </div>
+                </div>
+              </div>
             </div>
           </div>
 

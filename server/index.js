@@ -881,25 +881,23 @@ app.post('/adminAuth', (req, res, next) =>{
 
 //4. Get number of cases and date of enrolment to populate graph
 
-app.post('/casePerformance', (req, res) => {
+app.post('/getCases', (req, res) => {
 
-        db.query("SELECT id, DATE_FORMAT(create_time, '%m') AS timeStamp FROM useraccount ORDER BY create_time ASC;", 
-        (err, result) =>{
-            if(err){
-                console.log({err : err});
-            }
-            if(result.length > 0){
-               res.send(result);
-            }
-            else{
-                res.send({message: "No cases"});
-              
-            }
-
-            
-        }
-        );
-});
+    db.query("SELECT DATE_FORMAT(create_time, '%M') AS month, DATE_FORMAT(create_time, '%Y-%M') AS monthAndYear FROM useraccount WHERE create_time > (now()) - INTERVAL 12 MONTH",
+    (err, result) =>{
+     if(err){
+         console.log({err : err});
+     }
+     if(result.length > 0){
+         res.send(result);
+     }
+     else{
+         res.send(result);
+     }
+    }
+    )
+        
+ });
 
 //5. Admin dashboard pending transfer table
 app.post("/")
@@ -909,7 +907,7 @@ app.post("/")
 app.post('/queuedTransfers', (req, res) => {
     
 
-        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.phone, userdetails.id_no, userdetails.employment_status, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, pensiondetails.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus, pensiondetails.usersignature FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId RIGHT JOIN pensiondetails ON userdetails.userId = pensiondetails.userId RIGHT JOIN transactions ON pensiondetails.userId = transactions.userId WHERE transactions.transferStatus < 100 AND transactions.transferStatus = pensiondetails.transferStatus;", 
+        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.phone, userdetails.id_no, userdetails.employment_status, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, pensiondetails.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId RIGHT JOIN pensiondetails ON userdetails.userId = pensiondetails.userId RIGHT JOIN transactions ON pensiondetails.userId = transactions.userId WHERE transactions.transferStatus < 100 AND transactions.transferStatus = pensiondetails.transferStatus;", 
     
         (err, result) =>{
             if(err){
@@ -938,19 +936,20 @@ app.post('/statusUpdate', (req, res) => {
     const clientId = req.body.clientId;
     const pensionAmount = req.body.pensionAmount;
     const status = req.body.status;
+    const clientEmployer = req.body.clientEmployer;
     const pensionProvider = req.body.pensionProvider;
 
     console.log(pensionProvider);
 
-    db.query("UPDATE transactions SET transferStatus = ?, Amount = ?  WHERE idNo = ? AND PensionProvider = ?;", 
-    [status, pensionAmount, clientId, pensionProvider], 
+    db.query("UPDATE pensiondetails SET transferStatus = ? WHERE idNo = ? AND PensionProvider = ? AND employername = ?;", 
+    [status, clientId, pensionProvider, clientEmployer], 
     (err, result) =>{
         if(err){
             console.log(err);
         }
         else{                          
-            db.query("UPDATE pensiondetails SET transferStatus = ? WHERE idNo = ? AND PensionProvider = ?;", 
-            [status, clientId, pensionProvider], 
+            db.query("UPDATE transactions SET transferStatus = ?, Amount = ?  WHERE idNo = ? AND PensionProvider = ?;", 
+            [status, pensionAmount, clientId, pensionProvider], 
             (err, result) =>{
                 if(err){
                     
@@ -1014,7 +1013,7 @@ app.post('/withdrawTable', async(req, res) => {
     );
 });  
 
-//Search client 
+// 12. Search client 
 
 app.post('/getClient', async(req, res) => {
     
@@ -1036,7 +1035,7 @@ app.post('/getClient', async(req, res) => {
     );
 }); 
 
-//6. Get specific client details
+//13. Get specific client details
 
 app.post('/searchDetails', async(req, res) => {
    
@@ -1075,7 +1074,7 @@ app.post('/searchDetails', async(req, res) => {
  
 });
 
-// 11. Total Combined pensions
+// 14. Total Combined pensions
 app.post('/clientProfileTotalCombined', (req, res) => {
     //id from userAccount table
     const idNumber = req.body.idNumber;
@@ -1114,7 +1113,7 @@ app.post('/clientProfileTotalCombined', (req, res) => {
     )
 });
 
-// 12. Get Total contributions
+// 15. Get Total contributions
 app.post('/clientProfileTotalContributions', (req, res) => {
     //id from userAccount table
     const idNumber = req.body.idNumber;
@@ -1154,43 +1153,85 @@ app.post('/clientProfileTotalContributions', (req, res) => {
     )
 });
 
-//Get year from useaccount table
-app.post('/getCases', (req, res) => {
 
-   db.query("SELECT DATE_FORMAT(create_time, '%M') AS month, DATE_FORMAT(create_time, '%Y-%M') AS monthAndYear FROM useraccount WHERE create_time > (now()+30) - INTERVAL 12 MONTH",
-   (err, result) =>{
-    if(err){
-        console.log({err : err});
-    }
-    if(result.length > 0){
-        res.send(result);
-    }
-    else{
-        res.send(result);
-    }
-   }
-   )
-       
-});
+//16. Get total combined and contributed amounts from transactions table to populate pie charts in the admin dashboard
+app.post('/getPieData', (req, res) => {
 
-//Get year from useaccount table
-app.post('/getMonth', (req, res) => {
-
-    db.query("SELECT create_time AS year FROM useraccount WHERE create_time > now() - INTERVAL 3 day",
+    db.query("SELECT DATE_FORMAT(time, '%Y-%M') AS monthAndYear, amount FROM transactions WHERE time > (now()) - INTERVAL 12 MONTH AND transactiontype = \"Pension Transfer\" AND amount > 0",
     (err, result) =>{
-     if(err){
-         console.log({err : err});
-     }
-     if(result.length > 0){
-         res.send(result);
-     }
-     else{
-         res.send("No data");
-     }
+        if(err){
+            console.log({err : err});
+        }
+        if(result.length > 0){
+            
+            var combineMonthAndYear = result;
+
+            db.query("SELECT SUM(amount) AS totalCombined FROM transactions WHERE time > (now()) - INTERVAL 12 MONTH AND transactiontype = \"Pension Transfer\" AND amount > 0",
+            (err, result) =>{
+                if(err){
+                    console.log({err : err});
+                }
+                if(result.length > 0){  
+                    var combinedCumulative = result; 
+
+                    db.query("SELECT DATE_FORMAT(time, '%Y-%M') AS monthAndYear, amount FROM transactions WHERE time > (now()) - INTERVAL 12 MONTH AND transactiontype = \"contribution\" AND amount > 0",
+                    (err, result) =>{
+                        if(err){
+                            console.log({err : err});
+                        }
+                        if(result.length >= 0){  
+                            var contributeMonthAndYear = result;
+
+                            db.query("SELECT SUM(amount) AS totalContributed FROM transactions WHERE time > (now()) - INTERVAL 12 MONTH AND transactiontype = \"contribution\" AND amount > 0",
+                            (err, result) =>{
+                                if(err){
+                                    console.log({err : err});
+                                }
+                                if(result.length >= 0){  
+                
+                                    var contributedCumulative = result;
+                                    res.json({combineMonthAndYear, combinedCumulative, contributeMonthAndYear, contributedCumulative});
+                                }
+                            }
+                            );
+                        }
+                    }
+                    );
+                }
+            }
+            );
+        }
+        else{
+            res.send("No combined pensions");
+        }
     }
     )
         
  });
+
+ //17. Get client signature
+
+app.post('/getSig', async(req, res) => {
+    const clientId = req.body.clientId;
+    const pensionProvider = req.body.pensionProvider;
+    const clientEmployer = req.body.clientEmployer;
+
+    db.query("SELECT  userSignature FROM pensiondetails WHERE idNo = ? AND pensionprovider = ? AND employername = ?;", 
+    [clientId, pensionProvider, clientEmployer],
+    (err, result) =>{
+        if(err){
+            console.log({err : err});
+        }
+        if(result.length > 0){
+           res.send(result);
+        }
+        else{
+            res.send({message: "No Signature"});
+            
+        }
+    }
+    );
+}); 
 
 
 app.listen(5000, ()=>{

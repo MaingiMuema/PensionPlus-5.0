@@ -36,14 +36,18 @@ const ClientDetails = (props) => {
 
   let onChange = (event) => {
     const newValue = event.target.value;
-    setInputValue(newValue);
+    const newValue1 = newValue.trim();
+    const newValue2 = parseInt(newValue1);
+    setInputValue(newValue2);
   };
 
   const [inputValue2, setInputValue2] = useState();
 
   let onChange2 = (event) => {
     const newValue = event.target.value;
-    setInputValue2(newValue);
+    const newValue1 = newValue.trim();
+    const newValue2 = parseInt(newValue1);
+    setInputValue2(newValue2);
   };
 
   const [inputValue3, setInputValue3] = useState();
@@ -201,7 +205,7 @@ const ClientDetails = (props) => {
                 <br />
                 <br />
                 <input
-                  type="number"
+                  type="text"
                   onChange={onChange}
                   name="phoneNumber"
                   className="inputbox"
@@ -215,7 +219,7 @@ const ClientDetails = (props) => {
                 <br />
                 <br />
                 <input
-                  type="number"
+                  type="text"
                   onChange={onChange2}
                   name="ID"
                   className="inputbox"
