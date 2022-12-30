@@ -51,7 +51,6 @@ function AdminDashboard() {
     });
   };
 
-
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
 
@@ -160,279 +159,239 @@ function AdminDashboard() {
     },
   ]);
 
+  //Getting total combined to populate combine pie
+  const pieData = () => {
+    Axios.post("http://localhost:5000/getPieData", {}).then((response) => {
+      if (response.data == "No combined pensions") {
+        setCombinedAmount(0);
+      } else {
+        if (response.data.contributedCumulative[0].totalContributed == null) {
+          setContributionAmount(0);
+        } else {
+          setContributionAmount(
+            response.data.contributedCumulative[0].totalContributed
+          );
+        }
+        setCombinedAmount(response.data.combinedCumulative[0].totalCombined);
 
-    //Getting total combined to populate combine pie
-    const pieData = () => {
-      Axios.post("http://localhost:5000/getPieData", {}).then((response) => {
-        if (response.data == "No combined pensions") {
-          setCombinedAmount(0);
-        } 
-        else {
-          if(response.data.contributedCumulative[0].totalContributed == null){
-            setContributionAmount(0);
+        var monthSort = []; //Array to store sorted months
+
+        var i;
+
+        //Initialize months
+        var JanuaryAmount = 0;
+        var FebruaryAmount = 0;
+        var MarchAmount = 0;
+        var AprilAmount = 0;
+        var MayAmount = 0;
+        var JuneAmount = 0;
+        var JulyAmount = 0;
+        var AugustAmount = 0;
+        var SeptemberAmount = 0;
+        var OctoberAmount = 0;
+        var NovemberAmount = 0;
+        var DecemberAmount = 0;
+
+        var month;
+        var amount = 0;
+
+        //For loop to add every month's combined pensions
+
+        for (i = 0; i < response.data.combineMonthAndYear.length; i++) {
+          month = response.data.combineMonthAndYear[i].monthAndYear.slice(
+            5,
+            response.data.combineMonthAndYear[i].monthAndYear.length
+          ); //Get month from date string response
+          amount = response.data.combineMonthAndYear[i].amount; //Get amount from from the JSON object
+
+          if (month == "January") {
+            JanuaryAmount = JanuaryAmount + amount;
+          } else if (month == "February") {
+            FebruaryAmount = FebruaryAmount + amount;
+          } else if (month == "March") {
+            MarchAmount = MarchAmount + amount;
+          } else if (month == "April") {
+            AprilAmount = AprilAmount + amount;
+          } else if (month == "May") {
+            MayAmount = MayAmount + amount;
+          } else if (month == "June") {
+            JuneAmount = JuneAmount + amount;
+          } else if (month == "July") {
+            JulyAmount = JulyAmount + amount;
+          } else if (month == "August") {
+            AugustAmount = AugustAmount + amount;
+          } else if (month == "September") {
+            SeptemberAmount = SeptemberAmount + amount;
+          } else if (month == "October") {
+            OctoberAmount = OctoberAmount + amount;
+          } else if (month == "November") {
+            NovemberAmount = NovemberAmount + amount;
+          } else if (month == "December") {
+            DecemberAmount = DecemberAmount + amount;
+          } else {
           }
-          else{
-            setContributionAmount(response.data.contributedCumulative[0].totalContributed);
-          }  
-          setCombinedAmount(response.data.combinedCumulative[0].totalCombined);
+        }
+        var totalMonthlyAmounts = []; //An array that stores the monthly totals
 
-          var monthSort = [];//Array to store sorted months
-
-          var i;
-
-          //Initialize months
-          var JanuaryAmount = 0;
-          var FebruaryAmount = 0;
-          var MarchAmount = 0;
-          var AprilAmount = 0;
-          var MayAmount = 0;
-          var JuneAmount = 0;
-          var JulyAmount = 0;
-          var AugustAmount = 0;
-          var SeptemberAmount = 0;
-          var OctoberAmount = 0;
-          var NovemberAmount = 0;
-          var DecemberAmount = 0;
-
-          var month;
-          var amount = 0;
-
-          //For loop to add every month's combined pensions
-
-          for(i = 0; i<response.data.combineMonthAndYear.length; i++){
-           
-            month = response.data.combineMonthAndYear[i].monthAndYear.slice(5, response.data.combineMonthAndYear[i].monthAndYear.length); //Get month from date string response
-            amount = response.data.combineMonthAndYear[i].amount;//Get amount from from the JSON object
-          
-            if(month == "January"){
-              JanuaryAmount = JanuaryAmount + amount;
+        //A for loop to match Month to a corresponding index and also populate the totalMonthlyTotals array with monthly totals
+        for (i = 0; i < 12; i++) {
+          if (i == 0) {
+            if (JanuaryAmount > 0) {
+              monthSort[i] = "Jan";
+              totalMonthlyAmounts[i] = JanuaryAmount;
+            } else {
+              monthSort[i] = "";
             }
-            else if(month =="February"){
-              FebruaryAmount = FebruaryAmount + amount;
+          } else if (i == 1) {
+            if (FebruaryAmount > 0) {
+              monthSort[i] = "Feb";
+              totalMonthlyAmounts[i] = FebruaryAmount;
+            } else {
+              monthSort[i] = "";
             }
-            else if(month =="March"){
-              MarchAmount = MarchAmount + amount;
+          } else if (i == 2) {
+            if (MarchAmount > 0) {
+              monthSort[i] = "Mar";
+              totalMonthlyAmounts[i] = MarchAmount;
+            } else {
+              monthSort[i] = "";
             }
-            else if(month =="April"){
-              AprilAmount = AprilAmount + amount;
-            }
-            else if(month =="May"){
-              MayAmount = MayAmount + amount;
-            }
-            else if(month =="June"){
-              JuneAmount = JuneAmount + amount;
-            }
-            else if(month =="July"){
-              JulyAmount = JulyAmount + amount;
-            }
-            else if(month =="August"){
-              AugustAmount = AugustAmount + amount;
-            }
-            else if(month =="September"){
-              SeptemberAmount = SeptemberAmount + amount;
-            }
-            else if(month =="October"){
-              OctoberAmount = OctoberAmount + amount;
-            }
-            else if(month =="November"){
-              NovemberAmount = NovemberAmount + amount;
-            }
-            else if(month =="December"){
-              DecemberAmount = DecemberAmount + amount;
-            }
-            else{
-
-            }
-
-          }
-          var totalMonthlyAmounts = [];//An array that stores the monthly totals
-          
-          //A for loop to match Month to a corresponding index and also populate the totalMonthlyTotals array with monthly totals
-          for(i = 0; i < 12; i++){
-                       
-            if(i == 0){
-              if(JanuaryAmount > 0){
-                monthSort[i] = "Jan";
-                totalMonthlyAmounts[i] = JanuaryAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
-            }
-            else if(i == 1){
-              if(FebruaryAmount > 0){
-                monthSort[i] = "Feb";
-                totalMonthlyAmounts[i] = FebruaryAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
-            }
-            else if(i == 2){
-              if(MarchAmount > 0){
-                monthSort[i] = "Mar";
-                totalMonthlyAmounts[i] = MarchAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
-            }
-            else if(i == 3){
-              if(AprilAmount > 0){
+          } else if (i == 3) {
+            if (AprilAmount > 0) {
               monthSort[i] = "Apr";
               totalMonthlyAmounts[i] = AprilAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 4){
-              if(MayAmount > 0){
+          } else if (i == 4) {
+            if (MayAmount > 0) {
               monthSort[i] = "May";
               totalMonthlyAmounts[i] = MayAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 5){
-              if(JuneAmount > 0){
+          } else if (i == 5) {
+            if (JuneAmount > 0) {
               monthSort[i] = "Jun";
               totalMonthlyAmounts[i] = JuneAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 6){
-              if(JulyAmount > 0){
+          } else if (i == 6) {
+            if (JulyAmount > 0) {
               monthSort[i] = "Jul";
               totalMonthlyAmounts[i] = JulyAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 7){
-              if(AugustAmount > 0){
+          } else if (i == 7) {
+            if (AugustAmount > 0) {
               monthSort[i] = "Aug";
               totalMonthlyAmounts[i] = AugustAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 8){
-              if(SeptemberAmount > 0){
+          } else if (i == 8) {
+            if (SeptemberAmount > 0) {
               monthSort[i] = "Sep";
               totalMonthlyAmounts[i] = SeptemberAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 9){
-              if(OctoberAmount > 0){
+          } else if (i == 9) {
+            if (OctoberAmount > 0) {
               monthSort[i] = "Oct";
               totalMonthlyAmounts[i] = OctoberAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 10){
-              if(NovemberAmount > 0){
+          } else if (i == 10) {
+            if (NovemberAmount > 0) {
               monthSort[i] = "Nov";
               totalMonthlyAmounts[i] = NovemberAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else if(i == 11){
-              if(DecemberAmount > 0){
+          } else if (i == 11) {
+            if (DecemberAmount > 0) {
               monthSort[i] = "Dec";
               totalMonthlyAmounts[i] = DecemberAmount;
-              }
-              else{
-                monthSort[i] = "";
-              }
+            } else {
+              monthSort[i] = "";
             }
-            else{
-
-            }
+          } else {
           }
-
-          var combinedAmount = [];
-          
-          combinedAmount = [
-            {
-              name: monthSort[0],
-              value: totalMonthlyAmounts[0],
-              fill: "#a978f1"
-            },
-            {
-              name: monthSort[1],
-              value: totalMonthlyAmounts[1],
-              fill: "#d786e1"
-            },
-            {
-              name: monthSort[2],
-              value: totalMonthlyAmounts[2],
-              fill: "#e294c8"
-            },
-            {
-              name: monthSort[3],
-              value: totalMonthlyAmounts[3],
-              fill: "#ffbbd4"
-            },
-            {
-              name: monthSort[4],
-              value: totalMonthlyAmounts[4],
-              fill: "#c995bd"
-            },
-            {
-              name: monthSort[5],
-              value: totalMonthlyAmounts[5],
-              fill: "#816993"
-            },
-            {
-              name: monthSort[6],
-              value: totalMonthlyAmounts[6],
-              fill: "#696b93"
-            },
-            {
-              name: monthSort[7],
-              value: totalMonthlyAmounts[7],
-              fill: "#0f3960"
-            },
-            {
-              name: monthSort[8],
-              value: totalMonthlyAmounts[8],
-              fill: "#696b93"
-            },
-            {
-              name: monthSort[9],
-              value: totalMonthlyAmounts[9],
-              fill: "#8f74a3"
-            },
-            {
-              name: monthSort[10],
-              value: totalMonthlyAmounts[10],
-              fill: "#ffbbd4"
-            },
-            {
-              name: monthSort[11],
-              value: totalMonthlyAmounts[11],
-              fill: "#6072fd"
-            }           
-          ];
-
-          setCombinedCashAmount(combinedAmount);
         }
 
-      });
-    };
+        var combinedAmount = [];
+
+        combinedAmount = [
+          {
+            name: monthSort[0],
+            value: totalMonthlyAmounts[0],
+            fill: "#a978f1",
+          },
+          {
+            name: monthSort[1],
+            value: totalMonthlyAmounts[1],
+            fill: "#d786e1",
+          },
+          {
+            name: monthSort[2],
+            value: totalMonthlyAmounts[2],
+            fill: "#e294c8",
+          },
+          {
+            name: monthSort[3],
+            value: totalMonthlyAmounts[3],
+            fill: "#ffbbd4",
+          },
+          {
+            name: monthSort[4],
+            value: totalMonthlyAmounts[4],
+            fill: "#c995bd",
+          },
+          {
+            name: monthSort[5],
+            value: totalMonthlyAmounts[5],
+            fill: "#816993",
+          },
+          {
+            name: monthSort[6],
+            value: totalMonthlyAmounts[6],
+            fill: "#696b93",
+          },
+          {
+            name: monthSort[7],
+            value: totalMonthlyAmounts[7],
+            fill: "#0f3960",
+          },
+          {
+            name: monthSort[8],
+            value: totalMonthlyAmounts[8],
+            fill: "#696b93",
+          },
+          {
+            name: monthSort[9],
+            value: totalMonthlyAmounts[9],
+            fill: "#8f74a3",
+          },
+          {
+            name: monthSort[10],
+            value: totalMonthlyAmounts[10],
+            fill: "#ffbbd4",
+          },
+          {
+            name: monthSort[11],
+            value: totalMonthlyAmounts[11],
+            fill: "#6072fd",
+          },
+        ];
+
+        setCombinedCashAmount(combinedAmount);
+      }
+    });
+  };
 
   //Get total pending pension transfers
   const [pendingPensions, setPendingTransfer] = useState(0);
@@ -477,854 +436,774 @@ function AdminDashboard() {
     });
   };
 
-const [data, setData] = useState([]);
-const [Month, setMonth] = useState([]);
+  const [data, setData] = useState([]);
+  const [Month, setMonth] = useState([]);
 
-const getCases = () => {
-    Axios.post("http://localhost:5000/getCases", {}).then(
-      (response) => {
-       
-            var JanuaryCases = 0;
-            var FebruaryCases = 0;
-            var MarchCases = 0;
-            var AprilCases = 0;
-            var MayCases = 0;
-            var JuneCases = 0;
-            var JulyCases = 0;
-            var AugustCases = 0;
-            var SeptemberCases = 0;
-            var OctoberCases = 0;
-            var NovemberCases = 0;
-            var DecemberCases = 0;
-            let i;
-            var yearSort = [];
+  const getCases = () => {
+    Axios.post("http://localhost:5000/getCases", {}).then((response) => {
+      var JanuaryCases = 0;
+      var FebruaryCases = 0;
+      var MarchCases = 0;
+      var AprilCases = 0;
+      var MayCases = 0;
+      var JuneCases = 0;
+      var JulyCases = 0;
+      var AugustCases = 0;
+      var SeptemberCases = 0;
+      var OctoberCases = 0;
+      var NovemberCases = 0;
+      var DecemberCases = 0;
+      let i;
+      var yearSort = [];
 
-            setMonth(response.data);
-           
-            for(i = 0; i<response.data.length; i++){
-                yearSort[i] = response.data[i].monthAndYear;
-            }
-  
+      setMonth(response.data);
 
-            //A for loop to Find total cases for each month
-            for(i = 0; i < response.data.length; i++){
+      for (i = 0; i < response.data.length; i++) {
+        yearSort[i] = response.data[i].monthAndYear;
+      }
 
-                if(response.data[i].month == "January"){
-                    JanuaryCases = JanuaryCases +1;
-                }
-                else if(response.data[i].month == "February"){
-                    FebruaryCases = FebruaryCases +1;
-                }
-                else if(response.data[i].month == "March"){
-                    MarchCases = MarchCases + 1;
-                }
-                else if(response.data[i].month == "April"){
-                    AprilCases = AprilCases + 1;
-                }
-                else if(response.data[i].month == "May"){
-                    MayCases = MayCases + 1;
-                }
-                else if(response.data[i].month == "June"){
-                    JuneCases = JuneCases + 1;
-                }
-                else if(response.data[i].month == "July"){
-                    JulyCases = JulyCases + 1;
-                }
-                else if(response.data[i].month == "August"){
-                    AugustCases = AugustCases + 1;
-                }
-                else if(response.data[i].month == "September"){
-                    SeptemberCases = SeptemberCases + 1;
-                }
-                else if(response.data[i].month == "October"){
-                    OctoberCases =OctoberCases + 1;
-                }
-                else if(response.data[i].month == "November"){
-                    NovemberCases = NovemberCases + 1;
-                }
-                else if(response.data[i].month == "December"){
-                    DecemberCases = DecemberCases + 1;
-                }
-            }
-
-            var casesArray = [];//An array that store the a Month with its total cases.
-            var totalMonthlyCases = [];//An array that stores the monthly totals
-
-            
-
-            //A for loop to match Month to a corresponding index and also populate the totalMonthlyCases array with monthly totals
-            for(i = 0; i<12; i++){
-
-                var yearSort1 = yearSort[i].slice(5, yearSort[i].length);
-                
-                if(i == 0){
-                    if(yearSort1 == "January"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "January";
-                    }
-                    totalMonthlyCases[i] = JanuaryCases;
-                }
-                else if(i == 1){
-                    if(yearSort1 == "February"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "February";
-                    }
-                    totalMonthlyCases[i] = FebruaryCases;
-                }
-                else if(i == 2){
-                    if(yearSort1 == "March"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "March";
-                    }
-                    totalMonthlyCases[i] = MarchCases;
-                }
-                else if(i == 3){
-                    if(yearSort1 == "April"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "April";
-                    }
-                    totalMonthlyCases[i] = AprilCases;
-                }
-                else if(i == 4){
-                    if(yearSort1 == "May"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "May";
-                    }
-                    totalMonthlyCases[i] = MayCases;
-                }
-                else if(i == 5){
-                    if(yearSort1 == "June"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "June";
-                    }
-                    totalMonthlyCases[i] = JuneCases;
-                }
-                else if(i == 6){
-                    if(yearSort1 == "July"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "July";
-                    }
-                    totalMonthlyCases[i] = JulyCases;
-                }
-                else if(i == 7){
-                    if(yearSort1 == "August"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "August";
-                    }
-                    totalMonthlyCases[i] = AugustCases;
-                }
-                else if(i == 8){
-                    if(yearSort1 == "September"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "September";
-                    }
-                    totalMonthlyCases[i] = SeptemberCases;
-                }
-                else if(i == 9){
-                    if(yearSort1 == "October"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "October";
-                    }
-                    totalMonthlyCases[i] = OctoberCases;
-                }
-                else if(i == 10){
-                    if(yearSort1 == "November"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "November";
-                    }
-                    totalMonthlyCases[i] = NovemberCases;
-                }
-                else if(i == 11){
-                    if(yearSort1 == "December"){
-                        Month[i] = yearSort[i];
-                    }
-                    else{
-                        Month[i] = "December";
-                    }
-                    totalMonthlyCases[i] = DecemberCases;
-                }  
-            
-            }
-
-            let dateMonth = new Date();
-            let currentMonth = dateMonth.getMonth();
-
-            if(currentMonth == 0){
-                casesArray = [            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    }, 
-                                   
-                ]
-            }
-            else if(currentMonth == 1){
-                casesArray = [  
-                    
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                                   
-                ]
-            }
-            else if(currentMonth == 2){
-                casesArray = [  
-                   
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                                   
-                ]
-            }
-            else if(currentMonth == 3){
-                casesArray = [  
-                    
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                                   
-                ]
-            }
-            else if(currentMonth == 4){
-                casesArray = [  
-                   
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                                   
-                ]
-            }
-            else if(currentMonth == 5){
-                casesArray = [  
-                   
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                                   
-                ]
-            }
-            else if(currentMonth == 6){
-                casesArray = [  
-                   
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                                   
-                ]
-            }
-            else if(currentMonth == 7){
-                casesArray = [ 
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    }, 
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                   
-                                   
-                ]
-            }
-            else if(currentMonth == 8){
-                casesArray = [  
-                    
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                                                     
-                ]
-            }
-            else if(currentMonth == 9){
-                casesArray = [ 
-                    
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    }, 
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    
-                                                      
-                ]
-            }
-            else if(currentMonth == 10){
-                casesArray = [
-                    
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    },  
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                                                      
-                ]
-            }
-            else{
-                casesArray = [ 
-                   
-                    {
-                        month: Month[0],
-                        "Cases": totalMonthlyCases[0]
-                    },            
-                    {
-                        month: Month[1],
-                        "Cases": totalMonthlyCases[1]
-                    },
-                    {
-                        month: Month[2],
-                        "Cases": totalMonthlyCases[2]
-                    },
-                    {
-                        month: Month[3],
-                        "Cases": totalMonthlyCases[3]
-                    },
-                    {
-                        month: Month[4],
-                        "Cases": totalMonthlyCases[4]
-                    },
-                    {
-                        month: Month[5],
-                        "Cases": totalMonthlyCases[5]
-                    },
-                    {
-                        month: Month[6],
-                        "Cases": totalMonthlyCases[6]
-                    },
-                    {
-                        month: Month[7],
-                        "Cases": totalMonthlyCases[7]
-                    },
-                    {
-                        month: Month[8],
-                        "Cases": totalMonthlyCases[8]
-                    },
-                    {
-                        month: Month[9],
-                        "Cases": totalMonthlyCases[9]
-                    },
-                    {
-                        month: Month[10],
-                        "Cases": totalMonthlyCases[10]
-                    },
-                    {
-                        month: Month[11],
-                        "Cases": totalMonthlyCases[11]
-                    }, 
-                                                       
-                ]
-            }
-  
-
-            setData(casesArray);
+      //A for loop to Find total cases for each month
+      for (i = 0; i < response.data.length; i++) {
+        if (response.data[i].month == "January") {
+          JanuaryCases = JanuaryCases + 1;
+        } else if (response.data[i].month == "February") {
+          FebruaryCases = FebruaryCases + 1;
+        } else if (response.data[i].month == "March") {
+          MarchCases = MarchCases + 1;
+        } else if (response.data[i].month == "April") {
+          AprilCases = AprilCases + 1;
+        } else if (response.data[i].month == "May") {
+          MayCases = MayCases + 1;
+        } else if (response.data[i].month == "June") {
+          JuneCases = JuneCases + 1;
+        } else if (response.data[i].month == "July") {
+          JulyCases = JulyCases + 1;
+        } else if (response.data[i].month == "August") {
+          AugustCases = AugustCases + 1;
+        } else if (response.data[i].month == "September") {
+          SeptemberCases = SeptemberCases + 1;
+        } else if (response.data[i].month == "October") {
+          OctoberCases = OctoberCases + 1;
+        } else if (response.data[i].month == "November") {
+          NovemberCases = NovemberCases + 1;
+        } else if (response.data[i].month == "December") {
+          DecemberCases = DecemberCases + 1;
         }
-             
-    );
+      }
+
+      var casesArray = []; //An array that store the a Month with its total cases.
+      var totalMonthlyCases = []; //An array that stores the monthly totals
+
+      //A for loop to match Month to a corresponding index and also populate the totalMonthlyCases array with monthly totals
+      for (i = 0; i < 12; i++) {
+        var yearSort1 = yearSort[i].slice(5, yearSort[i].length);
+
+        if (i == 0) {
+          if (yearSort1 == "January") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "January";
+          }
+          totalMonthlyCases[i] = JanuaryCases;
+        } else if (i == 1) {
+          if (yearSort1 == "February") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "February";
+          }
+          totalMonthlyCases[i] = FebruaryCases;
+        } else if (i == 2) {
+          if (yearSort1 == "March") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "March";
+          }
+          totalMonthlyCases[i] = MarchCases;
+        } else if (i == 3) {
+          if (yearSort1 == "April") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "April";
+          }
+          totalMonthlyCases[i] = AprilCases;
+        } else if (i == 4) {
+          if (yearSort1 == "May") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "May";
+          }
+          totalMonthlyCases[i] = MayCases;
+        } else if (i == 5) {
+          if (yearSort1 == "June") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "June";
+          }
+          totalMonthlyCases[i] = JuneCases;
+        } else if (i == 6) {
+          if (yearSort1 == "July") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "July";
+          }
+          totalMonthlyCases[i] = JulyCases;
+        } else if (i == 7) {
+          if (yearSort1 == "August") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "August";
+          }
+          totalMonthlyCases[i] = AugustCases;
+        } else if (i == 8) {
+          if (yearSort1 == "September") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "September";
+          }
+          totalMonthlyCases[i] = SeptemberCases;
+        } else if (i == 9) {
+          if (yearSort1 == "October") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "October";
+          }
+          totalMonthlyCases[i] = OctoberCases;
+        } else if (i == 10) {
+          if (yearSort1 == "November") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "November";
+          }
+          totalMonthlyCases[i] = NovemberCases;
+        } else if (i == 11) {
+          if (yearSort1 == "December") {
+            Month[i] = yearSort[i];
+          } else {
+            Month[i] = "December";
+          }
+          totalMonthlyCases[i] = DecemberCases;
+        }
+      }
+
+      let dateMonth = new Date();
+      let currentMonth = dateMonth.getMonth();
+
+      if (currentMonth == 0) {
+        casesArray = [
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+        ];
+      } else if (currentMonth == 1) {
+        casesArray = [
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+        ];
+      } else if (currentMonth == 2) {
+        casesArray = [
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+        ];
+      } else if (currentMonth == 3) {
+        casesArray = [
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+        ];
+      } else if (currentMonth == 4) {
+        casesArray = [
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+        ];
+      } else if (currentMonth == 5) {
+        casesArray = [
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+        ];
+      } else if (currentMonth == 6) {
+        casesArray = [
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+        ];
+      } else if (currentMonth == 7) {
+        casesArray = [
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+        ];
+      } else if (currentMonth == 8) {
+        casesArray = [
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+        ];
+      } else if (currentMonth == 9) {
+        casesArray = [
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+        ];
+      } else if (currentMonth == 10) {
+        casesArray = [
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+        ];
+      } else {
+        casesArray = [
+          {
+            month: Month[0],
+            Cases: totalMonthlyCases[0],
+          },
+          {
+            month: Month[1],
+            Cases: totalMonthlyCases[1],
+          },
+          {
+            month: Month[2],
+            Cases: totalMonthlyCases[2],
+          },
+          {
+            month: Month[3],
+            Cases: totalMonthlyCases[3],
+          },
+          {
+            month: Month[4],
+            Cases: totalMonthlyCases[4],
+          },
+          {
+            month: Month[5],
+            Cases: totalMonthlyCases[5],
+          },
+          {
+            month: Month[6],
+            Cases: totalMonthlyCases[6],
+          },
+          {
+            month: Month[7],
+            Cases: totalMonthlyCases[7],
+          },
+          {
+            month: Month[8],
+            Cases: totalMonthlyCases[8],
+          },
+          {
+            month: Month[9],
+            Cases: totalMonthlyCases[9],
+          },
+          {
+            month: Month[10],
+            Cases: totalMonthlyCases[10],
+          },
+          {
+            month: Month[11],
+            Cases: totalMonthlyCases[11],
+          },
+        ];
+      }
+
+      setData(casesArray);
+    });
   };
 
   //setInterval(getCases(), 2000);
@@ -1433,20 +1312,20 @@ const getCases = () => {
   };
 
   //Employer
-    const [clientEmployer, setClientEmployer] = useState("");
+  const [clientEmployer, setClientEmployer] = useState("");
 
-    const checkEmployer = (event) => {
-      const newValue = event.target.value;
-      const newValue1 = newValue.trim();
-      setClientEmployer(newValue1);
-    };
+  const checkEmployer = (event) => {
+    const newValue = event.target.value;
+    const newValue1 = newValue.trim();
+    setClientEmployer(newValue1);
+  };
 
   //Get client Signature from backend
 
-  const emptySig = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAACWCAYAAAAmC+ydAAAAAXNSR0IArs4c6QAACXpJREFUeF7t1zENAAAMw7CVP+mxyOURqGTtyc4RIECAAAECBAgQIEAgEli0Y4YAAQIECBAgQIAAAQInQDwBAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAg8JsjAJdg2LaeAAAAAElFTkSuQmCC"
+  const emptySig =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAACWCAYAAAAmC+ydAAAAAXNSR0IArs4c6QAACXpJREFUeF7t1zENAAAMw7CVP+mxyOURqGTtyc4RIECAAAECBAgQIEAgEli0Y4YAAQIECBAgQIAAAQInQDwBAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAgIED8AAECBAgQIECAAAECmYAAyagNESBAgAABAgQIECAgQPwAAQIECBAgQIAAAQKZgADJqA0RIECAAAECBAgQICBA/AABAgQIECBAgAABApmAAMmoDREgQIAAAQIECBAg8JsjAJdg2LaeAAAAAElFTkSuQmCC";
 
   const [userSig, setUserSig] = useState(emptySig);
-
 
   //Get client signature from backend
 
@@ -1454,24 +1333,27 @@ const getCases = () => {
     sigCheck = (
       <div className="loadContainer">
         <div class="loading-container">
-            <div class="loading"></div>
-            <div id="loading-text">Waiting</div>
+          <div class="loading"></div>
+          <div id="loading-text">Waiting</div>
         </div>
       </div>
     );
     Axios.post("http://localhost:5000/getSig", {
       clientId: clientId,
       pensionProvider: pensionProvider,
-      clientEmployer: clientEmployer
+      clientEmployer: clientEmployer,
     }).then((response) => {
       console.log(response);
-      if(response.data != "No Signature"){
+      if (response.data != "No Signature") {
         setUserSig(response.data[0].userSignature);
         sigCheck = (
-          <img src={userSig} alt="Client Signature" className="clientSig img-fluid"/>
+          <img
+            src={userSig}
+            alt="Client Signature"
+            className="clientSig img-fluid"
+          />
         );
       }
-      
     });
   };
 
@@ -1480,8 +1362,8 @@ const getCases = () => {
     sigCheck = (
       <div className="loadContainer">
         <div class="loading-container">
-            <div class="loading"></div>
-            <div id="loading-text">Waiting</div>
+          <div class="loading"></div>
+          <div id="loading-text">Waiting</div>
         </div>
       </div>
     );
@@ -1490,15 +1372,16 @@ const getCases = () => {
       (pensionProvider == "" || pensionProvider == null) &&
       (clientEmployer == "" || clientEmployer == null)
     ) {
-      alert("Please input Client Id, pension provider and Employer to get signature!");
+      alert(
+        "Please input Client Id, pension provider and Employer to get signature!"
+      );
     } else if (clientId == "" || clientId == null) {
       alert("Please input Client Id!");
     } else if (pensionProvider == "" || pensionProvider == null) {
       alert("Please input the Pension provider!");
-    } else if(clientEmployer == "" || clientEmployer == null) {
+    } else if (clientEmployer == "" || clientEmployer == null) {
       alert("Please input the Employer name!");
-    }
-     else {
+    } else {
       getSig();
     }
   };
@@ -1506,43 +1389,44 @@ const getCases = () => {
   //checking if signature has loaded
   var sigCheck;
 
-  if(userSig == emptySig){
+  if (userSig == emptySig) {
     sigCheck = (
-    <div className="loadContainer">
-      <div class="loading-container">
+      <div className="loadContainer">
+        <div class="loading-container">
           <div class="loading"></div>
           <div id="loading-text">Waiting</div>
+        </div>
       </div>
-    </div>
     );
-  }
-  else{
+  } else {
     sigCheck = (
-      <img src={userSig} alt="Client Signature" className="clientSig img-fluid"/>
+      <img
+        src={userSig}
+        alt="Client Signature"
+        className="clientSig img-fluid"
+      />
     );
   }
 
-    //Download Signature
+  //Download Signature
 
-    const onDownload = () =>{
-      if(userSig == emptySig){
-        alert("No signature to download");
-      }
-      else{
-      fetch(userSig).then(response => {
-          response.blob().then(blob => {
-              // Creating new object of Image file
-              const fileURL = window.URL.createObjectURL(blob);
-              // Setting various property values
-              let alink = document.createElement('a');
-              alink.href = fileURL;
-              alink.download = userSig;
-              alink.click();
-          })
-      })
+  const onDownload = () => {
+    if (userSig == emptySig) {
+      alert("No signature to download");
+    } else {
+      fetch(userSig).then((response) => {
+        response.blob().then((blob) => {
+          // Creating new object of Image file
+          const fileURL = window.URL.createObjectURL(blob);
+          // Setting various property values
+          let alink = document.createElement("a");
+          alink.href = fileURL;
+          alink.download = userSig;
+          alink.click();
+        });
+      });
     }
-  }
-  
+  };
 
   //Send Transfer update status to backend
 
@@ -1553,9 +1437,7 @@ const getCases = () => {
       clientEmployer: clientEmployer,
       status: status,
       pensionProvider: pensionProvider,
-    }).then((response) => {
-    
-    });
+    }).then((response) => {});
   };
 
   const checkData = () => {
@@ -1793,13 +1675,13 @@ const getCases = () => {
                 <div className="d-flex justify-content-center">
                   <button className="dashboardButton ">
                     <div className="buttonIcon">
-                        <div className="align-middle">
+                      <div className="align-middle">
                         <p className="">
-                            <p className="counts">
+                          <p className="counts">
                             <b>{pendingPensions}</b>
-                            </p>
+                          </p>
                         </p>
-                        </div>
+                      </div>
                     </div>
                     <br />
                     <span className="btnText">Pending Transfers</span>
@@ -1812,13 +1694,13 @@ const getCases = () => {
                 <div className="d-flex justify-content-center">
                   <button className="dashboardButton ">
                     <div className="buttonIcon">
-                        <div className="align-middle">
+                      <div className="align-middle">
                         <p className="">
-                            <p className="counts">
+                          <p className="counts">
                             <b>{0}</b>
-                            </p>
+                          </p>
                         </p>
-                        </div>
+                      </div>
                     </div>
                     <br />
                     <span className="btnText">Contributions</span>
@@ -1831,13 +1713,13 @@ const getCases = () => {
                 <div className="d-flex justify-content-center">
                   <button className="dashboardButton ">
                     <div className="buttonIcon">
-                        <div className="align-middle">
+                      <div className="align-middle">
                         <p className="">
-                            <p className="counts">
+                          <p className="counts">
                             <b>{0}</b>
-                            </p>
+                          </p>
                         </p>
-                        </div>
+                      </div>
                     </div>
                     <br />
                     <span className="btnText">Withdrawals</span>
@@ -2031,7 +1913,8 @@ const getCases = () => {
                   </PieChart>
                   <br />
                   <p className="text-center">
-                    Total annual Contributed Amount: &nbsp;<b> Ksh{contributionAmount}</b>
+                    Total annual Contributed Amount: &nbsp;
+                    <b> Ksh{contributionAmount}</b>
                   </p>
                   <PieChart className="mx-auto" width={400} height={220}>
                     <Pie
@@ -2057,7 +1940,8 @@ const getCases = () => {
                     </Pie>
                   </PieChart>
                   <p className="text-center">
-                    Total annual Combined Amount: &nbsp;<b> Ksh{combinedAmount}</b>
+                    Total annual Combined Amount: &nbsp;
+                    <b> Ksh{combinedAmount}</b>
                   </p>
                 </div>
               </div>
@@ -2085,9 +1969,7 @@ const getCases = () => {
                   Update status
                 </button>
               </div>
-              <div className="col-sm-4">
-                
-              </div>
+              <div className="col-sm-4"></div>
               <div className="col-sm-4 d-flex justify-content-center">
                 <button
                   data-bs-toggle="collapse"
@@ -2221,11 +2103,15 @@ const getCases = () => {
               </div>
               <div className="col-lg-3"></div>
             </div>
-            <div className="updateContainer row  collapse" id="collapseExample1">
+            <div
+              className="updateContainer row  collapse"
+              id="collapseExample1"
+            >
               <div className="col-lg-3"></div>
               <div className="col-lg-6">
                 <h3 className="text-center">
-                  Get client Signature for a particular pension transfer request.
+                  Get client Signature for a particular pension transfer
+                  request.
                 </h3>
                 <div className="account-Form d-flex justify-content-center">
                   <div className="updateForm">
@@ -2275,10 +2161,7 @@ const getCases = () => {
                         required
                       />
                     </label>
-                    <button
-                      onClick={checkSigData}
-                      className="createACC-btn"
-                    >
+                    <button onClick={checkSigData} className="createACC-btn">
                       Acquire signature
                     </button>
                   </div>
@@ -2286,33 +2169,27 @@ const getCases = () => {
               </div>
               <div className="col-lg-3"></div>
               <div className="userSig">
-               <div className="d-flex justify-content-center sigbox">
-                {
-                 sigCheck
-                }
-                </div> 
+                <div className="d-flex justify-content-center sigbox">
+                  {sigCheck}
+                </div>
 
-                { /*     
+                {/*     
                 <div className="urlImg">
                   <p>{userSig}</p>
                 </div>
                 */}
                 <div className="row">
-                    <div className="col">
-
-                    </div>
-                    <div className="col d-flex justify-content-center">
-                      <button
-                        className="call-to-action-admin"
-                        onClick={onDownload}
-                      >
-                        {" "}
-                        Download 
-                      </button>
-                    </div>
-                    <div className="col">
-                      
-                    </div>
+                  <div className="col"></div>
+                  <div className="col d-flex justify-content-center">
+                    <button
+                      className="call-to-action-admin"
+                      onClick={onDownload}
+                    >
+                      {" "}
+                      Download
+                    </button>
+                  </div>
+                  <div className="col"></div>
                 </div>
               </div>
             </div>
