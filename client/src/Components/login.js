@@ -85,9 +85,7 @@ const LogIn = () => {
     );
   } else {
     logInBtn = (
-      <Link onMouseDown={login}>
-        <button class="createACC-btn">Login</button>
-      </Link>
+        <button onMouseDown={login} class="createACC-btn">Login</button>
     );
   }
 

@@ -153,6 +153,8 @@ const PensionDetails = () => {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
@@ -234,7 +236,7 @@ const PensionDetails = () => {
       <div class="row">
         <div class="col-lg-4">
           <div class="blueDiv fadeInLeft">
-            <h1>Almost there!</h1>
+            <h1>Secure your Pension</h1>
           </div>
         </div>
         <div class="col-lg-4 fadeInUp">

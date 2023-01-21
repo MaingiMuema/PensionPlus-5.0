@@ -17,7 +17,6 @@ const CreateAccount = () => {
 
   //Add user
   const addUser = () => {
-    sendEmail();
 
     Axios.post("http://localhost:5000/create", {
       name: name,
@@ -32,7 +31,9 @@ const CreateAccount = () => {
         alert(response.data);
       } else {
         console.log(response);
+        sendEmail();
         window.location.href = "/#/login";
+
       }
     });
   };
@@ -169,11 +170,12 @@ const CreateAccount = () => {
 
   const sendEmail = () => {
     Axios.post("http://localhost:5000/send", {
+      email: email,
       to: to,
       subject: subject,
       text: text,
     }).then((response) => {
-      alert(response);
+      console.log(response);
     });
   };
 
@@ -181,6 +183,8 @@ const CreateAccount = () => {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {

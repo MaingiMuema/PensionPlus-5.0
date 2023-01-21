@@ -67,6 +67,8 @@ const ConfirmPage = () => {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {

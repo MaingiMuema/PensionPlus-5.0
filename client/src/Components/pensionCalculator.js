@@ -210,8 +210,8 @@ function PensionCalculator() {
     );
   }
 
-  if (potDepletion < 1) {
-    result = <span>Try setting a goal by filling the fields!</span>;
+  if (potDepletion < 1 || TRP == 0) {
+    result = <span>Try setting a goal by filling fields!</span>;
   }
 
   //Calculate button
@@ -227,6 +227,8 @@ function PensionCalculator() {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
@@ -411,11 +413,6 @@ function PensionCalculator() {
             </div>
           </div>
         </form>
-        <div className="row">
-          <div className="col-lg-4"></div>
-          <div className="col-lg-4">{calculate}</div>
-          <div className="col-lg-4"></div>
-        </div>
         <div className="row">
           <div className="col-lg-3"></div>
           <div className="col-lg-6">

@@ -48,6 +48,124 @@ Navbar
   width: 100%;
 }
 
+@media  screen and (max-width: 1199px){
+  li .dropdown{
+      border: 0px;
+      background-color: #0075c9;
+      margin-top: 0px;
+      margin-left: -7px;
+    }
+
+    li .dropdown-content{
+      position: relative;
+      z-index: 2;
+      width: 70%;
+    }
+
+    li .dropdown button{
+      margin-top: 5px;
+    }
+
+}
+
+@media  screen and (max-width: 500px){
+  li .dropdown{
+      border: 0px;
+      background-color: #0075c9;
+      margin-top: 0px;
+      margin-left: -7px;
+    }
+
+    li .dropdown-content{
+      position: relative;
+      z-index: 2;
+      width: 70%;
+    }
+
+    li .dropdown button{
+      margin-top: 5px;
+    }
+
+}
+
+.nav-link:hover{
+  color: #0075c9;
+}
+
+.navLink-arrow{
+  transform: scale(0.3);
+  margin-left: -10px;
+}
+
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+  border-radius: 0px;
+  
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  overflow: auto;
+  z-index: 2;
+  width: 250%;
+  padding: 0px 25px 0px 25px;
+  background-color: #0075c9;
+}
+
+.dropdown button{
+  border: 0px;
+  background-color: #fff;
+  margin-top: -8px;
+  color: #000;
+  font-size: 14px;
+  transition: background-color 1s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.dropdown button:hover{
+  border: 0px;
+  background-color: #fff;
+  margin-top: -8px;
+  font-size: 14px;
+  color: #000;
+
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  background-color: #ffffff;
+  padding: 10px 25px 10px 25px;
+  background-color: #0075c9;
+  opacity: 0;
+  animation: navLinkDropdown 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.1s forwards;
+}
+
+@keyframes navLinkDropdown {
+  0% {
+    transform: translate(0px, 100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0px, 0);
+    opacity: 1;
+  }
+}
+
+.dropdown-content a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  transition: color 1s cubic-bezier(0.455, 0.03, 0.515, 0.955), background-color 1s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+.dropdown-content a:hover {
+  color: #fff;
+  background-color: #0461a4;
+ 
+}
+
 .linkWrapper {
   position: absolute;
   width: 100vw;
@@ -73,7 +191,7 @@ Navbar
 }
 
 .logIn-btn {
-  margin-right: 80px;
+  margin-right: 60px;
   text-decoration: none;
   color: #444;
   font-weight: 700;
@@ -1643,11 +1761,20 @@ table th:last-child {
 }
 
 .beneficiariesUpdate {
-  padding: 30px 0px 0 -50px;
+  padding: 30px 0px 0 -60px;
 }
 
 .updateBeneficiary {
   padding-left: 50px;
+}
+
+.addressContainer{
+  margin-top: 50px;
+}
+
+.Addresscheck{
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 /*
 
@@ -1872,6 +1999,29 @@ Input List of search suggestion
   margin-left: 6%;
   padding: 5px 10px 5px 10px;
   margin-top: 20px;
+}
+
+.term-heading{
+  padding: 100px 0 100px 0;
+  background-color: #0075c9;
+  color: white;
+}
+
+.termsParagraphText{
+  padding: 70px 20% 70px 20%;
+  font-size: 16px;
+}
+
+.blueTermsHeading{
+  color: #0075c9;
+}
+
+.h3TermsHeading{
+  padding: 50px 0 50px;
+}
+
+.deedTable{
+  padding: 70px 0 70px 0;
 }
 
 /*

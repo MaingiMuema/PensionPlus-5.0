@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import Logo from "../Assets/Logo.png";
+import navLinkArrow from "../Assets/navlink-arrow.png";
 
 const Navbar = () => {
+
   return (
     <nav className="navbar navbar-expand-xl navbar-light fadeInUp">
       <Link className="navbar-brand" to="/">
         <img src={Logo} alt="Logo" />
       </Link>
+
       <button
         class="navbar-toggler"
         type="button"
@@ -22,125 +25,78 @@ const Navbar = () => {
       <div className="navbar-collapse collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
-            <Link className="nav-link">About Us</Link>
+            <Link className="nav-link">About</Link>
           </li>
-          <li className="nav-item">
-            <a
-              data-bs-toggle="collapse"
-              href="#serviceDropdown"
-              data-bs-target="#serviceDropdown"
-              role="button"
-              aria-expanded="false"
-              aria-bs-controls="serviceDropdown"
-            >
-              <Link className="nav-link">Services</Link>
+
+          <li className="nav-item dropdown">
+            <a>
+              <Link className="nav-link dropdown-toggle">Services</Link>
             </a>
-            <div className="collapse navLinkDropdown" id="serviceDropdown">
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Combine
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Contribute
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  WorkPlace Pension
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Self-employed Saver
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Consultancy
-                </Link>
-              </div>
+            <div className="navLinkDropdown dropdown-content">
+               <a href="#">
+                  <Link to="/userDashboard">Combine</Link>
+                </a>
+                <a href="#">
+                  <Link to="/userDashboard">Contribute</Link>
+                </a>
+                <a href="#">
+                  <Link to="/consultancy">Consultancy</Link>
+                </a>
             </div>
           </li>
-          <li className="nav-item">
-            <a
-              data-bs-toggle="collapse"
-              href="#resourceDropdown"
-              data-bs-target="#resourceDropdown"
-              role="button"
-              aria-expanded="false"
-              aria-bs-controls="resourceDropdown"
-            >
-              <Link className="nav-link">Resources</Link>
+         
+          <li className="nav-item dropdown">
+            <a>
+              <Link className="nav-link dropdown-toggle">Resources</Link>
             </a>
-            <div className="collapse navLinkDropdown" id="resourceDropdown">
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" to="/pensionCalculator">
-                  Pension Calculator
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Pensions Explained
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  FAQs
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Terms & Conditions
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Contact Us
-                </Link>
-              </div>
+            <div className="navLinkDropdown dropdown-content">
+               <a href="#">
+                  <Link to="/pensionCalculator">Pension Calculator</Link>
+                </a>
+                <a href="#">
+                  <Link to="/pensionsExplained">Pensions Explained</Link>
+                </a>
+                <a href="#">
+                  <Link to="/combineProcess">WorkPlace Pension</Link>
+                </a>
+                <a href="#">
+                  <Link to="/contributeProcess">Self-employed Saver</Link>
+                </a>
+                <a href="#">
+                  <Link to="/FAQs">FAQs</Link>
+                </a>
+                <a href="#">
+                  <Link to="/terms">Terms & Conditions</Link>
+                </a>
+                <a href="#">
+                  <Link to="/">Contact Us</Link>
+                </a>
             </div>
           </li>
-          <li className="nav-item">
-            <a
-              data-bs-toggle="collapse"
-              href="#ourPensionDropdown"
-              data-bs-target="#ourPensionDropdown"
-              role="button"
-              aria-expanded="false"
-              aria-bs-controls="ourPensionDropdown"
-            >
-              <Link className="nav-link">Our Pension</Link>
+
+          <li className="nav-item dropdown">
+            <a>
+              <Link className="nav-link dropdown-toggle">Our Pension</Link>
             </a>
-            <div className="collapse navLinkDropdown" id="ourPensionDropdown">
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Our Pension
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  How it works
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Transfers
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Contributions
-                </Link>
-              </div>
-              <div className="dropdownLinkContainer">
-                <Link className="dropdownLink" href="#">
-                  Withdraw
-                </Link>
-              </div>
+            <div className="navLinkDropdown dropdown-content">
+               <a href="#">
+                  <Link to="/ourPension">Our Pension</Link>
+                </a>
+                <a href="#">
+                  <Link to="/howItWorks">How it works</Link>
+                </a>
+                <a href="#">
+                  <Link to="/userDashboard">Transfers</Link>
+                </a>
+                <a href="#">
+                  <Link to="/userDashboard">Contributions</Link>
+                </a>
+                <a href="#">
+                  <Link to="/userDashboard">Withdraw</Link>
+                </a>
             </div>
           </li>
+
         </ul>
 
         <div className="acc-btns">

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 //Images
 
-import img1 from "../Assets/Hero-Section Phone (1).png";
+import img1 from "../Assets/Hero-Section-Phone-_1_.webp";
 import img2 from "../Assets/Bonus badge.png";
 import img3 from "../Assets/Personal pension.png";
 import img4 from "../Assets/Workplace pension.png";
@@ -98,6 +98,8 @@ function Landingpage() {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
       } else {

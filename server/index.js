@@ -572,7 +572,7 @@ app.post('/updateUserName', (req, res) => {
                 );
 })
 
-//Update userEmail
+// 17. Update userEmail
 
 app.post('/updateUserEmail', (req, res) => {
     const userEmail = req.body.userEmail;
@@ -591,7 +591,7 @@ app.post('/updateUserEmail', (req, res) => {
                 );
 })
 
-//Update userPhone
+//18. Update userPhone
 
 app.post('/updateUserPhone', (req, res) => {
     const userPhone = req.body.userPhone;
@@ -610,7 +610,7 @@ app.post('/updateUserPhone', (req, res) => {
                 );
 })
 
-//Update userId
+//19. Update userId
 
 app.post('/updateUserId', (req, res) => {
     const id = req.body.userID;
@@ -650,7 +650,7 @@ app.post('/updateUserId', (req, res) => {
 
 })
 
-//Update dob
+//20. Update dob
 
 app.post('/updateDOB', (req, res) => {
     const dob = req.body.dob;
@@ -669,7 +669,7 @@ app.post('/updateDOB', (req, res) => {
                 );
 })
 
-//Update employment status
+//21. Update employment status
 
 app.post('/updateEmploymentStatus', (req, res) => {
     const employmentStatus = req.body.employmentStatus;
@@ -688,16 +688,17 @@ app.post('/updateEmploymentStatus', (req, res) => {
                 );
 })
 
-//Benefiary details
+//22. Benefiary details
 app.post('/beneficiaryDetails', (req, res) => {
     const beneficiaryFirstName =  req.body.beneficiaryFirstName;
     const  beneficiaryLastName =  req.body.beneficiaryLastName;
     const  beneficiarydob = req.body.beneficiarydob;
     const benefit = req.body.benefit;
+    const relationship = req.body.relationship;
     const userId = req.session.user[0].id;
 
-    db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, benefit, userId) VALUES (?, ?, ?, ?, ?);", 
-    [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, benefit, userId], 
+    db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, relationship, benefit, userId) VALUES (?, ?, ?, ?, ?, ?);", 
+    [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, relationship, benefit, userId], 
     (err, result) =>{
         if(err){
             console.log(err);
@@ -709,9 +710,8 @@ app.post('/beneficiaryDetails', (req, res) => {
     );
 })
 
-// Get beneficiaries
+//23. Get beneficiaries
 
-//Benefiary details
 app.post('/beneficiaries', (req, res) => {
     const userId = req.session.user[0].id;
 
@@ -727,6 +727,47 @@ app.post('/beneficiaries', (req, res) => {
         }
         else{
            res.send("No beneficiaries");
+        }
+    }
+    );
+})
+
+//24. Insert client Address
+app.post('/clientAddress', (req, res) => {
+    const addressInput =  req.body.addressInput;
+    const userId = req.session.user[0].id;
+
+    db.query("UPDATE userdetails SET address = ? WHERE userId = ?;", 
+    [addressInput, userId], 
+    (err, result) =>{
+        if(err){
+            console.log(err);
+        }
+        else{
+           res.send("Address Updated successfully");
+        }
+    }
+    );
+
+})
+
+//23. Get Address
+
+app.post('/getAddress', (req, res) => {
+    const userId = req.session.user[0].id;
+
+    db.query("SELECT address FROM userdetails WHERE userId = ?;", 
+    [userId], 
+    (err, result) =>{
+
+        if(err){
+            console.log(err);
+        }
+        if(result.length > 0){
+            res.send(result);
+        }
+        else{
+           res.send("Address not found!");
         }
     }
     );
@@ -1233,7 +1274,51 @@ app.post('/getSig', async(req, res) => {
     );
 }); 
 
+app.post('/send', async(req, res) =>{
+    const clientEmail = req.body.email;
+
+    // create a transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: 'mail.sanlamke.com',
+        port: 465,
+        secure: true, // use TLS
+        auth: {
+            user: 'pensionalerts@sanlamke.com',
+            pass: process.env.pensionAlertsPassword
+        },
+      
+    });
+
+    // define the email options
+    let mailOptions = {
+        from: '"PensionPlus" <pensionalerts@sanlamke.com>',
+        to: 'markmaingi@kabarak.ac.ke',
+        subject: 'Welcome Email',
+        text: 'We are glad to have you join us.',
+        html: '<b>Welcome</b> to sanlam'
+    };
+
+    transporter.verify(function (error, success) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("");
+        }
+      });
+
+    
+    // send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+        } else {
+            res.send('Email sent: ' + info.response);
+        }
+    });
+  
+})
 
 app.listen(5000, ()=>{
+    
     console.log("Server is running on port 5000");
 });

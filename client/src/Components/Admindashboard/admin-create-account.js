@@ -160,6 +160,7 @@ const CreateAdminAccount = () => {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    
     Axios.post("http://localhost:5000/authAdmin", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {

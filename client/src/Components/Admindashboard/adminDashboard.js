@@ -55,6 +55,8 @@ function AdminDashboard() {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/adminAuth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.location.href = "/#/admin-login";

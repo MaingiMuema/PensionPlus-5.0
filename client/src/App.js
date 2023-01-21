@@ -10,7 +10,6 @@ import UserDashboard from "./Components/userDashboard";
 import DashboardNavBar from "./Components/dashboardNavbar";
 import ContributionPage from "./Components/contributionPage";
 import NavbarSignedIn from "./Components/Navbar-SignedIn";
-import PensionDetailsLoggedIn from "./Components/pensionDetailsLoggedin";
 import Withdraw from "./Components/withdraw";
 import LogIn from "./Components/login";
 import PensionCalculator from "./Components/pensionCalculator";
@@ -21,6 +20,7 @@ import CreateAdminAccount from "./Components/Admindashboard/admin-create-account
 import AdminLogIn from "./Components/Admindashboard/admin-login";
 import Profile from "./Components/profile";
 import Referral from "./Components/referral";
+import Terms from "./Components/terms";
 
 function App() {
   return (
@@ -54,9 +54,6 @@ function App() {
           <Route exact path="/login">
             <LogIn />
           </Route>
-          <Route exact path="/PensionDetailsLoggedin">
-            <PensionDetailsLoggedIn />
-          </Route>
           <Route exact path="/withdraw">
             <Withdraw />
           </Route>
@@ -80,6 +77,9 @@ function App() {
           </Route>
           <Route exact path="/referral">
             <Referral />
+          </Route>
+          <Route exact path="/Terms">
+            <Terms />
           </Route>
         </Switch>
       </Router>

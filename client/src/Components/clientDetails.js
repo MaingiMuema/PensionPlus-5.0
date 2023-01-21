@@ -5,6 +5,7 @@ import "semantic-ui-css/semantic.min.css";
 import { Icon } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import Cookies from 'js-cookie';
 
 //Images
 import img1 from "../Assets/Verification illustrations.png";
@@ -36,10 +37,9 @@ const ClientDetails = (props) => {
 
   let onChange = (event) => {
     const newValue = event.target.value;
-    const newValue1 = newValue.trim();
-    const newValue2 = parseInt(newValue1);
-    setInputValue(newValue2);
+    setInputValue(newValue);
   };
+  console.log(inputValue);
 
   const [inputValue2, setInputValue2] = useState();
 
@@ -95,7 +95,7 @@ const ClientDetails = (props) => {
     var val = inputValue;
 
     if (/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/g.test(val)) {
-      console.log("No. is ok.");
+
     } else {
       return false;
     }
@@ -104,6 +104,7 @@ const ClientDetails = (props) => {
   //Alerts
   const checkAlerts = () => {
     if (inputValue == null || inputValue2 == null || inputValue3 == null) {
+      alert(inputValue + inputValue2 + inputValue3);
       alert("Please fill in the fields appropriately!");
     }
 
@@ -128,12 +129,22 @@ const ClientDetails = (props) => {
         Next
       </button>
     );
-  } else {
+  } 
+  else
+  {
+
+    let path = Cookies.get('path');
+    console.log(path);
+
     nextBtn = (
-      <Link to="/pensionDetails" onClick={addDetails}>
+      <Link to={path} onClick={addDetails}>
         <button className="createACC-btn">Next</button>
       </Link>
-    );
+    )
+    
+    var date = new Date();
+    date.setTime(date.getTime()-1);
+    document.cookie = "example=; expires=" + date.toUTCString() + "; path=/";
   }
 
   //user details
@@ -143,12 +154,12 @@ const ClientDetails = (props) => {
   const dob = inputValue3;
   const employment_status = valueOption;
 
-  console.log(dob);
-
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
@@ -205,7 +216,7 @@ const ClientDetails = (props) => {
                 <br />
                 <br />
                 <input
-                  type="text"
+                  type="number"
                   onChange={onChange}
                   name="phoneNumber"
                   className="inputbox"

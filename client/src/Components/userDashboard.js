@@ -9,6 +9,7 @@ import {
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useState, useEffect, Component } from "react";
+import Cookies from 'js-cookie';
 import Axios from "axios";
 import {
   LineChart,
@@ -41,6 +42,8 @@ function UserDashboard() {
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     Axios.post("http://localhost:5000/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.location.href = "/";
@@ -50,20 +53,53 @@ function UserDashboard() {
         pendingTransfers();
       }
     });
+
+    
   };
+
+var d = new Date();
+d.setTime(d.getTime() + (0.25*60*60*1000));
+var expires = "expires="+ d.toUTCString();
 
   const checkDetails = () => {
     Axios.post("http://localhost:5000/checkUserDetails", {}).then(
       (response) => {
         if (response.data.message == "Client details present") {
           window.location.href = "/#/pensionDetails";
+          
         } else {
+          document.cookie = "path=/#/pensionDetails;" + expires + ";path=/";
           window.location.href = "/#/clientDetails";
         }
       }
     );
   };
 
+  const checkDetails2 = () => {
+    Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+      (response) => {
+        if (response.data.message == "Client details present") {
+          window.location.href = "/#/contributionPage";
+        } else {
+          document.cookie = "path=/#/contributionPage;" + expires + ";path=/";
+          window.location.href = "/#/clientDetails";
+        }
+      }
+    );
+  };
+
+  const checkDetails3 = () => {
+    Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+      (response) => {
+        if (response.data.message == "Client details present") {
+          window.location.href = "/#/profile";
+        } else {
+          document.cookie = "path=/#/profile;" + expires + ";path=/";
+          window.location.href = "/#/clientDetails";
+        }
+      }
+    );
+  };
   //Get total combined amount from backend
 
   const [totalCombinedAmount, setTotalCombinedAmount] = useState(0);
@@ -357,7 +393,7 @@ function UserDashboard() {
             </Link>
           </div>
           <div className="col-lg-3 fadeInUp">
-            <Link to="/contributionPage">
+            <Link onClick={checkDetails2}>
               <div className="d-flex justify-content-center">
                 <button className="dashboardButton ">
                   <div className="buttonIcon">
@@ -411,7 +447,7 @@ function UserDashboard() {
         <div className="row">
           <div className="col-lg-3"></div>
           <div className="col-lg-3 fadeInUp">
-            <Link to="/profile">
+            <Link onClick={checkDetails3}>
               <div className="d-flex justify-content-center">
                 <button className="dashboardButton ">
                   <div className="buttonIcon">
