@@ -50,7 +50,25 @@ function Withdraw() {
     );
   };
 
-  const totalPotAmount = contributedAmount + totalCombinedAmount;
+      //Get total withdrawn amount from backend
+      const [withdrawAmnt, setWithdrawAmnt] = useState(0);
+
+      const withdrawals = () => {
+        Axios.post("http://localhost:5000/withdrawals", {}).then(
+          (response) => {
+            if (response) {
+              setWithdrawAmnt(response.data[0].withdrawAmount);
+            } else {
+              setWithdrawAmnt(response.data[0].withdrawAmount);
+            }
+          }
+        );
+      };
+
+       //Deducting withdrawals from contributions
+  const finalContributedAmount = contributedAmount + withdrawAmnt;
+
+  const totalPotAmount = finalContributedAmount + totalCombinedAmount;
 
   const [inputValue, setInputValue] = useState();
 
@@ -75,11 +93,68 @@ function Withdraw() {
         window.history.go(-1);
       } else {
         setLoginStatus("true");
+        withdrawals();
       }
     });
   };
 
-  var isChecked = document.getElementsByName("paymentMethod").checked;
+  //Withdaw function
+  
+  const withdrawAmount = inputValue*-1;
+
+
+  const withdraw = () => {
+    if(inputValue == "" || inputValue == null){
+
+    }
+    else{
+      Axios.post("http://localhost:5000/withdraw", {
+        withdrawAmount: withdrawAmount,
+        }).then(
+        (response) => {
+         console.log(response);
+        }
+      );
+    }
+};
+
+  const [alertMessage, setAlertMessage] = useState("");
+  
+  const handleClickac = () => {
+    if(inputValue == "" || inputValue == null){
+        setAlertMessage("Please Input amount to withdraw!");
+        document.getElementById('cConfirm2').style.display='flex';
+        document.getElementById('cConfirm2').style.zIndex='1'
+    }
+    else{
+      if(inputValue > finalContributedAmount){
+        setAlertMessage("Insufficient funds. Please check your balance and try again!");
+        document.getElementById('cConfirm2').style.display='flex';
+        document.getElementById('cConfirm2').style.zIndex='1'
+      }
+      else{
+        document.getElementById('cConfirm').style.display='flex';
+        document.getElementById('cConfirm').style.zIndex='1';
+      }
+    }
+};
+
+const handleClick3 = () =>{
+  document.getElementById('cConfirm').style.display='none';
+  document.getElementById('cConfirm').style.zIndex='-1';
+}
+
+const successAlert = () =>{
+  withdraw();
+  alert("You have successfully withdrawn: Ksh" + withdrawAmount);
+}
+
+  //Alert modal box
+
+  const handleClick2 = () =>{
+    document.getElementById('cConfirm2').style.display='none';
+    document.getElementById('cConfirm2').style.zIndex='-1';
+  };
 
   return (
     <div
@@ -130,21 +205,21 @@ function Withdraw() {
         <div className="col-lg-4">
           <div className="d-flex justify-content-center">
             <div className="applausCard fadeInUp">
-              <h4>Total contributions</h4>
-              <h3>Ksh {contributedAmount}</h3>
+              <h4>Total contribution</h4>
+              <h3>Ksh {finalContributedAmount}</h3>
             </div>
           </div>
         </div>
       </div>
-      <div className="container dashboardButtonContainer fadeInRight">
+      <div className="container dashboardButtonContainer fadeInUp">
         <div className="row">
           <div className="col-lg-4"></div>
-          <div className="col-lg-4 ">
-            <div className="account-Form">
-              <h3>How much would you like to withdraw?</h3>
+          <div className="col-lg-4">
+          <h3 className="text-center">How much would you like to withdraw?</h3>
+            <div className="account-Form  d-flex justify-content-center">
               <form
                 action="handler.php"
-                className="create-account-form"
+                className="create-account-form fadeInRight"
                 name="companyForm"
                 method="POST"
               >
@@ -174,8 +249,8 @@ function Withdraw() {
             <div className="col-lg-4">
               <h3 className="text-center">Payment method</h3>
               <label for="visa" className="d-flex justify-content-center">
-                <div>
-                  <Link>
+                <div className="d-flex justify-content-center">
+                  <Link onClick={handleClickac}>
                     <button className="paymentMethod  ">
                       <div className="buttonIcon">
                         <img
@@ -194,6 +269,39 @@ function Withdraw() {
           </div>
         </form>
       </div>
+
+      <div class="modal container-fluid " onClick={handleClick3} id="cConfirm">
+        <div class="card contributeConfirm fadeInBottom" id="card">
+            <div> 
+                
+            </div>
+            <div>
+              <div id="modal-card-content">
+                <p class="text-center" id="s-heading">Withdraw <b>Ksh{inputValue}</b> from Contributions wallet.</p>
+                <p class="text-center">Click confirm to withdraw.</p>
+              </div>
+                <div class="d-flex justify-content-center">
+                    <Link to="/userDashboard" onClick={successAlert} class="btn btn-outline-secondary" id="s-btn-C-page">Confirm</Link>
+                </div>
+            </div>
+        </div>
+      </div>  
+
+      <div class="modal container-fluid " onClick={handleClick2} id="cConfirm2">
+        <div class="card contributeConfirm fadeInBottom" id="card">
+            <div> 
+                
+            </div>
+            <div>
+              <div id="modal-card-content">
+               <p><b>{alertMessage}</b></p>
+              </div>
+              <div class="d-flex justify-content-center">
+                  <Link onClick={handleClick2} class="btn btn-outline-secondary" id="s-btn-C-page">Ok</Link>
+              </div>
+            </div>
+        </div>
+      </div>  
     </div>
   );
 }

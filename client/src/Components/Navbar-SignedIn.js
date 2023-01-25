@@ -19,6 +19,32 @@ const NavbarSignedIn = () => {
       }
     });
   };
+  
+    //Check if user details exist on the database
+    const checkDetails = () => {
+      Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+        (response) => {
+          if (response.data.message == "Client details present") {
+            window.location.href = "/#/pensionDetails";
+            
+          } else {
+            window.location.href = "/#/clientDetails";
+          }
+        }
+      );
+    };
+
+    const checkDetails2 = () => {
+      Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+        (response) => {
+          if (response.data.message == "Client details present") {
+            window.location.href = "/#/contributionPage";
+          } else {
+            window.location.href = "/#/clientDetails";
+          }
+        }
+      );
+    };
 
   return (
     <nav className="navbar navbar-expand-xl navbar-light fadeInUp">
@@ -49,10 +75,10 @@ const NavbarSignedIn = () => {
             </a>
             <div className="navLinkDropdown dropdown-content">
                <a href="#">
-                  <Link to="/userDashboard">Combine</Link>
+                  <Link onClick={checkDetails}>Combine</Link>
                 </a>
                 <a href="#">
-                  <Link to="/userDashboard">Contribute</Link>
+                  <Link onClick={checkDetails2}>Contribute</Link>
                 </a>
                 <a href="#">
                   <Link to="/consultancy">Consultancy</Link>

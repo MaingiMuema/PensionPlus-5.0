@@ -120,7 +120,7 @@ const ConfirmPage = () => {
             />
           </div>
         </div>
-        <div class="col-lg-6 fadeInUp">
+        <div class="col-lg-6 fadeInRight">
           <div className="confirm-Provider">
             <h3>Pensions to Transfer</h3>
             <div>
@@ -147,7 +147,7 @@ const ConfirmPage = () => {
 
                   <span className="consentPhrase">
                     I hereby confirm to have read, comprehended, and agreed to
-                    the Terms, including the Declarations, Data Protection, and
+                    the <Link to="/terms" className="link">Terms</Link>, including the Declarations, Data Protection, and
                     Transfer authorizations therein.
                   </span>
                 </label>

@@ -29,9 +29,7 @@ function AdminDashboard() {
   const [queuedDataHeader, setQueuedDataHeaders] = useState([
     "Client name",
     "Client Email",
-    "Phone Number",
     "Client ID",
-    "Employment status",
     "Employer name",
     "Organization email",
     "Pension Provider",
@@ -45,6 +43,7 @@ function AdminDashboard() {
   const queuedTransfers = () => {
     Axios.post("http://localhost:5000/queuedTransfers", {}).then((response) => {
       if (response.data.message == "No pension transfers") {
+
       } else {
         setQueuedData(response.data);
       }
@@ -105,6 +104,7 @@ function AdminDashboard() {
     Axios.post("http://localhost:5000/getPieData", {}).then((response) => {
       if (response.data == "No combined pensions") {
         setCombinedAmount(0);
+        
       } else {
         if (response.data.contributedCumulative[0].totalContributed == null) {
           setContributionAmount(0);
@@ -113,10 +113,14 @@ function AdminDashboard() {
             response.data.contributedCumulative[0].totalContributed
           );
         }
+
         setCombinedAmount(response.data.combinedCumulative[0].totalCombined);
+
         const tCombinedAmnt = response.data.combinedCumulative[0].totalCombined;
+        const tContributedAmnt = response.data.contributedCumulative[0].totalContributed;
 
         var monthSort = []; //Array to store sorted months
+        var monthSort2 = [];
 
         var i;
 
@@ -134,8 +138,25 @@ function AdminDashboard() {
         var NovemberAmount = 0;
         var DecemberAmount = 0;
 
+        //Initialize months
+        var JanuaryAmount2 = 0;
+        var FebruaryAmount2 = 0;
+        var MarchAmount2 = 0;
+        var AprilAmount2 = 0;
+        var MayAmount2 = 0;
+        var JuneAmount2 = 0;
+        var JulyAmount2 = 0;
+        var AugustAmount2 = 0;
+        var SeptemberAmount2 = 0;
+        var OctoberAmount2 = 0;
+        var NovemberAmount2 = 0;
+        var DecemberAmount2 = 0;
+
         var month;
+        var month2;
+
         var amount = 0;
+        var amount2 = 0;
 
         //For loop to add every month's combined pensions
 
@@ -144,6 +165,8 @@ function AdminDashboard() {
             5,
             response.data.combineMonthAndYear[i].monthAndYear.length
           ); //Get month from date string response
+          
+          //Get month from date string response
           amount = response.data.combineMonthAndYear[i].amount; //Get amount from from the JSON object
 
           if (month == "January") {
@@ -172,7 +195,46 @@ function AdminDashboard() {
             DecemberAmount = DecemberAmount + amount;
           } else {
           }
-        }
+
+        }    
+
+         //For loop to add every month's combined pensions
+
+         for (i = 0; i < response.data.contributeMonthAndYear.length; i++) {
+          month2 = response.data.contributeMonthAndYear[i].monthAndYear.slice(
+            5,
+            response.data.contributeMonthAndYear[i].monthAndYear.length
+          );
+
+          amount2 =  response.data.contributeMonthAndYear[i].amount;
+
+         if (month2 == "January") {
+            JanuaryAmount2 = JanuaryAmount2 + amount2;
+          } else if (month2 == "February") {
+            FebruaryAmount2 = FebruaryAmount2 + amount2;
+          } else if (month2 == "March") {
+            MarchAmount2 = MarchAmount2 + amount2;
+          } else if (month2 == "April") {
+            AprilAmount2 = AprilAmount2 + amount2;
+          } else if (month2 == "May") {
+            MayAmount2 = MayAmount2 + amount2;
+          } else if (month2 == "June") {
+            JuneAmount2 = JuneAmount2 + amount2;
+          } else if (month2 == "July") {
+            JulyAmount2 = JulyAmount2 + amount2;
+          } else if (month2 == "August") {
+            AugustAmount2 = AugustAmount2 + amount2;
+          } else if (month2 == "September") {
+            SeptemberAmount2 = SeptemberAmount2 + amount2;
+          } else if (month2 == "October") {
+            OctoberAmount2 = OctoberAmount2 + amount2;
+          } else if (month2 == "November") {
+            NovemberAmount2 = NovemberAmount2 + amount2;
+          } else if (month2 == "December") {
+            DecemberAmount2 = DecemberAmount2 + amount2;
+          } else {
+          }
+        }    
 
         //Monthly shortform percentages
         const jp = ((JanuaryAmount*100)/tCombinedAmnt).toFixed(3);
@@ -188,7 +250,23 @@ function AdminDashboard() {
         const np = ((NovemberAmount*100)/tCombinedAmnt).toFixed(3);
         const dp = ((DecemberAmount*100)/tCombinedAmnt).toFixed(3);
 
+        //Monthly shortform percentages
+        const jp2 = ((JanuaryAmount2*100)/tContributedAmnt).toFixed(3);
+        const fp2 = ((FebruaryAmount2*100)/tContributedAmnt).toFixed(3);
+        const mp2 = ((MarchAmount2*100)/tContributedAmnt).toFixed(3);
+        const ap2 = ((AprilAmount2*100)/tContributedAmnt).toFixed(3);
+        const Map2 = ((MayAmount2*100)/tContributedAmnt).toFixed(3);
+        const Jup2 = ((JuneAmount2*100)/tContributedAmnt).toFixed(3);
+        const Julp2 = ((JulyAmount2*100)/tContributedAmnt).toFixed(3);
+        const Aup2 = ((AugustAmount2*100)/tContributedAmnt).toFixed(3);
+        const sp2 = ((SeptemberAmount2*100)/tContributedAmnt).toFixed(3);
+        const op2 = ((OctoberAmount2*100)/tContributedAmnt).toFixed(3);
+        const np2 = ((NovemberAmount2*100)/tContributedAmnt).toFixed(3);
+        const dp2 = ((DecemberAmount2*100)/tContributedAmnt).toFixed(3);
+
         var totalMonthlyAmounts = []; //An array that stores the monthly totals
+
+        var totalMonthlyAmounts2 = []; //An array that stores the monthly totals
 
         //A for loop to match Month to a corresponding index and also populate the totalMonthlyTotals array with monthly totals
         for (i = 0; i < 12; i++) {
@@ -280,7 +358,99 @@ function AdminDashboard() {
           }
         }
 
+        for (i = 0; i < 12; i++) {
+          if (i == 0) {
+            if (JanuaryAmount2 > 0) {
+              monthSort2[i] = "Jan" + " " + jp2 +"%";
+              totalMonthlyAmounts2[i] = JanuaryAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 1) {
+            if (FebruaryAmount2 > 0) {
+              monthSort2[i] = "Feb" + " " + fp2 +"%";
+              totalMonthlyAmounts2[i] = FebruaryAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 2) {
+            if (MarchAmount2 > 0) {
+              monthSort2[i] = "Mar" + " " + mp2 +"%";
+              totalMonthlyAmounts2[i] = MarchAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 3) {
+            if (AprilAmount2 > 0) {
+              monthSort2[i] = "Apr" + " " + ap2 +"%";
+              totalMonthlyAmounts2[i] = AprilAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 4) {
+            if (MayAmount2 > 0) {
+              monthSort2[i] = "May" + " " + Map2 +"%";
+              totalMonthlyAmounts2[i] = MayAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 5) {
+            if (JuneAmount2 > 0) {
+              monthSort2[i] = "Jun" + " " + Jup2 +"%";
+              totalMonthlyAmounts2[i] = JuneAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 6) {
+            if (JulyAmount2 > 0) {
+              monthSort2[i] = "Jul" + " " + Julp2 +"%";
+              totalMonthlyAmounts2[i] = JulyAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 7) {
+            if (AugustAmount2 > 0) {
+              monthSort2[i] = "Aug" + " " + Aup2 +"%";
+              totalMonthlyAmounts2[i] = AugustAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 8) {
+            if (SeptemberAmount2 > 0) {
+              monthSort2[i] = "Sep" + " " + sp2 +"%";
+              totalMonthlyAmounts2[i] = SeptemberAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 9) {
+            if (OctoberAmount2 > 0) {
+              monthSort2[i] = "Oct" + " " + op2 +"%";
+              totalMonthlyAmounts2[i] = OctoberAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 10) {
+            if (NovemberAmount2 > 0) {
+              monthSort2[i] = "Nov" + " " + np2 +"%";
+              totalMonthlyAmounts2[i] = NovemberAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else if (i == 11) {
+            if (DecemberAmount2 > 0) {
+              monthSort2[i] = "Dec" + " " + dp2 +"%";
+              totalMonthlyAmounts2[i] = DecemberAmount2;
+            } else {
+              monthSort2[i] = "";
+            }
+          } else {
+          }
+        }
+
+        console.log(totalMonthlyAmounts2);
+
         var combinedAmount = [];
+        var contributedAmount = [];
 
         combinedAmount = [
           {
@@ -345,7 +515,71 @@ function AdminDashboard() {
           },
         ];
 
+        contributedAmount = [
+          {
+            name: monthSort2[0],
+            value: totalMonthlyAmounts2[0],
+            fill: "#a978f1",
+          },
+          {
+            name: monthSort2[1],
+            value: totalMonthlyAmounts2[1],
+            fill: "#d786e1",
+          },
+          {
+            name: monthSort2[2],
+            value: totalMonthlyAmounts2[2],
+            fill: "#e294c8",
+          },
+          {
+            name: monthSort2[3],
+            value: totalMonthlyAmounts2[3],
+            fill: "#ffbbd4",
+          },
+          {
+            name: monthSort2[4],
+            value: totalMonthlyAmounts2[4],
+            fill: "#c995bd",
+          },
+          {
+            name: monthSort2[5],
+            value: totalMonthlyAmounts2[5],
+            fill: "#816993",
+          },
+          {
+            name: monthSort2[6],
+            value: totalMonthlyAmounts2[6],
+            fill: "#696b93",
+          },
+          {
+            name: monthSort2[7],
+            value: totalMonthlyAmounts2[7],
+            fill: "#0f3960",
+          },
+          {
+            name: monthSort2[8],
+            value: totalMonthlyAmounts2[8],
+            fill: "#696b93",
+          },
+          {
+            name: monthSort2[9],
+            value: totalMonthlyAmounts2[9],
+            fill: "#8f74a3",
+          },
+          {
+            name: monthSort2[10],
+            value: totalMonthlyAmounts2[10],
+            fill: "#ffbbd4",
+          },
+          {
+            name: monthSort2[11],
+            value: totalMonthlyAmounts2[11],
+            fill: "#6072fd",
+          },
+        ];
+
         setCombinedCashAmount(combinedAmount);
+        setportfolioData(contributedAmount);
       }
     });
   };
@@ -1185,9 +1419,13 @@ function AdminDashboard() {
   const [recentContribDataHeader, setRecentContribDataHeader] = useState([
     "Client name",
     "Client ID",
-    "Amount",
     "Phone Number",
+    "Amount"
+    ,
   ]);
+
+  //Getting total number of people that have contributed for the past one month
+  const [contributionCases, setContributionCases] = useState(0);
 
   const [recentContibutions, setrecentContibutions] = useState([]);
 
@@ -1197,6 +1435,7 @@ function AdminDashboard() {
       (response) => {
         if (response.data.message == "No contributions") {
         } else {
+          setContributionCases(response.data.length);
           setrecentContibutions(response.data);
         }
       }
@@ -1207,9 +1446,8 @@ function AdminDashboard() {
     useState([
       "Client name",
       "Client ID",
-      "Amount",
       "Phone Number",
-      "Contibutions balance",
+      "Amount"
     ]);
 
   const [contribBalance, setContribBalance] = useState([
@@ -1222,6 +1460,9 @@ function AdminDashboard() {
     },
   ]);
 
+  //Getting total number of people that have withdrawn for the past 1 month
+  const [withdrawCases, setWithdrawCases] = useState(0);
+
   //Getting recent withdrawals
 
   const withdrawTable = () => {
@@ -1229,6 +1470,17 @@ function AdminDashboard() {
       if (response.data.message == "No withdrawals") {
         setContribBalance(response.data);
       } else {
+        let arr = [];
+
+        for(var i=0; i<response.data.length; i++){
+          if(response.data[i].withdrawAmount < 0){
+            response.data[i].withdrawAmount= response.data[i].withdrawAmount * -1;
+          }
+
+          arr[i] = response.data[i];
+        }
+        setWithdrawCases(arr.length);
+        setContribBalance(arr);
       }
     });
   };
@@ -1654,7 +1906,7 @@ function AdminDashboard() {
                       <div className="align-middle">
                         <p className="">
                           <p className="counts">
-                            <b>{0}</b>
+                            <b>{contributionCases}</b>
                           </p>
                         </p>
                       </div>
@@ -1673,7 +1925,7 @@ function AdminDashboard() {
                       <div className="align-middle">
                         <p className="">
                           <p className="counts">
-                            <b>{0}</b>
+                            <b>{withdrawCases}</b>
                           </p>
                         </p>
                       </div>
@@ -1687,35 +1939,42 @@ function AdminDashboard() {
           </div>
           <div className="row searchBarSection" onClick={hideSearchList}>
             <h3 className="text-center">Search for Client</h3>
-            <div className="col-lg-3"></div>
-            <div className="col-lg-6 d-flex justify-content-center">
-              <div className="input-group mt-5 ">
-                <input
-                  type="search"
-                  value={searchValue}
-                  onChange={handleSearchChange}
-                  className="form-control rounded"
-                  id="searchForm"
-                  placeholder="Search"
-                  aria-label="Search"
-                  aria-describedby="search-addon"
-                />
-                <div className="list">{ItemList}</div>
+            <div className="col-lg-2"></div>
+            <div className="col-lg-8 d-flex justify-content-center">
+              <div className="input-group mt-5">
+                <div className="searchboxContainer d-flex justify-content-center">
+                    <input
+                      type="search"
+                      value={searchValue}
+                      onChange={handleSearchChange}
+                      className="form-control rounded"
+                      id="searchForm"
+                      placeholder="Search"
+                      aria-label="Search"
+                      aria-describedby="search-addon"
+                    />
+                    <button
+                    data-bs-toggle="collapse"
+                    href="#profile"
+                    data-bs-target="#profile"
+                    role="button"
+                    aria-expanded="false"
+                    aria-bs-controls="profile"
+                    className="call-to-action-admin"
+                    onMouseDown={search()}
+                  >
+                    View Profile
+                  </button>
+    
+                </div>
+                <div className="listContainer">
+                  <div className="list">{ItemList}</div>
+                </div>
+             
               </div>
-              <button
-                data-bs-toggle="collapse"
-                href="#profile"
-                data-bs-target="#profile"
-                role="button"
-                aria-expanded="false"
-                aria-bs-controls="profile"
-                className="call-to-action-admin"
-                onMouseDown={search()}
-              >
-                View Profile
-              </button>
+             
             </div>
-            <div className="col-lg-3"></div>
+            <div className="col-lg-2"></div>
           </div>
           <div className="row">
             <div className="col-lg-2"></div>

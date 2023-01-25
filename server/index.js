@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const isAuth = require('./isAuth');
 const nodemailer = require("nodemailer");
+const twilio = require('twilio');
 
 require('dotenv').config();
 
@@ -507,7 +508,7 @@ app.post('/activity', (req, res) => {
     //id from userAccount table
     const userId = req.session.user[0].id;
 
-        db.query("SELECT transactionType AS activity, Amount AS activityAmount FROM transactions WHERE userId = ? AND transferStatus > 99;", 
+        db.query("SELECT transactionType AS activity, Amount AS activityAmount, DATE_FORMAT(time, '%D-%M-%Y') AS activityTime FROM transactions WHERE userId = ? AND transferStatus > 99;", 
         [userId],
         (err, result) =>{
             if(err){
@@ -773,6 +774,89 @@ app.post('/getAddress', (req, res) => {
     );
 })
 
+// 24. Send user controbution to database
+
+app.post('/contributionAmount', (req, res) => {    
+    const contribution = req.body.contributeAmount;
+    const userId = req.session.user[0].id;
+    const transactionType = "Contribution";
+    const userName = req.session.user[0].name;
+    const transferStatus = 100;
+    
+
+    db.query("INSERT INTO usercontributions (userId, userName, Amount, transactionType) VALUES (?, ?, ?, ?)", 
+    [userId, userName, contribution, transactionType], 
+    (err, result) =>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            db.query("INSERT INTO  transactions (Amount, transferStatus, transactionType, userId) VALUES (?, ?, ?, ?)", 
+            [contribution, transferStatus, transactionType, userId], 
+            (err, result) =>{
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    res.send({message: "Values Inserted"});
+                }
+            }
+            );
+        }
+    }
+    );
+
+
+
+});
+
+// 25. Send Withdraw amount to database
+
+app.post('/withdraw', (req, res) => {    
+    const withdrawAmount = req.body.withdrawAmount;
+    const userId = req.session.user[0].id;
+    const transactionType = "Withdraw";
+    const transferStatus = 100;
+
+    db.query("INSERT INTO  transactions (Amount, transferStatus, transactionType, userId) VALUES (?, ?, ?, ?)", 
+    [withdrawAmount, transferStatus, transactionType, userId], 
+    (err, result) =>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send({message: "Values Inserted"});
+        }
+    }
+    );
+
+});
+
+//Get total client withdrawn amount
+
+//23. Get Address
+
+app.post('/withdrawals', (req, res) => {
+    const userId = req.session.user[0].id;
+    const transactionType = "Withdraw";
+
+    db.query("SELECT SUM(Amount) as withdrawAmount FROM transactions WHERE userId = ? and transactionType = ?;", 
+    [userId, transactionType], 
+    (err, result) =>{
+
+        if(err){
+            console.log(err);
+        }
+        if(result.length > 0){
+            res.send(result);
+        }
+        else{
+           res.send("No withdrawals");
+        }
+    }
+    );
+})
+
 
 //
 //
@@ -946,10 +1030,10 @@ app.post("/")
 //6. get Pending pension transfers
 
 app.post('/queuedTransfers', (req, res) => {
-    
+    const transactionType = "Pension Transfer";
 
-        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.phone, userdetails.id_no, userdetails.employment_status, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, pensiondetails.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId RIGHT JOIN pensiondetails ON userdetails.userId = pensiondetails.userId RIGHT JOIN transactions ON pensiondetails.userId = transactions.userId WHERE transactions.transferStatus < 100 AND transactions.transferStatus = pensiondetails.transferStatus;", 
-    
+        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.id_no, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, pensiondetails.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId RIGHT JOIN pensiondetails ON userdetails.userId = pensiondetails.userId RIGHT JOIN transactions ON pensiondetails.userId = transactions.userId WHERE transactions.transferStatus < 100 AND transactions.transferStatus = pensiondetails.transferStatus AND transactions.transactionType = ? ORDER BY transactions.transferStatus DESC;", 
+        [transactionType],
         (err, result) =>{
             if(err){
                 console.log({err : err});
@@ -979,8 +1063,6 @@ app.post('/statusUpdate', (req, res) => {
     const status = req.body.status;
     const clientEmployer = req.body.clientEmployer;
     const pensionProvider = req.body.pensionProvider;
-
-    console.log(pensionProvider);
 
     db.query("UPDATE pensiondetails SET transferStatus = ? WHERE idNo = ? AND PensionProvider = ? AND employername = ?;", 
     [status, clientId, pensionProvider, clientEmployer], 
@@ -1014,7 +1096,7 @@ app.post('/statusUpdate', (req, res) => {
 app.post('/contributionsTable', (req, res) => {
     
 
-    db.query("SELECT DISTINCT useraccount.name, userdetails.id_no, userdetails.phone, transactions.amount FROM useraccount JOIN userdetails ON useraccount.id = userdetails.userId JOIN transactions ON userdetails.userId = transactions.userid WHERE transactions.transactionType = \"Contribution\";", 
+    db.query("SELECT DISTINCT useraccount.name, userdetails.id_no, userdetails.phone, transactions.amount FROM useraccount JOIN userdetails ON useraccount.id = userdetails.userId JOIN transactions ON userdetails.userId = transactions.userid WHERE transactions.transactionType = \"Contribution\" AND transactions.time > (now()) - INTERVAL 1 MONTH;", 
 
     (err, result) =>{
         if(err){
@@ -1037,7 +1119,7 @@ app.post('/contributionsTable', (req, res) => {
 app.post('/withdrawTable', async(req, res) => {
     
 
-    db.query("SELECT DISTINCT useraccount.name, userdetails.id_no, userdetails.phone, transactions.amount FROM useraccount JOIN userdetails ON useraccount.id = userdetails.userId JOIN transactions ON userdetails.userId = transactions.userid WHERE transactions.transactionType = \"Withdraw\";", 
+    db.query("SELECT DISTINCT useraccount.name, userdetails.id_no, userdetails.phone, transactions.amount as withdrawAmount FROM useraccount JOIN userdetails ON useraccount.id = userdetails.userId JOIN transactions ON userdetails.userId = transactions.userid WHERE transactions.transactionType = \"Withdraw\" AND transactions.time > (now()) - INTERVAL 1 MONTH ORDER BY transactions.transactionId DESC;", 
 
     (err, result) =>{
         if(err){
@@ -1274,6 +1356,8 @@ app.post('/getSig', async(req, res) => {
     );
 }); 
 
+//17. Trigger Email
+
 app.post('/send', async(req, res) =>{
     const clientEmail = req.body.email;
 
@@ -1317,6 +1401,20 @@ app.post('/send', async(req, res) =>{
     });
   
 })
+
+//Trigger SMS
+/*
+app.post("sms", async(req,res) => {
+    const accountSid = "AC642d40b5e932ffd37f45b3c638ae21b5";
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require("twilio")(accountSid, authToken);
+
+client.messages
+  .create({ body: "Hello from Twilio", from: "+12056193718", to: "+254708015054" })
+  .then(message => console.log(message.sid));
+})
+
+*/
 
 app.listen(5000, ()=>{
     

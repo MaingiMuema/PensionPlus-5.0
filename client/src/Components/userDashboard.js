@@ -68,7 +68,7 @@ var expires = "expires="+ d.toUTCString();
           window.location.href = "/#/pensionDetails";
           
         } else {
-          document.cookie = "path=/#/pensionDetails;" + expires + ";path=/";
+          document.cookie = "path=pensionDetails;" + expires + ";path=/";
           window.location.href = "/#/clientDetails";
         }
       }
@@ -81,7 +81,7 @@ var expires = "expires="+ d.toUTCString();
         if (response.data.message == "Client details present") {
           window.location.href = "/#/contributionPage";
         } else {
-          document.cookie = "path=/#/contributionPage;" + expires + ";path=/";
+          document.cookie = "path=contributionPage;" + expires + ";path=/";
           window.location.href = "/#/clientDetails";
         }
       }
@@ -94,7 +94,7 @@ var expires = "expires="+ d.toUTCString();
         if (response.data.message == "Client details present") {
           window.location.href = "/#/profile";
         } else {
-          document.cookie = "path=/#/profile;" + expires + ";path=/";
+          document.cookie = "path=profile;" + expires + ";path=/";
           window.location.href = "/#/clientDetails";
         }
       }
@@ -121,6 +121,7 @@ var expires = "expires="+ d.toUTCString();
   const [contributedAmount, setContributedAmount] = useState(0);
 
   const totalContributions = () => {
+    withdrawals();
     Axios.post("http://localhost:5000/totalContributions", {}).then(
       (response) => {
         if (response) {
@@ -132,8 +133,27 @@ var expires = "expires="+ d.toUTCString();
     );
   };
 
+
+    //Get total withdrawn amount from backend
+    const [withdrawAmount, setWithdrawAmount] = useState(0);
+
+    const withdrawals = () => {
+      Axios.post("http://localhost:5000/withdrawals", {}).then(
+        (response) => {
+          if (response) {
+            setWithdrawAmount(response.data[0].withdrawAmount);
+          } else {
+            setWithdrawAmount(response.data[0].withdrawAmount);
+          }
+        }
+      );
+    };
+
+  //Deducting withdrawals from contributions
+  const finalContributedAmount = contributedAmount + withdrawAmount;
+
   //Total Pot amount
-  const totalPotAmount = contributedAmount + totalCombinedAmount;
+  const totalPotAmount = finalContributedAmount + totalCombinedAmount;
 
   //Total percentage change
   const [annualPercentageChange, setannualPercentageChange] = useState(0);
@@ -153,7 +173,7 @@ var expires = "expires="+ d.toUTCString();
   //Combined and Contributions percentages
 
   let combinedPercentage = (totalCombinedAmount * 100) / totalPotAmount;
-  let contributionPercentage = (contributedAmount * 100) / totalPotAmount;
+  let contributionPercentage = (finalContributedAmount * 100) / totalPotAmount;
 
   // const tCombined = parseInt(combinedPercentage);
   // const tCContributed = parseInt(contributionPercentage);
@@ -183,18 +203,16 @@ var expires = "expires="+ d.toUTCString();
   const pendingTransfers = () => {
     Axios.post("http://localhost:5000/pendingTransfers", {}).then(
       (response) => {
-        console.log(response);
+ 
         if (response.data.message == "No pension transfers") {
-          console.log(response);
 
           setpendingTransferList([
             {
-              providerName: "No pending tranfers",
+              PensionProvider: "No pending tranfers",
               transferStatus: 0,
             },
           ]);
         } else {
-          console.log(response);
           setpendingTransferList(response.data);
         }
       }
@@ -222,8 +240,9 @@ var expires = "expires="+ d.toUTCString();
 
   //Get pension providers
   const activity = () => {
+
     Axios.post("http://localhost:5000/activity", {}).then((response) => {
-      console.log(response);
+
       if (response.data.message == "No activity") {
         setTransferList([
           {
@@ -233,7 +252,18 @@ var expires = "expires="+ d.toUTCString();
           },
         ]);
       } else {
-        setTransferList(response.data);
+
+        let arr = [];
+
+        for(var i=0; i<response.data.length; i++){
+          if(response.data[i].activityAmount < 0){
+            response.data[i].activityAmount= response.data[i].activityAmount * -1;
+          }
+
+          arr[i] = response.data[i];
+        }
+
+        setTransferList(arr);
       }
     });
   };
@@ -266,12 +296,10 @@ var expires = "expires="+ d.toUTCString();
       if (response) {
         setData(response.data);
       } else {
-        console.log("No amount combined or contributed!");
+
       }
     });
   };
-
-  console.log(data);
 
   var screenWidth = window.screen.width;
   var casegraphWidth;
@@ -290,17 +318,6 @@ var expires = "expires="+ d.toUTCString();
     casegraphHeight = 300;
   }
 
-  //Check user session
-
-  /*useEffect(() =>{
-  Axios.get("http://localhost:5000/login").then((response) => {
-    if(response.data.loggedIn == true){
-      setLoginStatus("LoggedIn");
-    }
-    
-  })
-}, [])*/
-
   var applauseMessage;
 
   if (totalPotAmount == 0) {
@@ -310,6 +327,13 @@ var expires = "expires="+ d.toUTCString();
   } else {
     applauseMessage = "You are on Track.";
   }
+
+  //SMS Trigger
+  /* const sendSMS = () =>{
+    Axios.post("http://localhost:5000/sms", {}).then((response) => {
+      console.log(response.data);
+    });
+  } */
 
   return (
     <div onLoad={checkLogin} className="container-fluid Dashboard">
@@ -551,14 +575,14 @@ var expires = "expires="+ d.toUTCString();
               <div className="d-flex">
                 <div className="blueLabel"></div>
                 <p className="portfolioKeyLabel">
-                  Combined Pensions ({combinedPercentage}%)
+                  Combined Pensions: <b>Ksh{totalCombinedAmount}</b>{" "}({combinedPercentage.toFixed(3)}%)
                 </p>
               </div>
               <br />
               <div className="d-flex">
                 <div className="yellowLabel"></div>
                 <p className="portfolioKeyLabel">
-                  Contributions ({contributionPercentage}%)
+                  Contributions: <b>Ksh{finalContributedAmount}</b>{" "}({contributionPercentage.toFixed(3)}%)
                 </p>
               </div>
             </div>
@@ -566,7 +590,7 @@ var expires = "expires="+ d.toUTCString();
         </div>
         <div className="row activitySection">
           <div className="col-lg-6 fadeInUp">
-            <div className="dashboardCard">
+            <div className="dashboardCard" id="dashboardCard">
               <span className="tableHeading">Pending Transfers</span>
               <hr className="pensionTransferDivider" />
               <div className="listUpdateContainer">
@@ -594,14 +618,17 @@ var expires = "expires="+ d.toUTCString();
             </div>
           </div>
           <div className="col-lg-6">
-            <div className="dashboardCard">
+            <div className="dashboardCard" id="dashboardCard">
               <span className="tableHeading">Activity</span>
               <hr className="pensionTransferDivider" />
               <div className="listUpdateContainer">
                 {activityList.map((activity) => (
                   <li class="pendingTransfer">
+                    <div className="d-flex justify-content-center">
+                      
+                    </div>
                     <span className="pendingTransferProviderName">
-                      {activity.activity}
+                      {activity.activity}<br/><span className="activityTime">{activity.activityTime}</span>
                     </span>
                     <span
                       className="d-flex justify-content-end"

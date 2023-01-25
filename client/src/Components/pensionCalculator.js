@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 
 //Images
 
-import img1 from "../Assets/Hero-Section Phone (1).png";
 import img2 from "../Assets/Bonus badge.png";
 import img3 from "../Assets/Personal pension.png";
 

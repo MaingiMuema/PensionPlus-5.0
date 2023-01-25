@@ -23,24 +23,66 @@ const ContributionPage = () => {
   const checkAlert = () => {
     alert("Please input amount");
   };
+ 
 
-  var nextBtn;
+   //Get total contributed amount from backend
+   const [contributedAmount, setContributedAmount] = useState(0);
 
-  if (inputValue == "" || inputValue == null) {
-    nextBtn = (
-      <Link to="/contributionPage">
-        <button className="createACC-btn" onClick={checkAlert}>
-          Next
-        </button>
-      </Link>
+   const totalContributions = () => {
+    Axios.post("http://localhost:5000/totalContributions", {}).then(
+      (response) => {
+        if (response) {
+          setContributedAmount(response.data[0].totalContributed);
+          if (
+            response.data[0].totalContributed == "" ||
+            response.data[0].totalContributed == null
+          ) {
+            setContributedAmount(0);
+          }
+        } else {
+        }
+      }
     );
-  } else {
-    nextBtn = (
-      <Link to="/checkOutPage">
-        <button className="createACC-btn">Next</button>
-      </Link>
+  };
+
+  //Integrating the Mpesa API
+
+  //Sending contribution amount to the backend
+  
+    const contributeAmount = inputValue;
+
+    const contributionAmount = () => {
+
+      //Mpesa Logic to go here.
+
+      //After money is deposited successfully, run the axios function below to store added amount to database
+
+      Axios.post("http://localhost:5000/contributionAmount", {
+        contributeAmount: contributeAmount,
+      }).then(
+      (response) => {
+       console.log(response);
+      }
     );
-  }
+  };
+
+      //Get total withdrawn amount from backend
+      const [withdrawAmnt, setWithdrawAmnt] = useState(0);
+
+      const withdrawals = () => {
+        Axios.post("http://localhost:5000/withdrawals", {}).then(
+          (response) => {
+            if (response) {
+              setWithdrawAmnt(response.data[0].withdrawAmount);
+            } else {
+              setWithdrawAmnt(response.data[0].withdrawAmount);
+            }
+          }
+        );
+      };
+
+       //Deducting withdrawals from contributions
+  const finalContributedAmount = contributedAmount + withdrawAmnt;
 
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
@@ -54,11 +96,40 @@ const ContributionPage = () => {
         window.history.go(-1);
       } else {
         setLoginStatus("true");
+        totalContributions();
+        withdrawals();
       }
     });
   };
 
-  //Check user session
+  const handleClickac = () => {
+    if(contributeAmount == "" || contributeAmount == null){
+        document.getElementById('cConfirm2').style.display='flex';
+        document.getElementById('cConfirm2').style.zIndex='1'
+    }
+    else{
+      contributionAmount();
+      document.getElementById('cConfirm').style.display='flex';
+      document.getElementById('cConfirm').style.zIndex='1';
+    }
+};
+
+const handleClick3 = () =>{
+  document.getElementById('cConfirm').style.display='none';
+  document.getElementById('cConfirm').style.zIndex='-1';
+}
+
+const successAlert = () =>{
+  alert("You have successfully deposited: Ksh" + contributeAmount);
+}
+
+  //Alert modal box
+
+  const handleClick2 = () =>{
+    document.getElementById('cConfirm2').style.display='none';
+    document.getElementById('cConfirm2').style.zIndex='-1';
+  };
+  
 
   return (
     <div onLoad={checkLogin} className="container-fluid account-section">
@@ -79,7 +150,7 @@ const ContributionPage = () => {
             <h1>Contribute with ease</h1>
           </div>
         </div>
-        <div class="col-lg-4 fadeInUp">
+        <div class="col-lg-4 fadeInBottom">
           <div className="account-Form">
             <h3>How much would you like to contribute?</h3>
             <form
@@ -106,33 +177,76 @@ const ContributionPage = () => {
             <br />
           </div>
         </div>
-        <div className="col-lg-4"></div>
+        <div className="col-lg-4">
+          <div className="d-flex justify-content-center">
+            <div className="applausCard fadeInRight">
+              <h4>Total contribution</h4>
+              <h3>Ksh {finalContributedAmount}</h3>
+            </div>
+          </div>
+        </div>
         <form id="paymentMethod">
           <div className="row">
             <div className="col-lg-4"></div>
-            <div className="col-lg-4 fadeInRight">
+            <div className="col-lg-4 fadeInUp">
               <h3 className="text-center">Payment method</h3>
-              <label for="visa" className="d-flex justify-content-center">
-                <div>
-                  <Link>
-                    <button className="paymentMethod  ">
-                      <div className="buttonIcon">
-                        <img
-                          className="img-fluid bIcon"
-                          src={img3}
-                          alt="total Icon"
-                        />
-                      </div>
-                      <br />
-                    </button>
-                  </Link>
-                </div>
-              </label>
+              <div className="d-flex justify-content-center">
+                <label for="visa">
+                  <div>
+                    <Link onClick={handleClickac}>
+                      <button className="paymentMethod  ">
+                        <div className="buttonIcon">
+                          <img
+                            className="img-fluid bIcon"
+                            src={img3}
+                            alt="total Icon"
+                          />
+                        </div>
+                        <br />
+                      </button>
+                    </Link>
+                  </div>
+                </label>
+              </div>
             </div>
             <div className="col-lg-4"></div>
           </div>
         </form>
       </div>
+
+      <div class="modal container-fluid " onClick={handleClick3} id="cConfirm">
+        <div class="card contributeConfirm fadeInBottom" id="card">
+            <div> 
+                
+            </div>
+            <div>
+              <div id="modal-card-content">
+                <p class="text-center" id="s-heading"><b>Deposit Ksh{contributeAmount} to PensionPlus</b></p>
+                <p class="text-center">An mpesa message prompt to complete the transaction</p>
+                <p class="text-center"> and enter your pin  has been sent to your phone.</p>
+              </div>
+                <div class="d-flex justify-content-center">
+                    <Link to="/userDashboard" onClick={successAlert} class="btn btn-outline-secondary" id="s-btn-C-page">Complete</Link>
+                </div>
+            </div>
+        </div>
+      </div>  
+
+      <div class="modal container-fluid " onClick={handleClick2} id="cConfirm2">
+        <div class="card contributeConfirm fadeInBottom" id="card">
+            <div> 
+                
+            </div>
+            <div>
+              <div id="modal-card-content">
+               <p><b>Please Input amount to deposit!</b></p>
+              </div>
+              <div class="d-flex justify-content-center">
+                  <Link onClick={handleClick2} class="btn btn-outline-secondary" id="s-btn-C-page">Ok</Link>
+              </div>
+            </div>
+        </div>
+      </div>  
     </div>
   );
 };

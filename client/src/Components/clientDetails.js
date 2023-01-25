@@ -134,7 +134,6 @@ const ClientDetails = (props) => {
   {
 
     let path = Cookies.get('path');
-    console.log(path);
 
     nextBtn = (
       <Link to={path} onClick={addDetails}>

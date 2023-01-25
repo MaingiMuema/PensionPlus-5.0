@@ -2,8 +2,8 @@ import React from "react";
 
 const TableComponent = ({ name, tableHeaders, data }) => {
   return (
-    <div className="row dashboardCard">
-      <div className="">
+    <div className="row">
+      <div className="dashboardTable">
         <h3>{name}</h3>
         <hr
           style={{

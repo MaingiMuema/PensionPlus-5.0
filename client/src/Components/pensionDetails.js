@@ -9,7 +9,7 @@ import "semantic-ui-css/semantic.min.css";
 import { Icon } from "semantic-ui-react";
 
 //Images
-import img1 from "../Assets/pensionDetail vector.png";
+import img1 from "../Assets/pensionDetail vector.webp";
 import img2 from "../Assets/successTick.png";
 import img3 from "../Assets/digital-signature 1.png";
 
@@ -329,7 +329,7 @@ const PensionDetails = () => {
                   name="AdditionalInfo"
                   className="inputbox"
                   id="AdditionalInformation"
-                  placeholder="eg. tax Details"
+                  placeholder="eg. Company Location"
                 />
               </label>
 
@@ -349,8 +349,8 @@ const PensionDetails = () => {
 
             <br />
             <span>
-              <b>Note:</b> The more details you provide, the faster we can
-              transfer your funds.
+              <b>Note:</b> The more details you provide, the easier we can
+             locate and transfer your funds.
             </span>
           </div>
         </div>
