@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import React, { useRef } from "react";
 import { useState, useEffect } from "react";
@@ -11,6 +11,9 @@ import img3 from "../Assets/mpesa-removebg-preview.png";
 import img4 from "../Assets/visa-removebg-preview.png";
 import img5 from "../Assets/whitePensionCalculatorIcon.png";
 
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 function Withdraw() {
   //Get total combined amount from backend
 
@@ -19,7 +22,7 @@ function Withdraw() {
   const totalCombined = () => {
     totalContributions();
 
-    Axios.post("http://localhost:5000/totalCombined", {}).then((response) => {
+    Axios.post(domain + "/totalCombined", {}).then((response) => {
       if (response) {
         setTotalCombinedAmount(response.data[0].totalCombined);
       } else {
@@ -34,7 +37,7 @@ function Withdraw() {
   const [contributedAmount, setContributedAmount] = useState(0);
 
   const totalContributions = () => {
-    Axios.post("http://localhost:5000/totalContributions", {}).then(
+    Axios.post(domain + "/totalContributions", {}).then(
       (response) => {
         if (response) {
           setContributedAmount(response.data[0].totalContributed);
@@ -54,7 +57,7 @@ function Withdraw() {
       const [withdrawAmnt, setWithdrawAmnt] = useState(0);
 
       const withdrawals = () => {
-        Axios.post("http://localhost:5000/withdrawals", {}).then(
+        Axios.post(domain + "/withdrawals", {}).then(
           (response) => {
             if (response) {
               setWithdrawAmnt(response.data[0].withdrawAmount);
@@ -87,7 +90,7 @@ function Withdraw() {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
@@ -108,7 +111,7 @@ function Withdraw() {
 
     }
     else{
-      Axios.post("http://localhost:5000/withdraw", {
+      Axios.post(domain + "/withdraw", {
         withdrawAmount: withdrawAmount,
         }).then(
         (response) => {

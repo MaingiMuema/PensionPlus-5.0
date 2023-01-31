@@ -1,10 +1,13 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Navbar from "../NavBar";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 
 //Images
 import img1 from "../../Assets/create-acc-vector.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 const AdminLogIn = () => {
   //Checkpath
@@ -17,7 +20,7 @@ const AdminLogIn = () => {
   Axios.defaults.withCredentials = true;
 
   const login = () => {
-    Axios.post("http://localhost:5000/adminLogin", {
+    Axios.post(domain + "/adminLogin", {
       email: email,
       password: password,
     }).then((response) => {
@@ -30,7 +33,7 @@ const AdminLogIn = () => {
         setCheckPath("/admin-login");
         alert(response.data.message);
       } else {
-        window.location.href = "/#/adminDashboard";
+        window.location.href = "/adminDashboard";
       }
     });
   };

@@ -1,10 +1,13 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import React from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Icon } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 const Profile = () => {
 
@@ -1047,7 +1050,7 @@ const Profile = () => {
 
   //Get pending pension transfers
   const beneficiaries = () => {
-    Axios.post("http://localhost:5000/beneficiaries", {}).then((response) => {
+    Axios.post(domain + "/beneficiaries", {}).then((response) => {
       console.log(response);
       if (response.data == "No beneficiaries") {
         console.log(response);
@@ -1072,7 +1075,7 @@ const Profile = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
       } else {
@@ -1104,7 +1107,7 @@ const Profile = () => {
 
   //Update username on the backend
   const updateUserName = () => {
-    Axios.post("http://localhost:5000/updateUserName", {
+    Axios.post(domain + "/updateUserName", {
       userName: userName,
     }).then((response) => {});
   };
@@ -1118,7 +1121,7 @@ const Profile = () => {
 
   //Update userEmail on the backend
   const updateUserEmail = () => {
-    Axios.post("http://localhost:5000/updateUserEmail", {
+    Axios.post(domain + "/updateUserEmail", {
       userEmail: userEmail,
     }).then((response) => {});
   };
@@ -1132,7 +1135,7 @@ const Profile = () => {
 
   //Update userPhone on the backend
   const updateUserPhone = () => {
-    Axios.post("http://localhost:5000/updateUserPhone", {
+    Axios.post(domain + "/updateUserPhone", {
       userPhone: userPhone,
     }).then((response) => {});
   };
@@ -1146,7 +1149,7 @@ const Profile = () => {
 
   //Update userId on the backend
   const updateUserId = () => {
-    Axios.post("http://localhost:5000/updateUserId", {
+    Axios.post(domain + "/updateUserId", {
       userID: userID,
     }).then((response) => {});
   };
@@ -1192,7 +1195,7 @@ const Profile = () => {
 
   //Update dob on the backend
   const updateDOB = () => {
-    Axios.post("http://localhost:5000/updateDOB", {
+    Axios.post(domain + "/updateDOB", {
       dob: dob,
     }).then((response) => {});
   };
@@ -1205,7 +1208,7 @@ const Profile = () => {
 
   //Update employmentStatus on the backend
   const updateEmploymentStatus = () => {
-    Axios.post("http://localhost:5000/updateEmploymentStatus", {
+    Axios.post(domain + "/updateEmploymentStatus", {
       employmentStatus: employmentStatus,
     }).then((response) => {});
   };
@@ -1215,7 +1218,7 @@ const Profile = () => {
   const getProfile = () => {
     beneficiaries();
     checkAddress();
-    Axios.post("http://localhost:5000/getProfile", {}).then((response) => {
+    Axios.post(domain + "/getProfile", {}).then((response) => {
       setUserName(response.data[0].name);
       setUserEmail(response.data[0].email);
       setUserPhone(response.data[0].phone);
@@ -1262,7 +1265,7 @@ const Profile = () => {
     const [address, setAddress] = useState("Address not provided");
 
     const checkAddress = () =>{
-      Axios.post("http://localhost:5000/getAddress", {}).then((response) => {
+      Axios.post(domain + "/getAddress", {}).then((response) => {
         console.log(response);
       if(response.data[0].address == "Address not found!" || response.data[0].address == "" || response.data[0].address == null){
         setAddress("Address not provided");
@@ -1356,7 +1359,7 @@ const Profile = () => {
 
       //Send beneficiary details to the backend
       const insertBenefeciary = () => {
-        Axios.post("http://localhost:5000/beneficiaryDetails", {
+        Axios.post(domain + "/beneficiaryDetails", {
           beneficiaryFirstName: beneficiaryFirstName,
           beneficiaryLastName: beneficiaryLastName,
           beneficiarydob: beneficiarydob,
@@ -1378,7 +1381,7 @@ const Profile = () => {
 
     //Send address to backend
     const insertAddress = () => {
-      Axios.post("http://localhost:5000/clientAddress", {
+      Axios.post(domain + "/clientAddress", {
         addressInput: addressInput,
         
       }).then((response) => {});

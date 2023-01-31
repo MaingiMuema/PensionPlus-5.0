@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import Navbar from "./NavBar";
 import React from "react";
@@ -7,6 +7,10 @@ import { Icon } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
+
 const Terms = () => {
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
@@ -14,7 +18,7 @@ const Terms = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         
       } else {
@@ -147,11 +151,93 @@ const Terms = () => {
                 <p>
                 IV.	The scheme shall pay all reasonable and necessary charges and expenses incurred by the Trustee in connection with the administration of the Fund 
                 </p>
-                <p><b>Definitions</b></p>
+                <h4><b>1. Definitions</b></h4>
                 <p>In this agreement, the following expressions shall, unless the context otherwise requires, have the following meaning:</p>
                 <p><b>“Insurance Company” </b>shall mean Sanlam Life Insurance Ltd whose principal office in Kenya is situated at Sanlam Tower, Waiyaki Way, Nairobi</p>
                 <p><b>“Income Tax Act”  </b>This IPP shall be governed by the provisions of the Income Tax Act (Chapter 470 of the laws of Kenya) and any statutory modification or re-enactment thereof and any rules made from time to time thereafter </p>
                 <h6 className="termsSalutation">“Fund” shall mean: -</h6>
+                <ol type="a">
+                  <li>An employer allocation account to records the contributions made by the employer on behalf of the employee</li>
+                  <li>An employee allocation account to record the contributions made by the employee </li>
+                  <li>Interest from investments less</li>
+                  <li>Withdrawals made in pursuant to item 3 of this policy, less</li>
+                  <li>Scheme expenses </li>
+                </ol>
+
+                <h4><b>2.	Investment responsibility </b></h4>
+                <p>The insurance company is responsible for investment of the “Fund” as defined above</p>
+
+                <h4><b>3.	Vesting period</b></h4>
+                <p>There is a vesting period that commences from the date of receipt of the fund, and it applies to transfers into a member’s contract from another administrator or member contributions as indicated as clause 10</p>
+
+                <h4><b>4.	Payment out of the Fund </b></h4>
+                <p>Partial withdrawal for contributing members is allowed up to a maximum of 30% of the fund in any given year. Provided that should the withdrawal amount exceed 30% of the fund at any time, such a withdrawal shall be
+                   treated as a surrender and will be subjected to a surrender charge as stipulated under item 10 of this contract </p>
+                <p>Payment out of the fund is only applicable if the fund is legally payable, if the fund is a deferred fund, therefore locked until early retirement age, then the fund is not payable until such a time or an event occurs
+                   that RBA Act, the Regulations, the scheme Trust Deed & Rules and any other relevant Regulation allows</p>
+
+                <h4><b>5.	Powers and Responsibilities of the Investment Manager</b></h4>
+                <p>Subject to the limitations on investment placed by rule 5 of the above Trust Deed and the rest of this agreement, which may be modified from time to time, investments of the funds shall be made by the Insurance Company
+                   in their absolute discretion. Provided that the investments are made in qualifying assets </p>
+                <p>The Insurance Company shall at inception of this contract and at the end of the year, advise the client in writing of the interest credited to the IPP contract during the expiring year </p>
+
+                <h4><b>6.	 Dealing and other Procedures </b></h4>
+                <ol type="a">
+                  <li>The Insurance Company shall ensure that all investments in the fund are made in accordance with the law</li>
+                  <li>The Insurance Company shall be responsible for the safe custody of the investments and all articles and documents held in their connection </li>
+                  <li>The Insurance Company shall be responsible for claiming all interest on the investments of the fund </li>
+                </ol>
+
+                <h4><b>7.	Warranty and Undertaking </b></h4>
+                <p>The member undertakes that he/she shall not, during the continuance of this agreement create any encumbrance over the IPP and / or the Fund or any part of it or modification of such trusts without giving the Insurance
+                   Company prior written notice </p>
+                
+                <h4><b>8.	Notice </b></h4>
+                <p>All notices or other communication required or permitted to be given hereunder shall be in writing and shall be delivered or sent to the address given </p>
+
+                <h4><b>9.	Termination Notice  </b></h4>
+                <p>This agreement may be terminated by either party in writing to that effect to the other party</p>
+                
+                <h4><b>10.	Surrender Charge </b></h4>
+                <p>The surrender charge, is a charge on an Individual pension contract because of immediate withdrawal after funds have been transferred to Sanlam Life or if the withdrawal is over 30% of the gross members fund in a given year from a contributory member
+
+                The Surrender charge shall be a percentage of the accumulated fund value as per the following table:
+                </p>
+
+                <div className="table-responsive">
+                    <table>
+                        <tr>
+                            <th><b>No of Years the contract has been in force</b></th>
+                            <th><b>Surrender charge as a percentage of the accumulated fund</b></th>
+                        </tr>
+                        <tr>
+                            <td>1 - 12 Months</td>
+                            <td>2%</td>
+                        </tr>
+                        <tr>
+                            <td>1 - 2 Years</td>
+                            <td>1%</td>
+                        </tr>
+                        <tr>
+                            <td>Over 2 Years</td>
+                            <td>0%</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h4><b>11.	Contract  </b></h4>
+                <p>The whole contracts include this agreement, and the application. A copy of the application is 
+                  attached this agreement and made part of it. All modifications to this agreement shall be in writing
+                   and signed by Sanlam Life Insurance Co Ltd or their authorized representative and policy holder </p>
+
+                <h3>IN WITNESS WHEREOF this Deed has been signed by: -	</h3>
+                <p>Signed and delivered: </p>
+                <p>ACCEPTED FOR Sanlam Life Insurance Ltd</p>
+                <p><b>And on Behalf of the Corporate Trustees</b></p>
+
+                <p>Name: Sanlam Pension</p>
+                <p>Signed: __________ </p>
+                <p>Date: __________</p>
             </div>
         </div>
     </div>

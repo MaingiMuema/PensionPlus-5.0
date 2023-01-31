@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import Logo from "../Assets/Logo.png";
 import Axios from "axios";
 
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 const DashboardNavBar = () => {
   const logout = () => {
-    Axios.get("http://localhost:5000/logout", {}).then((response) => {
+    Axios.get(domain + "/logout", {}).then((response) => {
       if (response.data) {
         window.location.href = "/";
         console.log(response);
@@ -14,12 +17,12 @@ const DashboardNavBar = () => {
   };
 
   const checkDetails = () => {
-    Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+    Axios.post(domain + "/checkUserDetails", {}).then(
       (response) => {
         if (response.data.message == "Client details present") {
-          window.location.href = "/#/pensionDetails";
+          window.location.href = "/pensionDetails";
         } else {
-          window.location.href = "/#/clientDetails";
+          window.location.href = "/clientDetails";
         }
       }
     );

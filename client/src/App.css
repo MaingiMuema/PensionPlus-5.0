@@ -420,6 +420,11 @@ Combine section(3rd section)
 Plan section(4th section)
 
 */
+@media screen and (max-width: 800px){
+  div.img7 {
+    margin-top: -130px;
+  }
+}
 
 .plan-section {
   margin-top: 150px;
@@ -1537,7 +1542,7 @@ Dashboard buttons
 .pendingTransfer {
   font-size: 24px;
   color: #ffc928;
-  margin-top: 20px;
+  margin-top: 5px;
   padding: 0 20px 0 20px;
 }
 
@@ -1608,6 +1613,11 @@ Login form
   Withdraw page
 
   */
+  @media screen and (max-width: 990px){
+    div .pMethodTxt {
+      margin-top: 30px;
+    }
+  }
 
 .paymentMethod {
   box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.276);
@@ -1921,7 +1931,7 @@ Admin DashBoard styles
 }
 
 .listContainer{
-  width: 90%;
+  width: 87%;
 }
 
 #searchForm {

@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import React from "react";
 import "semantic-ui-css/semantic.min.css";
@@ -7,15 +7,20 @@ import { useState, useEffect } from "react";
 import Axios from "axios";
 import Cookies from 'js-cookie';
 
+
+
 //Images
 import img1 from "../Assets/Verification illustrations.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 const ClientDetails = (props) => {
   var name = props.name;
   console.log(name);
 
   const addDetails = () => {
-    Axios.post("http://localhost:5000/userDetails", {
+    Axios.post("/userDetails", {
       phone: phone,
       id_no: id_no,
       dob: dob,
@@ -159,7 +164,7 @@ const ClientDetails = (props) => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
       } else {

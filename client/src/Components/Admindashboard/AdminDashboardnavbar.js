@@ -1,13 +1,16 @@
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import Logo from "../../Assets/Logo.png";
 import Axios from "axios";
 
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 const AdminDashboardNavBar = () => {
   const logout = () => {
-    Axios.get("http://localhost:5000/logout", {}).then((response) => {
+    Axios.get(domain + "/logout", {}).then((response) => {
       if (response.data) {
-        window.location.href = "/#/admin-login";
+        window.location.href = "/admin-login";
         console.log(response);
       }
     });

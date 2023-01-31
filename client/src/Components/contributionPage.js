@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Navbar from "./NavBar";
 import { useState, useEffect } from "react";
 import Axios from "axios";
@@ -11,6 +11,10 @@ import img2 from "../Assets/masterCard-removebg-preview.png";
 import img3 from "../Assets/mpesa-removebg-preview.png";
 import img4 from "../Assets/visa-removebg-preview.png";
 import img5 from "../Assets/create-acc-vector.png";
+
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 const ContributionPage = () => {
   const [inputValue, setInputValue] = useState();
@@ -29,7 +33,7 @@ const ContributionPage = () => {
    const [contributedAmount, setContributedAmount] = useState(0);
 
    const totalContributions = () => {
-    Axios.post("http://localhost:5000/totalContributions", {}).then(
+    Axios.post(domain + "/totalContributions", {}).then(
       (response) => {
         if (response) {
           setContributedAmount(response.data[0].totalContributed);
@@ -57,7 +61,7 @@ const ContributionPage = () => {
 
       //After money is deposited successfully, run the axios function below to store added amount to database
 
-      Axios.post("http://localhost:5000/contributionAmount", {
+      Axios.post(domain + "/contributionAmount", {
         contributeAmount: contributeAmount,
       }).then(
       (response) => {
@@ -70,7 +74,7 @@ const ContributionPage = () => {
       const [withdrawAmnt, setWithdrawAmnt] = useState(0);
 
       const withdrawals = () => {
-        Axios.post("http://localhost:5000/withdrawals", {}).then(
+        Axios.post(domain + "/withdrawals", {}).then(
           (response) => {
             if (response) {
               setWithdrawAmnt(response.data[0].withdrawAmount);
@@ -90,7 +94,7 @@ const ContributionPage = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
@@ -108,7 +112,6 @@ const ContributionPage = () => {
         document.getElementById('cConfirm2').style.zIndex='1'
     }
     else{
-      contributionAmount();
       document.getElementById('cConfirm').style.display='flex';
       document.getElementById('cConfirm').style.zIndex='1';
     }
@@ -120,6 +123,7 @@ const handleClick3 = () =>{
 }
 
 const successAlert = () =>{
+  contributionAmount();
   alert("You have successfully deposited: Ksh" + contributeAmount);
 }
 
@@ -150,7 +154,7 @@ const successAlert = () =>{
             <h1>Contribute with ease</h1>
           </div>
         </div>
-        <div class="col-lg-4 fadeInBottom">
+        <div class="col-lg-4 fadeInBottom d-flex justify-content-center">
           <div className="account-Form">
             <h3>How much would you like to contribute?</h3>
             <form
@@ -189,7 +193,7 @@ const successAlert = () =>{
           <div className="row">
             <div className="col-lg-4"></div>
             <div className="col-lg-4 fadeInUp">
-              <h3 className="text-center">Payment method</h3>
+              <h3 className="text-center pMethodTxt">Payment method</h3>
               <div className="d-flex justify-content-center">
                 <label for="visa">
                   <div>

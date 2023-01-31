@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Navbar from "./NavBar";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import "semantic-ui-css/semantic.min.css";
@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 
 import img2 from "../Assets/Bonus badge.png";
 import img3 from "../Assets/Personal pension.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 /*
 
@@ -228,7 +231,7 @@ function PensionCalculator() {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
       } else {

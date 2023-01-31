@@ -1,12 +1,16 @@
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Logo from "../Assets/Logo.png";
 import navLinkArrow from "../Assets/navlink-arrow.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 
 const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand-xl navbar-light fadeInUp">
-      <Link className="navbar-brand" to="/">
+      <Link className="navbar-brand" onClick={ function move(){window.location.href = "/"}}>
         <img src={Logo} alt="Logo" />
       </Link>
 
@@ -25,85 +29,50 @@ const Navbar = () => {
       <div className="navbar-collapse collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
-            <Link className="nav-link">About</Link>
+            <Link className="nav-link" onClick={ function move(){window.location.href = "/about"}}>About</Link>
           </li>
 
           <li className="nav-item dropdown">
-            <a>
               <Link className="nav-link dropdown-toggle">Services</Link>
-            </a>
             <div className="navLinkDropdown dropdown-content">
-               <a href="#">
-                  <Link to="/userDashboard">Combine</Link>
-                </a>
-                <a href="#">
-                  <Link to="/userDashboard">Contribute</Link>
-                </a>
-                <a href="#">
-                  <Link to="/consultancy">Consultancy</Link>
-                </a>
+                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Combine</Link>
+                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Contribute</Link>
+                  <Link onClick={ function move(){window.location.href = "/consultancy"}}>Consultancy</Link>
             </div>
           </li>
          
           <li className="nav-item dropdown">
-            <a>
               <Link className="nav-link dropdown-toggle">Resources</Link>
-            </a>
             <div className="navLinkDropdown dropdown-content">
-               <a href="#">
-                  <Link to="/pensionCalculator">Pension Calculator</Link>
-                </a>
-                <a href="#">
-                  <Link to="/pensionsExplained">Pensions Explained</Link>
-                </a>
-                <a href="#">
-                  <Link to="/combineProcess">WorkPlace Pension</Link>
-                </a>
-                <a href="#">
-                  <Link to="/contributeProcess">Self-employed Saver</Link>
-                </a>
-                <a href="#">
-                  <Link to="/FAQs">FAQs</Link>
-                </a>
-                <a href="#">
-                  <Link to="/terms">Terms & Conditions</Link>
-                </a>
-                <a href="#">
-                  <Link to="/">Contact Us</Link>
-                </a>
+                  <Link onClick={ function move(){window.location.href = "/pensionCalculator"}}>Pension Calculator</Link>
+                  <Link onClick={ function move(){window.location.href = "/pensionsExplained"}}>Pensions Explained</Link>
+                  <Link onClick={ function move(){window.location.href = "/combineProcess"}}>WorkPlace Pension</Link>
+                  <Link onClick={ function move(){window.location.href = "/contributeProcess"}}>Self-employed Saver</Link>
+                  <Link onClick={ function move(){window.location.href = "/FAQs"}}>FAQs</Link>
+                  <Link onClick={ function move(){window.location.href = "/terms"}}>Terms & Conditions</Link>
+                  <Link onClick={ function move(){window.location.href = "/"}}>Contact Us</Link>
             </div>
           </li>
 
           <li className="nav-item dropdown">
-            <a>
               <Link className="nav-link dropdown-toggle">Our Pension</Link>
-            </a>
             <div className="navLinkDropdown dropdown-content">
-               <a href="#">
-                  <Link to="/ourPension">Our Pension</Link>
-                </a>
-                <a href="#">
-                  <Link to="/howItWorks">How it works</Link>
-                </a>
-                <a href="#">
-                  <Link to="/userDashboard">Transfers</Link>
-                </a>
-                <a href="#">
-                  <Link to="/userDashboard">Contributions</Link>
-                </a>
-                <a href="#">
-                  <Link to="/userDashboard">Withdraw</Link>
-                </a>
+                  <Link onClick={ function move(){window.location.href = "/ourPension"}}>Our Pension</Link>
+                  <Link onClick={ function move(){window.location.href = "/howItWorks"}}>How it works</Link>
+                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Transfers</Link>
+                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Contributions</Link>
+                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Withdraw</Link>
+
             </div>
           </li>
 
         </ul>
 
         <div className="acc-btns">
-          <Link className="logIn-btn" to="/login">
+          <Link className="logIn-btn" onClick={ function move(){window.location.href = "/login"}}>
             LOG IN
           </Link>
-          <Link to="/create-account">
+          <Link onClick={ function move(){window.location.href = "/create-account"}}>
             <button className="signUp-btn">SIGN UP</button>
           </Link>
         </div>

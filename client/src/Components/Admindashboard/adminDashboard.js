@@ -16,13 +16,16 @@ import {
 } from "recharts";
 import TableComponent from "./tableComponent";
 import Axios from "axios";
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 //Images
 import img1 from "../../Assets/totalIcon.png";
 import img2 from "../../Assets/whiteAddIcon.png";
 import img3 from "../../Assets/whiteContributionIcon.png";
 import img4 from "../../Assets/whiteWithdrawIcon.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 function AdminDashboard() {
   //Queued transfers data
@@ -41,7 +44,7 @@ function AdminDashboard() {
 
   //Getting queued transfers
   const queuedTransfers = () => {
-    Axios.post("http://localhost:5000/queuedTransfers", {}).then((response) => {
+    Axios.post(domain + "/queuedTransfers", {}).then((response) => {
       if (response.data.message == "No pension transfers") {
 
       } else {
@@ -56,9 +59,9 @@ function AdminDashboard() {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/adminAuth", {}).then((response) => {
+    Axios.post(domain + "/adminAuth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
-        window.location.href = "/#/admin-login";
+        window.location.href = "admin-login";
       } else {
         setLoginStatus("true");
       }
@@ -78,7 +81,7 @@ function AdminDashboard() {
     withdrawTable();
     fetchSuggestions();
 
-    Axios.post("http://localhost:5000/totalCases", {}).then((response) => {
+    Axios.post(domain + "/totalCases", {}).then((response) => {
       let totalAccounts;
 
       for (var i = 0; i < response.data.length; i++) {
@@ -101,7 +104,7 @@ function AdminDashboard() {
 
   //Getting total combined to populate combine pie
   const pieData = () => {
-    Axios.post("http://localhost:5000/getPieData", {}).then((response) => {
+    Axios.post(domain + "/getPieData", {}).then((response) => {
       if (response.data == "No combined pensions") {
         setCombinedAmount(0);
         
@@ -589,7 +592,7 @@ function AdminDashboard() {
 
   const pendingTransfers = () => {
     pieData();
-    Axios.post("http://localhost:5000/totalPendingTransfers", {}).then(
+    Axios.post(domain + "/totalPendingTransfers", {}).then(
       (response) => {
         if (response.data.message != "No Pending transfers") {
           setPendingTransfer(response.data[0].totalPendingTransfers);
@@ -619,7 +622,7 @@ function AdminDashboard() {
 
   //Get admin name from backend
   const adName = () => {
-    Axios.post("http://localhost:5000/adminName", {}).then((response) => {
+    Axios.post(domain + "/adminName", {}).then((response) => {
       if (response) {
         setAdminName(response.data);
       } else {
@@ -631,7 +634,7 @@ function AdminDashboard() {
   const [Month, setMonth] = useState([]);
 
   const getCases = () => {
-    Axios.post("http://localhost:5000/getCases", {}).then((response) => {
+    Axios.post(domain + "/getCases", {}).then((response) => {
       var JanuaryCases = 0;
       var FebruaryCases = 0;
       var MarchCases = 0;
@@ -1431,7 +1434,7 @@ function AdminDashboard() {
 
   //Getting queued transfers
   const contributionsTable = () => {
-    Axios.post("http://localhost:5000/contributionsTable", {}).then(
+    Axios.post(domain + "/contributionsTable", {}).then(
       (response) => {
         if (response.data.message == "No contributions") {
         } else {
@@ -1466,7 +1469,7 @@ function AdminDashboard() {
   //Getting recent withdrawals
 
   const withdrawTable = () => {
-    Axios.post("http://localhost:5000/withdrawTable", {}).then((response) => {
+    Axios.post(domain + "/withdrawTable", {}).then((response) => {
       if (response.data.message == "No withdrawals") {
         setContribBalance(response.data);
       } else {
@@ -1547,7 +1550,7 @@ function AdminDashboard() {
         </div>
       </div>
     );
-    Axios.post("http://localhost:5000/getSig", {
+    Axios.post(domain + "/getSig", {
       clientId: clientId,
       pensionProvider: pensionProvider,
       clientEmployer: clientEmployer,
@@ -1640,7 +1643,7 @@ function AdminDashboard() {
   //Send Transfer update status to backend
 
   const statusUpdate = () => {
-    Axios.post("http://localhost:5000/statusUpdate", {
+    Axios.post(domain + "/statusUpdate", {
       clientId: clientId,
       pensionAmount: pensionAmount,
       clientEmployer: clientEmployer,
@@ -1712,7 +1715,7 @@ function AdminDashboard() {
 
   const totalCombined = () => {
     totalContributions();
-    Axios.post("http://localhost:5000/clientProfileTotalCombined", {
+    Axios.post(domain + "/clientProfileTotalCombined", {
       idNumber: idNumber,
     }).then((response) => {
       if (response) {
@@ -1727,7 +1730,7 @@ function AdminDashboard() {
   const [contributedAmount, setContributedAmount] = useState(0);
 
   const totalContributions = () => {
-    Axios.post("http://localhost:5000/clientProfileTotalContributions", {
+    Axios.post(domain + "/clientProfileTotalContributions", {
       idNumber: idNumber,
     }).then((response) => {
       if (response) {
@@ -1750,7 +1753,7 @@ function AdminDashboard() {
   const search = () => {
     totalCombined();
 
-    Axios.post("http://localhost:5000/searchDetails", {
+    Axios.post(domain + "/searchDetails", {
       idNumber: idNumber,
     }).then((response) => {
       setClientName(response.data[0].name);
@@ -1773,7 +1776,7 @@ function AdminDashboard() {
   // Update the suggestions in the state
 
   const fetchSuggestions = () => {
-    Axios.post("http://localhost:5000/getClient", {}).then((response) => {
+    Axios.post(domain + "/getClient", {}).then((response) => {
       if (response.data.message == "No client") {
       } else {
         let searchName = [];
@@ -1806,6 +1809,7 @@ function AdminDashboard() {
     });
   };
 
+
   const [show, setShow] = React.useState(false);
 
   const ItemList = (() => {
@@ -1829,6 +1833,39 @@ function AdminDashboard() {
   const hideSearchList = () => {
     setShow(false);
   };
+
+  //Delete account 
+  const deleteAccount = () =>{
+    Axios.post(domain + "/deleteAccount", {
+      clientIdNumber: clientIdNumber,
+      clientEmail: clientEmail,
+    }).then((response) => {
+      if(response.data == "Account Deleted"){
+        alertBox();
+      }
+    });
+  }
+
+  //Alert
+
+  const alertBox = () =>{
+    document.getElementById('cConfirm2').style.display='flex';
+    document.getElementById('cConfirm2').style.zIndex='1'
+  }
+
+  const handleClick2 = () =>{
+    document.getElementById('cConfirm2').style.display='none';
+    document.getElementById('cConfirm2').style.zIndex='-1';
+  };
+
+  let alertContent;
+
+  if(clientName == "" || clientName == null){
+    alertContent = "No profile to delete";
+  }
+  else{
+    alertContent = "Account Deleted";
+  }
 
   return (
     <>
@@ -1967,7 +2004,7 @@ function AdminDashboard() {
                   </button>
     
                 </div>
-                <div className="listContainer">
+                <div className="listContainer" onClick={hideSearchList}>
                   <div className="list">{ItemList}</div>
                 </div>
              
@@ -1976,7 +2013,7 @@ function AdminDashboard() {
             </div>
             <div className="col-lg-2"></div>
           </div>
-          <div className="row">
+          <div className="row" onMouseDown={hideSearchList}>
             <div className="col-lg-2"></div>
 
             <div className="col-lg-8">
@@ -2056,7 +2093,7 @@ function AdminDashboard() {
                     </span>
                   </div>
                 </div>
-                <button className="call-to-action-deleteBTN">
+                <button className="call-to-action-deleteBTN" onClick={deleteAccount}>
                   Delete client account
                 </button>
               </div>
@@ -2429,6 +2466,28 @@ function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/*Alert*/}
+      <div class="modal container-fluid " onClick={handleClick2} id="cConfirm2">
+        <div class="card contributeConfirm fadeInBottom" id="card">
+            <div> 
+                
+            </div>
+            <div>
+              <div id="modal-card-content">
+               <p><b>{alertContent}</b></p>
+              </div>
+              <div class="d-flex justify-content-center">
+                  <Link  data-bs-toggle="collapse"
+                    href="#profile"
+                    data-bs-target="#profile"
+                    role="button"
+                    aria-expanded="false"
+                    aria-bs-controls="profile" onClick={handleClick2} class="btn btn-outline-secondary" id="s-btn-C-page">Ok</Link>
+              </div>
+            </div>
+        </div>
+      </div> 
     </>
   );
 }

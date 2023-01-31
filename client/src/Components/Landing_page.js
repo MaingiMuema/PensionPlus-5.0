@@ -1,10 +1,11 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Navbar from "./NavBar";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import "semantic-ui-css/semantic.min.css";
 import { Icon } from "semantic-ui-react";
 import Axios from "axios";
 import { useEffect, useState } from "react";
+import $ from 'jquery';
 
 //Images
 
@@ -20,6 +21,10 @@ import img9 from "../Assets/reviwer1.png";
 import img10 from "../Assets/reviwer2.png";
 import img11 from "../Assets/reviwer3.png";
 import img12 from "../Assets/sanalm 1.png";
+
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 var screenWidth = window.screen.width;
 
@@ -93,14 +98,18 @@ if (screenWidth <= 900) {
   );
 }
 
+
+
 function Landingpage() {
+
+
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
 
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post((domain + "/auth"), {}).then((response) => {
       if (response.data.message == "Not authenticated") {
       } else {
         setLoginStatus("true");
@@ -121,7 +130,7 @@ function Landingpage() {
   var contributeLink;
   var calculatorLink;
   var personalPensionLink;
-  var contributionLink;
+  var workPlaceLink ;
 
   if (loginStatus == "true") {
     NavBar = (
@@ -156,9 +165,9 @@ function Landingpage() {
       </Link>
     );
 
-    contributionLink = (
+    workPlaceLink  = (
       <Link class="arrow-button" to="/userDashboard">
-        Employer<span class="arrow"></span>
+        workplace<span class="arrow"></span>
       </Link>
     );
   } else {
@@ -181,7 +190,7 @@ function Landingpage() {
     );
 
     combineBtnLandingPage = (
-      <Link to="/create-account">
+      <Link to="/login">
         <button class="call-to-action">Combine with PensionPlus</button>
       </Link>
     );
@@ -195,9 +204,9 @@ function Landingpage() {
       </Link>
     );
 
-    contributionLink = (
+    workPlaceLink  = (
       <Link class="arrow-button" to="/login">
-        Employer<span class="arrow"></span>
+        Workplace<span class="arrow"></span>
       </Link>
     );
   }
@@ -230,6 +239,9 @@ function Landingpage() {
         </div>
         <div className="container pension-offerings">
           <div className="row">
+            <div className="col-lg-2 fadeInUp">
+              
+            </div>
             <div className="col-lg-4 fadeInUp">
               <div className="section2-icons">
                 <img
@@ -240,42 +252,28 @@ function Landingpage() {
               </div>
               <h3>Personal pension</h3>
               <p>
-                With a few easy steps, you can combine previous pensions or
-                begin saving on our online platform.
+                With a few easy steps, you can contribute and begin saving on our online platform.
               </p>
+              <br/>
               {personalPensionLink}
             </div>
             <div className="col-lg-4 fadeInUp">
               <div className="section2-icons">
                 <img
-                  className="image-fluid"
-                  src={img5}
-                  alt="Personalpension icon"
-                />
-              </div>
-              <h3>Contribution at a click</h3>
-              <p>
-                Set up Direct debits or bank transfers in just a few taps, and
-                use our retirement planner to keep your savings on track.
-              </p>
-              {contributionLink}
-            </div>
-            <div className="col-lg-4 fadeInUp">
-              <div className="section2-icons">
-                <img
-                  className="image-fluid"
+                  className="image-fluid contributionImg"
                   src={img4}
                   alt="Personalpension icon"
                 />
               </div>
               <h3>Workplace pension</h3>
               <p>
-                Our auto-enrolment pension will save you money and motivate your
-                workforce. Try it now.
+                Our auto-enrolment pension will save you money and get you set for
+                your retirement. combine previous pensions with ease. Try it now.
               </p>
-              <Link class="arrow-button">
-                Employer<span class="arrow"></span>
-              </Link>
+              {workPlaceLink}
+            </div>
+            <div className="col-lg-2 fadeInUp">
+              
             </div>
           </div>
         </div>
@@ -804,3 +802,25 @@ function Landingpage() {
 }
 
 export default Landingpage;
+
+  //FadeInUp animation when section on sight
+  function checkElementLocation() {
+    var $window = $(window);
+    var bottom_of_window = $window.scrollTop() + $window.height();
+  
+    $('.contributionImg .img-fluid').each(function(i) {
+      var $that = $(this);
+      var bottom_of_object = $that.position().top + $that.outerHeight();
+  
+      //if element is in viewport, add the animate class
+      if (bottom_of_window > bottom_of_object) {
+        $(this).addClass('fadeInUp');
+      }
+    });
+  }
+  // if in viewport, show the animation
+  checkElementLocation();
+  
+  $(window).on('scroll', function() {
+    checkElementLocation();
+  });

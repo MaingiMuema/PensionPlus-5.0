@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import DashboardNavBar from "./dashboardNavbar";
 import React, { useRef } from "react";
 import moment from "moment";
@@ -37,6 +37,9 @@ import img5 from "../Assets/whitePensionCalculatorIcon.png";
 import img6 from "../Assets/collaborate.png";
 import img7 from "../Assets/user.png";
 
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 function UserDashboard() {
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
@@ -44,7 +47,7 @@ function UserDashboard() {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.location.href = "/";
       } else {
@@ -62,40 +65,40 @@ d.setTime(d.getTime() + (0.25*60*60*1000));
 var expires = "expires="+ d.toUTCString();
 
   const checkDetails = () => {
-    Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+    Axios.post(domain  + "/checkUserDetails", {}).then(
       (response) => {
         if (response.data.message == "Client details present") {
-          window.location.href = "/#/pensionDetails";
+          window.location.href = "/pensionDetails";
           
         } else {
           document.cookie = "path=pensionDetails;" + expires + ";path=/";
-          window.location.href = "/#/clientDetails";
+          window.location.href = "/clientDetails";
         }
       }
     );
   };
 
   const checkDetails2 = () => {
-    Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+    Axios.post(domain  + "/checkUserDetails", {}).then(
       (response) => {
         if (response.data.message == "Client details present") {
-          window.location.href = "/#/contributionPage";
+          window.location.href = "/contributionPage";
         } else {
           document.cookie = "path=contributionPage;" + expires + ";path=/";
-          window.location.href = "/#/clientDetails";
+          window.location.href = "/clientDetails";
         }
       }
     );
   };
 
   const checkDetails3 = () => {
-    Axios.post("http://localhost:5000/checkUserDetails", {}).then(
+    Axios.post(domain  + "/checkUserDetails", {}).then(
       (response) => {
         if (response.data.message == "Client details present") {
-          window.location.href = "/#/profile";
+          window.location.href = "/profile";
         } else {
           document.cookie = "path=profile;" + expires + ";path=/";
-          window.location.href = "/#/clientDetails";
+          window.location.href = "/clientDetails";
         }
       }
     );
@@ -108,7 +111,7 @@ var expires = "expires="+ d.toUTCString();
     totalContributions();
     transactions();
     activity();
-    Axios.post("http://localhost:5000/totalCombined", {}).then((response) => {
+    Axios.post(domain  + "/totalCombined", {}).then((response) => {
       if (response) {
         setTotalCombinedAmount(response.data[0].totalCombined);
       } else {
@@ -122,7 +125,7 @@ var expires = "expires="+ d.toUTCString();
 
   const totalContributions = () => {
     withdrawals();
-    Axios.post("http://localhost:5000/totalContributions", {}).then(
+    Axios.post(domain  + "/totalContributions", {}).then(
       (response) => {
         if (response) {
           setContributedAmount(response.data[0].totalContributed);
@@ -138,7 +141,7 @@ var expires = "expires="+ d.toUTCString();
     const [withdrawAmount, setWithdrawAmount] = useState(0);
 
     const withdrawals = () => {
-      Axios.post("http://localhost:5000/withdrawals", {}).then(
+      Axios.post(domain  + "/withdrawals", {}).then(
         (response) => {
           if (response) {
             setWithdrawAmount(response.data[0].withdrawAmount);
@@ -201,7 +204,7 @@ var expires = "expires="+ d.toUTCString();
 
   //Get pending pension transfers
   const pendingTransfers = () => {
-    Axios.post("http://localhost:5000/pendingTransfers", {}).then(
+    Axios.post(domain  + "/pendingTransfers", {}).then(
       (response) => {
  
         if (response.data.message == "No pension transfers") {
@@ -241,7 +244,7 @@ var expires = "expires="+ d.toUTCString();
   //Get pension providers
   const activity = () => {
 
-    Axios.post("http://localhost:5000/activity", {}).then((response) => {
+    Axios.post(domain  + "/activity", {}).then((response) => {
 
       if (response.data.message == "No activity") {
         setTransferList([
@@ -268,6 +271,29 @@ var expires = "expires="+ d.toUTCString();
     });
   };
 
+  let firstDeposit; 
+  
+  firstDeposit = ((1*activityList[activityList.length-1].activityAmount)/100);
+
+    //Referral reward
+    const referralReward = () => {
+      Axios.post(domain  + "/referralReward", {
+        firstDeposit: firstDeposit,
+      }).then((response) => {
+  
+      });
+    };
+
+    //Check For the first contribution
+    const checkReward = () =>{
+      if(activityList.length == 1){
+        referralReward();
+      };
+    }
+
+    setInterval(checkReward, 2000)
+   
+
   //Line graph data
 
   //Get amount and year from the backend
@@ -277,7 +303,7 @@ var expires = "expires="+ d.toUTCString();
   const [KshAmount, setKshAmount] = useState();
 
   const transactions = () => {
-    Axios.post("http://localhost:5000/transactions", {}).then((response) => {
+    Axios.post(domain  + "/transactions", {}).then((response) => {
       var tamount = [];
 
       for (var i = 0; i < response.data.length; i++) {
@@ -329,8 +355,9 @@ var expires = "expires="+ d.toUTCString();
   }
 
   //SMS Trigger
+  
   /* const sendSMS = () =>{
-    Axios.post("http://localhost:5000/sms", {}).then((response) => {
+    Axios.post(domain  + "/sms", {}).then((response) => {
       console.log(response.data);
     });
   } */
@@ -623,13 +650,13 @@ var expires = "expires="+ d.toUTCString();
               <hr className="pensionTransferDivider" />
               <div className="listUpdateContainer">
                 {activityList.map((activity) => (
-                  <li class="pendingTransfer">
+                  <div class="pendingTransfer">
                     <div className="d-flex justify-content-center">
                       
                     </div>
-                    <span className="pendingTransferProviderName">
-                      {activity.activity}<br/><span className="activityTime">{activity.activityTime}</span>
-                    </span>
+                    <li className="pendingTransfer"><span className="pendingTransferProviderName">
+                     {activity.activity} <br/><span className="activityTime">{activity.activityTime}</span>
+                    </span></li>
                     <span
                       className="d-flex justify-content-end"
                       id="activityAmount"
@@ -638,7 +665,7 @@ var expires = "expires="+ d.toUTCString();
                         Ksh{activity.activityAmount}
                       </span>
                     </span>
-                  </li>
+                  </div>
                 ))}
               </div>
             </div>

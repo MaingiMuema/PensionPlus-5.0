@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import React, { useRef } from "react";
 import SignatureCanvas from "react-signature-canvas";
@@ -12,6 +12,9 @@ import { Icon } from "semantic-ui-react";
 import img1 from "../Assets/pensionDetail vector.webp";
 import img2 from "../Assets/successTick.png";
 import img3 from "../Assets/digital-signature 1.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 const PensionDetails = () => {
   //Input value
@@ -155,7 +158,7 @@ const PensionDetails = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
       } else {
@@ -174,7 +177,7 @@ const PensionDetails = () => {
 
   //Sending user pension details to the backend
   const pensionDetails = () => {
-    Axios.post("http://localhost:5000/pensionDetails", {
+    Axios.post(domain + "/pensionDetails", {
       companyName: companyName,
       companyEmail: companyEmail,
       provider: provider,
@@ -188,7 +191,7 @@ const PensionDetails = () => {
 
   //Send user signature to backend
   const userSig = () => {
-    Axios.post("http://localhost:5000/userSignature", {
+    Axios.post(domain + "/userSignature", {
       userSignature: sigData,
     }).then((response) => {
       console.log(response.data.message);

@@ -59,6 +59,8 @@ app.post('/create', async(req, res) => {
         const name = req.body.name;
         const email = req.body.email;
         const password = req.body.password;
+        const refValue = req.body.refValue;
+        const bonusCheck = 0;
 
         db.query("SELECT * FROM userAccount WHERE email = ?;",
         email,
@@ -76,8 +78,8 @@ app.post('/create', async(req, res) => {
                         console.log(err);
                     }
         
-                    db.query("INSERT INTO userAccount (name, email, password) VALUES (?, ?, ?);", 
-                    [name, email, hash], 
+                    db.query("INSERT INTO userAccount (name, email, password, referrercode, bonuscheck) VALUES (?, ?, ?, ?, ?);", 
+                    [name, email, hash, refValue,bonusCheck], 
                     (err, result) =>{
                         if(err){
                             console.log(err);
@@ -485,7 +487,7 @@ app.post('/pendingTransfers', (req, res) => {
     //id from userAccount table
     const userId = req.session.user[0].id;
 
-        db.query("SELECT PensionProvider, transferStatus FROM transactions WHERE userId = ? AND transferStatus < 100;", 
+        db.query("SELECT PensionProvider, transferStatus FROM transactions WHERE userId = ? AND transferStatus < 100 ORDER BY time DESC;", 
         [userId],
         (err, result) =>{
             if(err){
@@ -508,7 +510,7 @@ app.post('/activity', (req, res) => {
     //id from userAccount table
     const userId = req.session.user[0].id;
 
-        db.query("SELECT transactionType AS activity, Amount AS activityAmount, DATE_FORMAT(time, '%D-%M-%Y') AS activityTime FROM transactions WHERE userId = ? AND transferStatus > 99;", 
+        db.query("SELECT transactionType AS activity, Amount AS activityAmount, DATE_FORMAT(time, '%D-%M-%Y') AS activityTime FROM transactions WHERE userId = ? AND transferStatus > 99 ORDER BY time DESC;", 
         [userId],
         (err, result) =>{
             if(err){
@@ -832,9 +834,7 @@ app.post('/withdraw', (req, res) => {
 
 });
 
-//Get total client withdrawn amount
-
-//23. Get Address
+//26. Get total client withdrawn amount
 
 app.post('/withdrawals', (req, res) => {
     const userId = req.session.user[0].id;
@@ -856,6 +856,78 @@ app.post('/withdrawals', (req, res) => {
     }
     );
 })
+
+//27. Get userId for referral purpose
+
+app.post('/setReferral', (req, res) => {
+    const userId = req.session.user[0].id;
+
+    db.query("SELECT id as referralId FROM useraccount WHERE id = ?;", 
+    [userId], 
+    (err, result) =>{
+
+        if(err){
+            console.log(err);
+        }
+        if(result.length > 0){
+            res.send(result);
+        }
+        else{
+           res.send("No referralId");
+        }
+    }
+    );
+})
+
+// 28. Referral reward
+
+app.post('/referralReward', (req, res) => {    
+    const firstDeposit = req.body.firstDeposit;
+    const userId = req.session.user[0].id;
+    const transactionType = "Referral bonus";
+    const transferStatus = 100;
+    const bonusCheck = 1;
+    
+
+    db.query("SELECT referrercode FROM useraccount WHERE id = ? AND bonuscheck > 0", 
+    [userId], 
+    (err, result) =>{
+        if(err){
+            console.log(err);
+        }
+        if(result.length>0){
+            let referreId = result;
+            db.query("INSERT INTO  transactions (Amount, transferStatus, transactionType, userId) VALUES (?, ?, ?, ?)", 
+            [firstDeposit, transferStatus, transactionType, referreId], 
+            (err, result) =>{
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    db.query("UPDATE useraccount SET bonuscheck = ?", 
+                    [bonusCheck], 
+                    (err, result) =>{
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            res.send("Bonus awarded.");
+                        }
+                    }
+                    );
+                }
+            }
+            );
+        }
+        else{
+           res.send("No referrer");
+        }
+    }
+    );
+
+
+
+});
 
 
 //
@@ -1402,6 +1474,8 @@ app.post('/send', async(req, res) =>{
   
 })
 
+
+
 //Trigger SMS
 /*
 app.post("sms", async(req,res) => {
@@ -1415,6 +1489,76 @@ client.messages
 })
 
 */
+
+//18 Delete userAccount
+app.post('/deleteAccount', (req, res) => {
+    const clientIdNumber = req.body.clientIdNumber;
+    const clientEmail = req.body.clientEmail;
+    let userId;
+
+    db.query("SELECT id FROM useraccount WHERE email = ?;", 
+    [clientEmail],
+    (err, result) =>{
+        if(err){
+            console.log({err : err});
+        }
+        if(result.length > 0){
+          userId = result;
+          db.query("DELETE FROM userdetails WHERE id_no= ?;", 
+            [clientIdNumber],
+            (err, result) =>{
+                if(err){
+                    console.log({err : err});
+                }
+                else{
+                    db.query("DELETE FROM clientbeneficiary WHERE userId= ?;", 
+                    [userId],
+                    (err, result) =>{
+                        if(err){
+                            console.log({err : err});
+                        }
+                        else{
+                            db.query("DELETE FROM pensiondetails WHERE idno = ?;", 
+                            [clientIdNumber],
+                            (err, result) =>{
+                                if(err){
+                                    console.log({err : err});
+                                }
+                                else{
+                                   
+                                    
+                                }
+                            }
+                            );    
+                        }
+                    }
+                    ); 
+                    
+                }
+            }
+            );       
+            }
+        else{
+            
+        }
+    }
+    );
+
+    db.query("DELETE FROM useraccount WHERE email = ?;", 
+    [clientEmail],
+    (err, result) =>{
+        if(err){
+            console.log({err : err});
+        }
+        else{
+            res.send("Account Deleted");
+            
+        }
+    }
+    );  
+
+  
+}); 
 
 app.listen(5000, ()=>{
     

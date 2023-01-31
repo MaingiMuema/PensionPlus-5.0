@@ -1,10 +1,13 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Navbar from "./NavBar";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 
 //Images
 import img1 from "../Assets/create-acc-vector.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 const LogIn = () => {
   //Checkpath
@@ -17,7 +20,7 @@ const LogIn = () => {
   Axios.defaults.withCredentials = true;
 
   const login = () => {
-    Axios.post("http://localhost:5000/login", {
+    Axios.post(domain + "/login", {
       email: email,
       password: password,
     }).then((response) => {
@@ -28,7 +31,7 @@ const LogIn = () => {
         setCheckPath("/login");
         alert(response.data.message);
       } else {
-        window.location.href = "/#/userDashboard";
+        window.location.href = "/userDashboard";
       }
     });
   };
@@ -90,7 +93,7 @@ const LogIn = () => {
   }
 
   return (
-    <div className="container-fluid account-section">
+    <div onLoad={function scrollTop(){document.body.scrollTop = 0; document.documentElement.scrollTop = 0;}} className="container-fluid account-section">
       <div class="container">
         <>
           <Router>

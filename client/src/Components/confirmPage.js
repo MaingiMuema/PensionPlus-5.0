@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import React, { useState, useEffect } from "react";
 import $ from "jquery";
@@ -10,6 +10,10 @@ import { Icon } from "semantic-ui-react";
 //Images
 import img1 from "../Assets/confirmPageVector.png";
 
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 const ConfirmPage = () => {
   //Providers List
   const [providerList, setProviderList] = useState([]);
@@ -18,7 +22,7 @@ const ConfirmPage = () => {
   const pensionProvider = () => {
     scrollWin();
 
-    Axios.post("http://localhost:5000/pensionProvider", {}).then((response) => {
+    Axios.post(domain + "/pensionProvider", {}).then((response) => {
       console.log(response.data.message);
       if (response.data.message == "Providers are missing.") {
         setProviderList([
@@ -39,7 +43,7 @@ const ConfirmPage = () => {
   const queueTransfer = () => {
     scrollWin();
     setTransferStatus(1);
-    Axios.post("http://localhost:5000/queueTransfer", {
+    Axios.post(domain + "/queueTransfer", {
       transferStatus: transferStatus,
     }).then((response) => {
       console.log(response.data.message);
@@ -55,11 +59,11 @@ const ConfirmPage = () => {
       document.getElementById("consentInput2").checked
     ) {
       queueTransfer();
-      window.location.href = "/#/userDashboard";
+      window.location.href = "/userDashboard";
       //setcheckPath("/userDashboard");
     } else {
       alert("Please agree to our terms!");
-      window.location.href = "/#/confirmPage";
+      window.location.href = "/confirmPage";
     }
   };
 
@@ -69,7 +73,7 @@ const ConfirmPage = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);

@@ -1,7 +1,7 @@
 import React from "react";
 import $ from "jquery";
 import { Icon } from "semantic-ui-react";
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import { useState, useEffect } from "react";
 import Axios from "axios";
@@ -13,6 +13,9 @@ import img2 from "../Assets/masterCard-removebg-preview.png";
 import img3 from "../Assets/mpesa-removebg-preview.png";
 import img4 from "../Assets/visa-removebg-preview.png";
 
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 const Payment = () => {
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
@@ -20,7 +23,7 @@ const Payment = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);

@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Navbar from "./NavBar";
 import { useState, useEffect } from "react";
 import Axios from "axios";
@@ -8,8 +8,35 @@ import ClientDetails from "./clientDetails";
 //Images
 import img1 from "../Assets/create-acc-vector.png";
 
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
+
 Axios.defaults.withCredentials = true;
 const CreateAccount = () => {
+
+    //Get referral Id
+
+    let referralLink = window.location.href;  
+    let referralValue;
+    let keyValue;
+  
+    let paramString = referralLink.split('?')[1];
+    let queryString = new URLSearchParams(paramString);
+    for(let pair of queryString.entries()) {
+        keyValue = pair[0];
+        referralValue = pair[1];
+  
+    }
+  
+    let refValue;
+  
+    if(keyValue == "referral"){
+      var strpos = referralValue.indexOf("#");
+   
+      refValue = referralValue.slice(0, strpos);
+    
+    }
+
   //Create account button
   var createAccountBtn;
 
@@ -18,21 +45,22 @@ const CreateAccount = () => {
   //Add user
   const addUser = () => {
 
-    Axios.post("http://localhost:5000/create", {
+    Axios.post(domain + "/create", {
       name: name,
       email: email,
       password: password,
+      refValue: refValue,
     }).then((response) => {
       if (
         response.data ==
         "A username with that email already exists! Try logging in"
       ) {
-        window.location.href = "/#/create-account";
+        window.location.href = "/create-account";
         alert(response.data);
       } else {
         console.log(response);
         sendEmail();
-        window.location.href = "/#/login";
+        window.location.href = "/login";
 
       }
     });
@@ -169,7 +197,7 @@ const CreateAccount = () => {
   text = "Welcome to pensionplus.";
 
   const sendEmail = () => {
-    Axios.post("http://localhost:5000/send", {
+    Axios.post(domain + "/send", {
       email: email,
       to: to,
       subject: subject,
@@ -185,7 +213,7 @@ const CreateAccount = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    Axios.post(domain + "/auth", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
       } else {
@@ -221,8 +249,7 @@ const CreateAccount = () => {
       </>
     );
   }
-  console.log(loginStatus);
-
+  
   return (
     <div onLoadStart={checkLogin} className="container-fluid account-section">
       <div class="container">{NavBar}</div>
@@ -309,9 +336,9 @@ const CreateAccount = () => {
               <p>
                 By creating an account you agree <br />
                 to our{" "}
-                <a href="#" className="termsLink">
+                <Link to="/terms" className="termsLink">
                   Terms and Privacy Policy.
-                </a>
+                </Link>
               </p>
             </form>
             {createAccountBtn}

@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 import Navbar from "../NavBar";
@@ -6,6 +6,9 @@ import NavbarSignedIn from "../Navbar-SignedIn";
 
 //Images
 import img1 from "../../Assets/create-acc-vector.png";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 Axios.defaults.withCredentials = true;
 const CreateAdminAccount = () => {
@@ -16,7 +19,7 @@ const CreateAdminAccount = () => {
 
   //Add user
   const addUser = () => {
-    Axios.post("http://localhost:5000/adminCreate", {
+    Axios.post(domain + "/adminCreate", {
       name: name,
       email: email,
       password: password,
@@ -25,11 +28,11 @@ const CreateAdminAccount = () => {
         response.data ==
         "Another admin with that email already exists! If this is you, Try logging in"
       ) {
-        window.location.href = "/#/admin-create-account";
+        window.location.href = "/admin-create-account";
         alert(response.data);
       } else {
         console.log(response);
-        window.location.href = "/#/admin-login";
+        window.location.href = "/admin-login";
       }
     });
   };
@@ -161,7 +164,7 @@ const CreateAdminAccount = () => {
 
   const checkLogin = () => {
     
-    Axios.post("http://localhost:5000/authAdmin", {}).then((response) => {
+    Axios.post(domain + "/authAdmin", {}).then((response) => {
       console.log(response.status);
       if (response.data.message == "Not authenticated") {
       } else {

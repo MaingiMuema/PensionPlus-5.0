@@ -1,10 +1,13 @@
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import NavbarSignedIn from "./Navbar-SignedIn";
 import React from "react";
 import "semantic-ui-css/semantic.min.css";
 import { Icon } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+
+//Localhost url for the server
+const domain = "http://localhost:5000"; 
 
 const Referral = () => {
   //Login status
@@ -13,7 +16,8 @@ const Referral = () => {
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-    Axios.post("http://localhost:5000/auth", {}).then((response) => {
+    setReferral();
+    Axios.post(domain + "/auth", {}).then((response) => {
       if (response.data.message == "Not authenticated") {
         window.history.go(-1);
       } else {
@@ -32,6 +36,18 @@ const Referral = () => {
       </span>
     </Link>
   );
+
+  const [linkId, setLinkId] = useState();
+
+  const setReferral = () => {
+
+    Axios.post(domain + "/setReferral", {}).then((response) => {
+      let Id = response.data[0].referralId.toString();
+      setLinkId(Id); 
+    });
+  };
+
+  let referralLink = "http://localhost:3000?referral=" + linkId;
 
   return (
     <div onLoadCapture={checkLogin} className="container-fluid account-section">
@@ -62,11 +78,11 @@ const Referral = () => {
               Share the link below with your friends to refer them.
             </span>
             <div className="referralLinkCard">
-              <a href="http://localhost:3000?referral=1">
-                http://localhost:3000?referral=1
+              <a href={referralLink} id="refLink">
+              {referralLink}
               </a>
             </div>
-            <button className="copylink">Copy Link</button>
+            <button className="copylink" onClick={() => {navigator.clipboard.writeText(referralLink)}}>Copy Link</button>
           </div>
         </div>
       </div>
