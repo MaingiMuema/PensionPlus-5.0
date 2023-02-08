@@ -20,7 +20,7 @@ const ClientDetails = (props) => {
   console.log(name);
 
   const addDetails = () => {
-    Axios.post("/userDetails", {
+    Axios.post(domain + "/userDetails", {
       phone: phone,
       id_no: id_no,
       dob: dob,

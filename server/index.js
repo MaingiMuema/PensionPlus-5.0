@@ -700,14 +700,39 @@ app.post('/beneficiaryDetails', (req, res) => {
     const relationship = req.body.relationship;
     const userId = req.session.user[0].id;
 
-    db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, relationship, benefit, userId) VALUES (?, ?, ?, ?, ?, ?);", 
-    [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, relationship, benefit, userId], 
+    db.query("SELECT SUM(benefit) as benefitTotal FROM clientbeneficiary WHERE userId = ?;", 
+    [userId], 
     (err, result) =>{
+
         if(err){
             console.log(err);
         }
+        if(result.length > 0){
+            let bft = result[0].benefitTotal;
+            
+            if((bft + benefit) <= 100){
+                db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, relationship, benefit, userId) VALUES (?, ?, ?, ?, ?, ?);", 
+                [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, relationship, benefit, userId], 
+                (err, result) =>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        
+                       res.send("Beneficiary added successfully");
+                    }
+                }
+                );
+            }
+            else{
+                console.log(result[0].benefitTotal);
+                var addAmount = 100 - result[0].benefitTotal;
+                res.send("Benefit cannot exceed " + addAmount+"%");
+            }
+           
+        }
         else{
-           res.send("Beneficiary added successfully");
+           res.send("No beneficiaries");
         }
     }
     );
@@ -1104,7 +1129,7 @@ app.post("/")
 app.post('/queuedTransfers', (req, res) => {
     const transactionType = "Pension Transfer";
 
-        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.id_no, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, pensiondetails.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId RIGHT JOIN pensiondetails ON userdetails.userId = pensiondetails.userId RIGHT JOIN transactions ON pensiondetails.userId = transactions.userId WHERE transactions.transferStatus < 100 AND transactions.transferStatus = pensiondetails.transferStatus AND transactions.transactionType = ? ORDER BY transactions.transferStatus DESC;", 
+        db.query("SELECT DISTINCT useraccount.name, useraccount.email, userdetails.id_no, pensiondetails.EmployerName, pensiondetails.OrganizationEmail, pensiondetails.PensionProvider, pensiondetails.FundedByEmployer, transactions.transferStatus FROM useraccount RIGHT JOIN userdetails ON useraccount.id = userdetails.userId RIGHT JOIN pensiondetails ON userdetails.userId = pensiondetails.userId RIGHT JOIN transactions ON pensiondetails.userId = transactions.userId WHERE transactions.transferStatus = pensiondetails.transferStatus AND transactions.transferStatus < 100 AND transactions.transactionType = ? ORDER BY transactions.transferStatus DESC;", 
         [transactionType],
         (err, result) =>{
             if(err){
@@ -1136,7 +1161,7 @@ app.post('/statusUpdate', (req, res) => {
     const clientEmployer = req.body.clientEmployer;
     const pensionProvider = req.body.pensionProvider;
 
-    db.query("UPDATE pensiondetails SET transferStatus = ? WHERE idNo = ? AND PensionProvider = ? AND employername = ?;", 
+    db.query("UPDATE pensiondetails SET transferStatus = ? WHERE idNo = ? AND pensionProvider = ? AND employername = ?;", 
     [status, clientId, pensionProvider, clientEmployer], 
     (err, result) =>{
         if(err){

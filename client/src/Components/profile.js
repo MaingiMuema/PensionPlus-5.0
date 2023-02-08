@@ -1366,8 +1366,17 @@ const Profile = () => {
           benefit: benefit,
           relationship: relationship,
           
-        }).then((response) => {});
+        }).then((response) => {
+          if(response.data[0] == "Beneficiary added successfully"){
 
+          }
+          else{
+            let r = response.data;
+            alert(r);
+          }
+          console.log(response);
+        });
+        
         beneficiaries();
       };
 
