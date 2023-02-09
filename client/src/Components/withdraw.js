@@ -149,7 +149,7 @@ const handleClick3 = () =>{
 
 const successAlert = () =>{
   withdraw();
-  alert("You have successfully withdrawn: Ksh" + withdrawAmount);
+  alert("You have successfully withdrawn: Ksh" + (withdrawAmount*-1));
 }
 
   //Alert modal box

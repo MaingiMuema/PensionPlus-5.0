@@ -158,6 +158,11 @@ const AdminLogIn = () => {
               </label>
             </form>
             {logInBtn}
+            <div>
+              <span>
+                <Link to="/adminPasswordReset">Forgot password?</Link>
+              </span>
+            </div>
             <p>
               <span>Don't have an account?</span>&nbsp;&nbsp;&nbsp;
               <span>

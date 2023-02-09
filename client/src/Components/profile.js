@@ -1147,6 +1147,8 @@ const Profile = () => {
     setUserId(newValue);
   };
 
+  var age;
+
   //Update userId on the backend
   const updateUserId = () => {
     Axios.post(domain + "/updateUserId", {
@@ -1157,40 +1159,10 @@ const Profile = () => {
   const [dob, setDob] = useState();
 
   //DOB Validation
-
   let onChange4 = (event) => {
     const newValue = event.target.value;
     setDob(newValue);
 
-    var dob = new Date(newValue);
-
-    var age;
-
-    if (newValue == "") {
-    } else {
-      //calculate month difference from current date in time
-      var month_diff = Date.now() - dob.getTime();
-
-      //convert the calculated difference in date format
-      var age_dt = new Date(month_diff);
-
-      //extract year from date
-      var year = age_dt.getUTCFullYear();
-
-      //now calculate the age of the user
-      age = Math.abs(year - 1970);
-      console.log(year + age_dt);
-    }
-
-    if (age < 18) {
-      console.log("Age below 18 is: ", age);
-      alert("You must to be 18 Years and Above");
-      newValue = event.target.value = null;
-      setDob(newValue);
-      return false;
-    } else {
-      console.log("Age is: ", age);
-    }
   };
 
   //Update dob on the backend
@@ -1247,10 +1219,84 @@ const Profile = () => {
 
   const [beneficiarydob, setbeneficiarydob] = useState();
 
+  const [Minor, setMinor] = useState("false");
+
   let onChange7 = (event) => {
     const newValue = event.target.value;
     setbeneficiarydob(newValue);
+
+    
+    var dob = new Date(newValue);
+
+    if (newValue == "") {
+    } else {
+      //calculate month difference from current date in time
+      var month_diff = Date.now() - dob.getTime();
+
+      //convert the calculated difference in date format
+      var age_dt = new Date(month_diff);
+
+      //extract year from date
+      var year = age_dt.getUTCFullYear();
+
+      //now calculate the age of the user
+      age = Math.abs(year - 1970);
+    }
+
+    if (age < 18) {
+      setMinor("true");
+    } else {
+      setMinor("false");
+    }
   };
+
+  //Guardian credentials
+  const [guardianFirstname, setGuardianFirstname] = useState();
+
+  let onChange9 = (event) => {
+    const newValue = event.target.value;
+    setGuardianFirstname(newValue);
+  };
+
+  const [guardianLastname, setGuardianLastname] = useState();
+
+  let onChange10 = (event) => {
+    const newValue = event.target.value;
+    setGuardianLastname(newValue);
+  };
+
+    //Guardian credentials
+    const [guardianDOB, setGuardianDOB] = useState();
+
+    const [guardianAge, setGuardianAge] = useState();
+
+    let onChange11 = (event) => {
+      const newValue = event.target.value;
+      setGuardianDOB(newValue);
+      
+      var dob = new Date(newValue);
+
+      if (newValue == "") {
+      } else {
+        //calculate month difference from current date in time
+        var month_diff = Date.now() - dob.getTime();
+  
+        //convert the calculated difference in date format
+        var age_dt = new Date(month_diff);
+  
+        //extract year from date
+        var year = age_dt.getUTCFullYear();
+  
+        //now calculate the age of the user
+        age = Math.abs(year - 1970);
+      }
+  
+      if (age < 18) {
+        setGuardianAge("minor");
+      } else {
+        setGuardianAge("Adult");
+      }
+    };
 
   //Benefit limit
   const [benefit, setBenefit] = useState(50);
@@ -1280,7 +1326,7 @@ const Profile = () => {
   
   //Relative r/s
 
-  const [value, setValue] = React.useState("Select");
+  const [value, setValue] = React.useState("Son");
 
   const handleRelativeSelect = (event) => {
     setValue(event.target.value);
@@ -1304,7 +1350,7 @@ const Profile = () => {
       <label for="rType">
         <b>Define relationship of other relative{" "}
           <span oncChange={onChange3} className="optional-field-text">
-            (e.g. aunt)
+            (e.g. nephew)
           </span>
         </b>
         <br />
@@ -1359,16 +1405,27 @@ const Profile = () => {
 
       //Send beneficiary details to the backend
       const insertBenefeciary = () => {
+        if((beneficiaryFirstName  == "" || beneficiaryFirstName  == null) || (beneficiaryLastName  == "" || beneficiaryLastName  == null) || (beneficiarydob  == "" || beneficiarydob  == null) || (guardianFirstname  == "" || guardianFirstname  == null) || (guardianLastname  == "" || guardianLastname  == null) || (guardianDOB  == "" || guardianDOB == null)){
+          alert("Please fill in the field'(s) appropriately");
+        }
+        else{
+        if(guardianAge == "minor"){
+          alert("Guardian must be 18 years and above!");
+        }
+        else{
         Axios.post(domain + "/beneficiaryDetails", {
           beneficiaryFirstName: beneficiaryFirstName,
           beneficiaryLastName: beneficiaryLastName,
           beneficiarydob: beneficiarydob,
           benefit: benefit,
           relationship: relationship,
+          guardianFirstname: guardianFirstname,
+          guardianLastname: guardianLastname,
+          guardianDOB: guardianDOB,
           
         }).then((response) => {
-          if(response.data[0] == "Beneficiary added successfully"){
-
+          if(response.data == "Beneficiary added successfully"){
+            beneficiaries();
           }
           else{
             let r = response.data;
@@ -1376,9 +1433,103 @@ const Profile = () => {
           }
           console.log(response);
         });
-        
-        beneficiaries();
+
+      }
+      }
+           
       };
+
+      //Check if beneficiary is a minor
+      var BeneficiaryAge;
+      var AddGuardian;
+
+      if(Minor == "true"){
+
+        BeneficiaryAge = (
+          <select
+          class="save-dropdown inputbox"
+          value={value}
+          id="Employment-status"
+          onChange={handleRelativeSelect}
+        >
+          document.write("e");
+          <option value="Son">Son</option>
+          <option value="Daughter">Daughter</option>
+          <option value="Sister">Sister</option>
+          <option value="Brother">Brother</option>
+          <option value="Other relative">Other</option>
+        </select>
+        )
+
+        AddGuardian = (
+          <div>
+            <b>Guardian Firstname</b>
+            <br />
+            <br />
+            <input
+              onChange={onChange9}
+              type="text"
+              className="inputbox"
+              id="firstname"
+              placeholder="Enter first name"
+              required
+            />
+            <br />
+            <br />
+            <b>Guardian Lastname</b>
+            <br />
+            <br />
+            <input
+              onChange={onChange10}
+              type="text"
+              className="inputbox"
+              id="lastname"
+              placeholder="Enter Last name"
+              required
+            />
+            <br />
+            <br />
+            <b>Guardian DOB</b>
+            <br />
+            <br />
+            <input
+              type="date"
+              onChange={onChange11}
+              className="inputbox"
+              id="beneficiarydob"
+              placeholder="Enter Date of birth"
+              required
+            />
+            <br/>
+            <br/>
+          </div>
+        )
+      }
+      else{
+        BeneficiaryAge = (
+          <select
+          class="save-dropdown inputbox"
+          value={value}
+          id="Employment-status"
+          onChange={handleRelativeSelect}
+        >
+          document.write("e");
+          <option value="Mother">Mother</option>
+          <option value="Father">Father</option>
+          <option value="Son">Son</option>
+          <option value="Daughter">Daughter</option>
+          <option value="Sister">Sister</option>
+          <option value="Brother">Brother</option>
+          <option value="Other relative">Other</option>
+        </select>
+        )
+
+        AddGuardian = (
+          <div>
+            
+          </div>
+        )
+      }
 
     //Hide hideSearchList function
     const hideSearchList = () => {
@@ -1421,163 +1572,6 @@ const Profile = () => {
           <div className="dashboardBlueDiv fadeInLeft">
             <h1>Profile</h1>
           </div>
-        </div>
-        <div className="col-lg-4 updateProfile fadeInUp">
-          <hr className="separator" />
-          <b>Name:</b> {userName}
-          <br/>
-          <br />
-          <br />
-          <hr className="separator" />
-          <b>Email:</b> {userEmail}
-          <br />
-          <br />
-          <a
-            data-bs-toggle="collapse"
-            href="#collapseExample2"
-            data-bs-target="#collapseExample2"
-            role="button"
-            aria-expanded="false"
-            aria-bs-controls="collapseExample2"
-          >
-            Update
-          </a>
-          <div class="collapse" id="collapseExample2">
-            <div class="updateCard">
-              <input
-                onChange={onChange1}
-                type="email"
-                name="email"
-                className="inputbox"
-                id="email"
-                placeholder="Email address"
-                required
-              />
-              <button onClick={updateUserEmail} className="createACC-btn">
-                Submit
-              </button>
-              <br />
-              <b>Note:</b>
-              <span>
-                Kindly note that after changing your email you'll be required to
-                use it to login.
-              </span>
-            </div>
-          </div>
-          <br />
-          <br />
-          <br />
-          <hr className="separator" />
-          <b>Phone:</b> {userPhone}
-          <br />
-          <br />
-          <a
-            data-bs-toggle="collapse"
-            href="#collapseExample3"
-            data-bs-target="#collapseExample3"
-            role="button"
-            aria-expanded="false"
-            aria-bs-controls="collapseExample3"
-          >
-            Update
-          </a>
-          <div class="collapse" id="collapseExample3">
-            <div class="updateCard">
-              <input
-                type="number"
-                onChange={onChange2}
-                name="phoneNumber"
-                className="inputbox"
-                id="name"
-                placeholder="Enter your phone number"
-                required
-              />
-              <button onClick={updateUserPhone} className="createACC-btn">
-                Submit
-              </button>
-            </div>
-          </div>
-          <br />
-          <br />
-          <br />
-          <hr className="separator" />
-          <b>ID number:</b> {userID}
-          <br />
-          <br />
-          <br />
-          <hr className="separator" />
-          <b>DOB:</b> {dob}
-          <br />
-          <br />
-          <a
-            data-bs-toggle="collapse"
-            href="#collapseExample5"
-            data-bs-target="#collapseExample5"
-            role="button"
-            aria-expanded="false"
-            aria-bs-controls="collapseExample5"
-          >
-            Update
-          </a>
-          <div class="collapse" id="collapseExample5">
-            <div class="updateCard">
-              <input
-                type="date"
-                onChange={onChange4}
-                className="inputbox"
-                id="dob"
-                placeholder="Enter Date of birth"
-                required
-              />
-              <button onClick={updateDOB} className="createACC-btn">
-                Submit
-              </button>
-            </div>
-          </div>
-          <br />
-          <br />
-          <br />
-          <hr className="separator" />
-          <b>Employment Status:</b> {employmentStatus}
-          <br />
-          <br />
-          <a
-            data-bs-toggle="collapse"
-            href="#collapseExample6"
-            data-bs-target="#collapseExample6"
-            role="button"
-            aria-expanded="false"
-            aria-bs-controls="collapseExample6"
-          >
-            Update
-          </a>
-          <div class="collapse" id="collapseExample6">
-            <div class="updateCard">
-              <select
-                class="save-dropdown inputbox"
-                value={employmentStatus}
-                id="Employment-status"
-                onChange={handleSelect}
-              >
-                document.write("e");
-                <option id="question" value="Employed">
-                  Employed
-                </option>
-                <option value="Self-employed">Self-Employed</option>
-                <option value="Unemployed">Unemployed</option>
-              </select>
-              <button
-                onClick={updateEmploymentStatus}
-                className="createACC-btn"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-          <br />
-          <br />
-          <br />
-          <hr className="separator" />
         </div>
         <div className="col-lg-4 beneficiariesUpdate fadeInRight">
           <h2>Beneficiaries</h2>
@@ -1649,21 +1643,7 @@ const Profile = () => {
                 <b>Relationship</b>
                 <br />
                 <br />
-                <select
-                  class="save-dropdown inputbox"
-                  value={value}
-                  id="Employment-status"
-                  onChange={handleRelativeSelect}
-                >
-                  document.write("e");
-                  <option value="Mother">Mother</option>
-                  <option value="Father">Father</option>
-                  <option value="Son">Son</option>
-                  <option value="Daughter">Daughter</option>
-                  <option value="Sister">Sister</option>
-                  <option value="Brother">Brother</option>
-                  <option value="Other relative">Other</option>
-                </select>
+               {BeneficiaryAge}
               </label>
               <br/>
               <br/>
@@ -1697,6 +1677,9 @@ const Profile = () => {
                   <option value="100" label="100%"></option>
                 </datalist>
               </label>
+              <br/>
+              <br/>
+             {AddGuardian}
               <button
                onClick={insertBenefeciary}
                className="createACC-btn"
@@ -1759,6 +1742,158 @@ const Profile = () => {
             </div>
           </div>
         </div>
+        <div className="col-lg-4 updateProfile fadeInUp">
+          <hr className="separator" />
+          <b>Name:</b> {userName}
+          <br/>
+          <br />
+          <hr className="separator" />
+          <b>Email:</b> {userEmail}
+          <br />
+          <br />
+          <a
+            data-bs-toggle="collapse"
+            href="#collapseExample2"
+            data-bs-target="#collapseExample2"
+            role="button"
+            aria-expanded="false"
+            aria-bs-controls="collapseExample2"
+          >
+            Update
+          </a>
+          <div class="collapse" id="collapseExample2">
+            <div class="updateCard">
+              <input
+                onChange={onChange1}
+                type="email"
+                name="email"
+                className="inputbox"
+                id="email"
+                placeholder="Email address"
+                required
+              />
+              <button onClick={updateUserEmail} className="createACC-btn">
+                Submit
+              </button>
+              <br />
+              <b>Note:</b>
+              <span>
+                Kindly note that after changing your email you'll be required to
+                use it to login.
+              </span>
+            </div>
+          </div>
+          <br />
+          <br />
+          <hr className="separator" />
+          <b>Phone:</b> {userPhone}
+          <br />
+          <br />
+          <a
+            data-bs-toggle="collapse"
+            href="#collapseExample3"
+            data-bs-target="#collapseExample3"
+            role="button"
+            aria-expanded="false"
+            aria-bs-controls="collapseExample3"
+          >
+            Update
+          </a>
+          <div class="collapse" id="collapseExample3">
+            <div class="updateCard">
+              <input
+                type="number"
+                onChange={onChange2}
+                name="phoneNumber"
+                className="inputbox"
+                id="name"
+                placeholder="Enter your phone number"
+                required
+              />
+              <button onClick={updateUserPhone} className="createACC-btn">
+                Submit
+              </button>
+            </div>
+          </div>
+          <br />
+          <br />
+          <hr className="separator" />
+          <b>ID number:</b> {userID}
+          <br />
+          <br />
+          <hr className="separator" />
+          <b>DOB:</b> {dob}
+          <br />
+          <br />
+          <a
+            data-bs-toggle="collapse"
+            href="#collapseExample5"
+            data-bs-target="#collapseExample5"
+            role="button"
+            aria-expanded="false"
+            aria-bs-controls="collapseExample5"
+          >
+            Update
+          </a>
+          <div class="collapse" id="collapseExample5">
+            <div class="updateCard">
+              <input
+                type="date"
+                onChange={onChange4}
+                className="inputbox"
+                id="dob"
+                placeholder="Enter Date of birth"
+                required
+              />
+              <button onClick={updateDOB} className="createACC-btn">
+                Submit
+              </button>
+            </div>
+          </div>
+          <br />
+          <br />
+          <hr className="separator" />
+          <b>Employment Status:</b> {employmentStatus}
+          <br />
+          <br />
+          <a
+            data-bs-toggle="collapse"
+            href="#collapseExample6"
+            data-bs-target="#collapseExample6"
+            role="button"
+            aria-expanded="false"
+            aria-bs-controls="collapseExample6"
+          >
+            Update
+          </a>
+          <div class="collapse" id="collapseExample6">
+            <div class="updateCard">
+              <select
+                class="save-dropdown inputbox"
+                value={employmentStatus}
+                id="Employment-status"
+                onChange={handleSelect}
+              >
+                document.write("e");
+                <option id="question" value="Employed">
+                  Employed
+                </option>
+                <option value="Self-employed">Self-Employed</option>
+                <option value="Unemployed">Unemployed</option>
+              </select>
+              <button
+                onClick={updateEmploymentStatus}
+                className="createACC-btn"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+          <br />
+          <br />
+          <hr className="separator" />
+        </div>
+        
       </div>
     </div>
   );

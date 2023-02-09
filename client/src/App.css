@@ -291,6 +291,15 @@ Hero-section
 Landing page section II
 
 */
+.mailLink{
+  text-decoration: none;
+  color: #444;
+}
+
+.mailLink:hover{
+  text-decoration: none;
+  color: #444;
+}
 
 .section2-icons {
   width: 73px;
@@ -1031,6 +1040,13 @@ Toggle
   margin-left: -20px;
 }
 
+.check-box1 {
+  transform: scale(0.5);
+  margin-left: -80px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 input[class="checkBox"] {
   position: relative;
   appearance: none;
@@ -1254,6 +1270,11 @@ Confirm page
 .consentLabel {
   margin-top: 30px;
 }
+
+.consentLabel1 {
+  margin-top: 0px;
+}
+
 
 .link{
   color: #0075c9;
@@ -1892,6 +1913,7 @@ table th:last-child {
   margin-top: 30px;
   margin-bottom: 30px;
 }
+
 /*
 
 Admin DashBoard styles

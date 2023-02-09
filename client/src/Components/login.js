@@ -154,12 +154,17 @@ const LogIn = () => {
               </label>
             </form>
             {logInBtn}
-            <p>
+            <div>
+              <span>
+                <Link to="/passwordReset">Forgot password?</Link>
+              </span>
+            </div>
+            <div>
               <span>Don't have an account?</span>&nbsp;&nbsp;&nbsp;
               <span>
                 <Link to="/create-account">Create account</Link>
               </span>
-            </p>
+            </div>
           </div>
         </div>
       </div>

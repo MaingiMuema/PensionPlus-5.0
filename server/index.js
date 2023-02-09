@@ -698,6 +698,9 @@ app.post('/beneficiaryDetails', (req, res) => {
     const  beneficiarydob = req.body.beneficiarydob;
     const benefit = req.body.benefit;
     const relationship = req.body.relationship;
+    const guardianFirstname = req.body.guardianFirstname;
+    const guardianLastname = req.body.guardianLastname;
+    const guardianDOB = req.body.guardianDOB; 
     const userId = req.session.user[0].id;
 
     db.query("SELECT SUM(benefit) as benefitTotal FROM clientbeneficiary WHERE userId = ?;", 
@@ -710,9 +713,9 @@ app.post('/beneficiaryDetails', (req, res) => {
         if(result.length > 0){
             let bft = result[0].benefitTotal;
             
-            if((bft + benefit) <= 100){
-                db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, relationship, benefit, userId) VALUES (?, ?, ?, ?, ?, ?);", 
-                [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, relationship, benefit, userId], 
+            if(parseInt(bft) <= 100 && parseInt(result[0].benefitTotal) +parseInt(benefit) <= 100){
+                db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, relationship, benefit, Guardian_FirstName, Guardian_LastName, Guardian_DOB, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", 
+                [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, relationship, benefit, guardianFirstname, guardianLastname, guardianDOB,  userId], 
                 (err, result) =>{
                     if(err){
                         console.log(err);
@@ -725,7 +728,7 @@ app.post('/beneficiaryDetails', (req, res) => {
                 );
             }
             else{
-                console.log(result[0].benefitTotal);
+             
                 var addAmount = 100 - result[0].benefitTotal;
                 res.send("Benefit cannot exceed " + addAmount+"%");
             }

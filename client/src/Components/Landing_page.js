@@ -710,7 +710,7 @@ function Landingpage() {
                   <div class="cta-text">
                     <h4>Mail us</h4>
                     <br />
-                    <span>info@sanlam.co.ke</span>
+                    <span className="sanlamEmail"><a className="mailLink" href="mailto:info@sanlam.co.ke">info@sanlam.co.ke</a></span>
                   </div>
                 </div>
               </div>
