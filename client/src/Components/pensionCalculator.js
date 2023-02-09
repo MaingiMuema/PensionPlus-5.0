@@ -227,7 +227,7 @@ function PensionCalculator() {
 
   //Login status
   const [loginStatus, setLoginStatus] = useState("false");
-
+ 
   const checkLogin = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
@@ -243,6 +243,7 @@ function PensionCalculator() {
   var NavBar;
 
   if (loginStatus == "true") {
+    
     NavBar = (
       <>
         <Router>
@@ -268,9 +269,65 @@ function PensionCalculator() {
     );
   }
 
+    //Get total combined amount from backend
+
+    const [totalCombinedAmount, setTotalCombinedAmount] = useState(0);
+
+    const totalCombined = () => {
+      totalContributions();
+      Axios.post(domain  + "/totalCombined", {}).then((response) => {
+        if (response) {
+          setTotalCombinedAmount(response.data[0].totalCombined);
+          console.log(response.data[0].totalCombined);
+        } else {
+          setTotalCombinedAmount(response.data[0].totalCombined);
+          console.log(response.data[0].totalCombined);
+        }
+      });
+    };
+  
+    //Get total contributed amount from backend
+    const [contributedAmount, setContributedAmount] = useState(0);
+  
+    const totalContributions = () => {
+      withdrawals();
+      Axios.post(domain  + "/totalContributions", {}).then(
+        (response) => {
+          if (response) {
+            setContributedAmount(response.data[0].totalContributed);
+          } else {
+            setContributedAmount(response.data[0].totalContributed);
+          }
+        }
+      );
+    };
+
+       //Get total withdrawn amount from backend
+       const [withdrawAmount, setWithdrawAmount] = useState(0);
+
+       const withdrawals = () => {
+         Axios.post(domain  + "/withdrawals", {}).then(
+           (response) => {
+             if (response) {
+               setWithdrawAmount(response.data[0].withdrawAmount);
+             } else {
+               setWithdrawAmount(response.data[0].withdrawAmount);
+             }
+           }
+         );
+       };
+
+      //Deducting withdrawals from contributions
+      const finalContributedAmount = contributedAmount + withdrawAmount;
+      
+
+ //Total Pot amount
+  const PotAmount = finalContributedAmount + totalCombinedAmount;
+
   return (
     <div
       onLoadCapture={checkLogin}
+      onLoad={totalCombined}
       className="container-fluid"
       id="calculatorContainer"
     >
@@ -298,6 +355,32 @@ function PensionCalculator() {
           name="calculator"
           className="pensionCalculatorForm fadeInUp"
         >
+          <div className="row">
+            <div className="col-lg-4">
+              <div className="d-flex justify-content-left">
+                <div className="applausCard">
+                  <h4>Combined Amount</h4>
+                  <p>Ksh{totalCombinedAmount}</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4">
+              <div className="d-flex justify-content-left">
+                  <div className="applausCard">
+                    <h4>Contributed Amount</h4>
+                    <p>Ksh{finalContributedAmount}</p>
+                  </div>
+                </div>
+            </div>
+            <div className="col-lg-4">
+              <div className="d-flex justify-content-left">
+                  <div className="applausCard">
+                    <h4>Total Pot Amount</h4>
+                    <p>Ksh{PotAmount}</p>
+                  </div>
+                </div>
+            </div>
+          </div>
           <div className="row">
             <div className="col-lg-4">
               <label for="cAge" className="inputLable">

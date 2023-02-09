@@ -103,6 +103,7 @@ var expires = "expires="+ d.toUTCString();
       }
     );
   };
+  
   //Get total combined amount from backend
 
   const [totalCombinedAmount, setTotalCombinedAmount] = useState(0);
