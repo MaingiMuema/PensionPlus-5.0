@@ -18,6 +18,7 @@ import AdminLogIn from "./Components/Admindashboard/admin-login";
 import Profile from "./Components/profile";
 import Referral from "./Components/referral";
 import Terms from "./Components/terms";
+import PasswordReset from "./Components/passwordReset";
 
 function App() {
   return (
@@ -74,6 +75,9 @@ function App() {
           </Route>
           <Route exact path="/UserDashboard">
             <UserDashboard />
+          </Route>
+          <Route exact path="/passwordReset">
+            <PasswordReset />
           </Route>
         </Switch>
       </Router>

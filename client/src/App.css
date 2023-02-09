@@ -2084,6 +2084,14 @@ Input List of search suggestion
   margin-top: 50px;
 }
 
+.pswdChangeCard{
+  padding: 50px;
+  padding-bottom: 30px;
+  width: 85%;
+  background-color: #d3edff68;
+  margin-top: 50px;
+}
+
 .referHeading {
   font-size: 21px;
   font-weight: 600;

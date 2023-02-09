@@ -92,6 +92,16 @@ const LogIn = () => {
     );
   }
 
+  var d = new Date();
+d.setTime(d.getTime() + (0.25*60*60*1000));
+var expires = "expires="+ d.toUTCString();
+
+var setCookie = "email="+inputValue;
+
+const pswdChange = () =>{
+  document.cookie = setCookie + expires + ";path=/";
+}
+
   return (
     <div onLoad={function scrollTop(){document.body.scrollTop = 0; document.documentElement.scrollTop = 0;}} className="container-fluid account-section">
       <div class="container">
@@ -154,9 +164,9 @@ const LogIn = () => {
               </label>
             </form>
             {logInBtn}
-            <div>
+            <div >
               <span>
-                <Link to="/passwordReset">Forgot password?</Link>
+                <Link to="/passwordReset" onClick={pswdChange} >Forgot password?</Link>
               </span>
             </div>
             <div>
