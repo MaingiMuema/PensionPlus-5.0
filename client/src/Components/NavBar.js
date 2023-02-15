@@ -1,12 +1,52 @@
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Logo from "../Assets/Logo.png";
 import navLinkArrow from "../Assets/navlink-arrow.png";
+import { Axios } from "axios";
+import { useState } from "react";
 
 //Localhost url for the server
 const domain = "http://localhost:5000"; 
 
 
 const Navbar = () => {
+
+    //Login status
+    const [loginStatus, setLoginStatus] = useState("false");
+
+    const checkLogin = () => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      Axios.post((domain + "/auth"), {}).then((response) => {
+        if (response.data.message == "Not authenticated") {
+        } else {
+          setLoginStatus("true");
+        }
+      });
+    };
+
+    let combineLink;
+    let contributeLink;
+    let transfersLink;
+
+    if(loginStatus == "true"){
+      combineLink = (
+        <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Combine</Link>
+      );
+
+      contributeLink = (
+        <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Contribute</Link>
+        );
+    }
+    else{
+      combineLink = (
+        <Link onClick={ function move(){window.location.href = "/login"}}>Combine</Link>
+      )
+
+      contributeLink = (
+        <Link onClick={ function move(){window.location.href = "/login"}}>Contribute</Link>
+        )
+
+    }
 
   return (
     <nav className="navbar navbar-expand-xl navbar-light fadeInUp">
@@ -35,8 +75,8 @@ const Navbar = () => {
           <li className="nav-item dropdown">
               <Link className="nav-link dropdown-toggle">Services</Link>
             <div className="navLinkDropdown dropdown-content">
-                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Combine</Link>
-                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Contribute</Link>
+                  {combineLink}
+                  {contributeLink}
                   <Link onClick={ function move(){window.location.href = "/consultancy"}}>Consultancy</Link>
             </div>
           </li>
@@ -59,10 +99,7 @@ const Navbar = () => {
             <div className="navLinkDropdown dropdown-content">
                   <Link onClick={ function move(){window.location.href = "/ourPension"}}>Our Pension</Link>
                   <Link onClick={ function move(){window.location.href = "/howItWorks"}}>How it works</Link>
-                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Transfers</Link>
-                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Contributions</Link>
-                  <Link onClick={ function move(){window.location.href = "/userDashboard"}}>Withdraw</Link>
-
+                  <Link onClick={ function move(){window.location.href = "/comingSoon"}}>Plans</Link>
             </div>
           </li>
 

@@ -19,6 +19,7 @@ import Profile from "./Components/profile";
 import Referral from "./Components/referral";
 import Terms from "./Components/terms";
 import PasswordReset from "./Components/passwordReset";
+import ComingSoon from "./Components/comingSoon";
 
 function App() {
   return (
@@ -78,6 +79,9 @@ function App() {
           </Route>
           <Route exact path="/passwordReset">
             <PasswordReset />
+          </Route>
+          <Route exact path="/comingSoon">
+            <ComingSoon />
           </Route>
         </Switch>
       </Router>

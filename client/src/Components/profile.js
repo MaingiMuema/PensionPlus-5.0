@@ -1405,37 +1405,73 @@ const Profile = () => {
 
       //Send beneficiary details to the backend
       const insertBenefeciary = () => {
-        if((beneficiaryFirstName  == "" || beneficiaryFirstName  == null) || (beneficiaryLastName  == "" || beneficiaryLastName  == null) || (beneficiarydob  == "" || beneficiarydob  == null) || (guardianFirstname  == "" || guardianFirstname  == null) || (guardianLastname  == "" || guardianLastname  == null) || (guardianDOB  == "" || guardianDOB == null)){
-          alert("Please fill in the field'(s) appropriately");
-        }
-        else{
-        if(guardianAge == "minor"){
-          alert("Guardian must be 18 years and above!");
-        }
-        else{
-        Axios.post(domain + "/beneficiaryDetails", {
-          beneficiaryFirstName: beneficiaryFirstName,
-          beneficiaryLastName: beneficiaryLastName,
-          beneficiarydob: beneficiarydob,
-          benefit: benefit,
-          relationship: relationship,
-          guardianFirstname: guardianFirstname,
-          guardianLastname: guardianLastname,
-          guardianDOB: guardianDOB,
-          
-        }).then((response) => {
-          if(response.data == "Beneficiary added successfully"){
-            beneficiaries();
+        if(Minor == "true"){
+          if((beneficiaryFirstName  == "" || beneficiaryFirstName  == null) || (beneficiaryLastName  == "" || beneficiaryLastName  == null) || (beneficiarydob  == "" || beneficiarydob  == null) || (guardianFirstname  == "" || guardianFirstname  == null) || (guardianLastname  == "" || guardianLastname  == null) || (guardianDOB  == "" || guardianDOB == null)){
+            alert("Please fill in the field'(s) appropriately");
           }
           else{
-            let r = response.data;
-            alert(r);
+          if(guardianAge == "minor"){
+            alert("Guardian must be 18 years and above!");
           }
-          console.log(response);
-        });
+          else{
+            Axios.post(domain + "/beneficiaryDetails", {
+              beneficiaryFirstName: beneficiaryFirstName,
+              beneficiaryLastName: beneficiaryLastName,
+              beneficiarydob: beneficiarydob,
+              benefit: benefit,
+              relationship: relationship,
+              guardianFirstname: guardianFirstname,
+              guardianLastname: guardianLastname,
+              guardianDOB: guardianDOB,
+              
+            }).then((response) => {
+              if(response.data == "Beneficiary added successfully"){
+                beneficiaries();
+              }
+              else{
+                let r = response.data;
+                alert(r);
+              }
+              console.log(response);
+            });
+  
+         }
+        }
+        }
+        else{
+          if((beneficiaryFirstName  == "" || beneficiaryFirstName  == null) || (beneficiaryLastName  == "" || beneficiaryLastName  == null) || (beneficiarydob  == "" || beneficiarydob  == null)){
+            alert("Please fill in the field'(s) appropriately");
+          }
+          else{
+          if(guardianAge == "minor"){
+            alert("Guardian must be 18 years and above!");
+          }
+          else{
+            Axios.post(domain + "/beneficiaryDetails", {
+              beneficiaryFirstName: beneficiaryFirstName,
+              beneficiaryLastName: beneficiaryLastName,
+              beneficiarydob: beneficiarydob,
+              benefit: benefit,
+              relationship: relationship,
+              guardianFirstname: guardianFirstname,
+              guardianLastname: guardianLastname,
+              guardianDOB: guardianDOB,
+              
+            }).then((response) => {
+              if(response.data == "Beneficiary added successfully"){
+                beneficiaries();
+              }
+              else{
+                let r = response.data;
+                alert(r);
+              }
+              console.log(response);
+            });
+  
+         }
+        }
+        }
 
-      }
-      }
            
       };
 

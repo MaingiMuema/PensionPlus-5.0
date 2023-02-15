@@ -59,7 +59,9 @@ if (screenWidth <= 900) {
           your funds in a Tailored option which automatically shifts your money
           into safer investments as you age.
         </p>
-        <button class="call-to-action">Explore our plans</button>
+        <br/>
+        <br/>
+        <Link class="call-to-action" to="/comingSoon">Explore our plans</Link>
       </div>
     </div>
   );
@@ -85,7 +87,9 @@ if (screenWidth <= 900) {
           your funds in a Tailored option which automatically shifts your money
           into safer investments as you age.
         </p>
-        <button class="call-to-action">Explore our plans</button>
+        <br/>
+        <br/>
+        <Link class="call-to-action" to="/comingSoon">Explore our plans</Link>
       </div>
       <div className="col-lg-6">
         <img
@@ -756,24 +760,24 @@ function Landingpage() {
                   </div>
                   <ul>
                     <li>
-                      <a href="#">Our pension</a>
+                      <Link href="#">Our pension</Link>
                     </li>
                     <li>{combineLink}</li>
                     <li>{contributeLink}</li>
                     <li>
-                      <a href="#" aria-disabled>
+                      <Link to="/comingSoon" >
                         Plans
-                      </a>
+                      </Link>
                     </li>
                     <li>{calculatorLink}</li>
                     <li>
-                      <a href="#">Self-employed Saver</a>
+                      <Link to="/contributeProcess">Self-employed Saver</Link>
                     </li>
                     <li>
-                      <a href="#">Workplace Pension</a>
+                      <Link to="/combineProcess">Workplace Pension</Link>
                     </li>
                     <li>
-                      <a href="#">Terms and conditions</a>
+                      <Link to="/terms">Terms and conditions</Link>
                     </li>
                   </ul>
                 </div>

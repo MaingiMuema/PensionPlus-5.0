@@ -421,7 +421,7 @@ function PensionCalculator() {
             <div className="col-lg-4">
               <label for="combinedPension" className="inputLable">
                 <span>
-                  <b>Total Combined pensions if any:</b>
+                  <b>Total Combined pension amount</b>
                 </span>
                 <br />
                 <input

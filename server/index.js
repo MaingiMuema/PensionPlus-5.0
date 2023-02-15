@@ -711,9 +711,14 @@ app.post('/beneficiaryDetails', (req, res) => {
             console.log(err);
         }
         if(result.length > 0){
+            
             let bft = result[0].benefitTotal;
             
-            if(parseInt(bft) <= 100 && parseInt(result[0].benefitTotal) +parseInt(benefit) <= 100){
+            if(bft == null){
+                bft = 0;
+            }
+
+            if((parseInt(bft) <= 100) && (parseInt(bft) +parseInt(benefit) <= 100)){
                 db.query("INSERT INTO clientbeneficiary (firstname, lastname, dob, relationship, benefit, Guardian_FirstName, Guardian_LastName, Guardian_DOB, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", 
                 [beneficiaryFirstName, beneficiaryLastName, beneficiarydob, relationship, benefit, guardianFirstname, guardianLastname, guardianDOB,  userId], 
                 (err, result) =>{
