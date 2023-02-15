@@ -215,6 +215,8 @@ function Landingpage() {
     );
   }
 
+  //Cookie usage alert
+
   return (
     <div onLoad={checkLogin} class="container-fluid">
       <div className="container">
@@ -238,6 +240,9 @@ function Landingpage() {
                 src={img1}
                 alt="Hero-section-img1"
               />
+            </div>
+            <div className="cookieAlert fadeInRight">
+              <span className="">Our site uses cookies. Read our <Link to="privacy-policy">privacy policy.</Link></span>
             </div>
           </div>
         </div>

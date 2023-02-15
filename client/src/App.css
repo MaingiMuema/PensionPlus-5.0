@@ -2188,6 +2188,25 @@ Table buttons
 
 /*
 
+Cookie Alert box
+
+*/
+
+.cookieAlert{
+  background-color: #0075c97e;
+  color: #fff;
+  padding: 30px;
+  max-width: 35%;
+  position: fixed;
+  bottom: 0px;
+  margin: 0 auto;
+  opacity: 0.8;
+  right: 15px;
+  border-radius: 10px;
+}
+
+/*
+
 Loading animation
 
 */
