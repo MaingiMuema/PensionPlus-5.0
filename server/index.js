@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const isAuth = require("./isAuth");
+const isAuth = require("./isAuth").default;
 const nodemailer = require("nodemailer");
 const twilio = require("twilio");
 

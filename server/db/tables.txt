@@ -37,6 +37,7 @@
     transferStatus
     transactionType
     userId
+    amount
 //Done
 
 6. clientbeneficiary
