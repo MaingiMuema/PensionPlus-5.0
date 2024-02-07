@@ -7,8 +7,6 @@ import { useState, useEffect } from "react";
 import Axios from "axios";
 import Cookies from 'js-cookie';
 
-
-
 //Images
 import img1 from "../Assets/Verification illustrations.png";
 

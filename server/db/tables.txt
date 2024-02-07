@@ -1,0 +1,66 @@
+1. userAccount
+    name
+    email
+    password
+    refValue
+    bonusCheck
+//Done
+
+2. userDetails
+    phone
+    id_no
+    dob
+    employment_status
+    userId
+//Done
+
+3. pensionDetails
+    EmployerName
+    OrganizationEmail
+    PensionProvider
+    AdditionalInformation
+    FundedByEmployer
+    userId
+    transferStatus
+    transactionType
+//Done
+
+4. usercombinedpensions
+    userId
+    userName
+    provider
+    transactionType
+//Done
+
+5. transactions
+    PensionProvider
+    transferStatus
+    transactionType
+    userId
+    amount
+//Done
+
+6. clientbeneficiary
+    firstname
+    lastname
+    dob
+    relationship
+    benefit
+    Guardian_FirstName
+    Guardian_LastName
+    Guardian_DOB
+    userId
+//Done
+
+7. usercontributions
+    userId
+    userName
+    Amount
+    transactionType
+//Done
+
+8. adminaccount
+    adminName
+    email
+    password
+//Done

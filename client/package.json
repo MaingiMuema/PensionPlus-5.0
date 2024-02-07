@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "allowedHosts": "all",
-  "homepage": "https://MaingiMuema.github.io/PensionPLus-client-1.0",
+  "homepage": "/",
   "dependencies": {
     "@syncfusion/ej2-react-grids": "^20.3.58",
     "@testing-library/jest-dom": "^5.16.5",

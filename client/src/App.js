@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import React from "react";
-import Landingpage from "./Components/Landing_page";
+import Landingpage from "./Components/LandingPage/Landing_page";
 import CreateAccount from "./Components/create-account";
 import ClientDetails from "./Components/clientDetails";
 import PensionDetails from "./Components/pensionDetails";
